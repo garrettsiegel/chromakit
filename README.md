@@ -1,4 +1,4 @@
-# ChromaKit 🎨
+# ChromaKit
 
 > **[chromakit.site](https://chromakit.site)** - Live demo and documentation
 
@@ -6,13 +6,13 @@ A modern React color picker library with first-class support for perceptually un
 
 ## Features
 
-- 🎨 **Modern Color Spaces**: OKLCH, OKLAB support for perceptually uniform colors
-- 🔧 **Traditional Formats**: RGB(A), HSL(A), HSV(A), HEX, HEX8
-- 🧩 **Composable**: Build custom pickers with primitive components
-- 🎯 **TypeScript First**: Complete type definitions
-- 🌗 **Dark Mode**: Built-in dark mode support
-- ⚡ **Lightweight**: Minimal dependencies
-- ♿ **Accessible**: WCAG compliant (keyboard navigation, ARIA labels)
+- **Modern Color Spaces**: OKLCH, OKLAB support for perceptually uniform colors
+- **Traditional Formats**: RGB(A), HSL(A), HSV(A), HEX, HEX8
+- **Composable**: Build custom pickers with primitive components
+- **TypeScript First**: Complete type definitions
+- **Dark Mode**: Built-in dark mode support
+- **Lightweight**: Minimal dependencies
+- **Accessible**: WCAG compliant (keyboard navigation, ARIA labels)
 
 ## Installation
 
