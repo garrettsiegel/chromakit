@@ -1,6 +1,6 @@
 # ChromaKit
 
-> **[chromakit.site](https://chromakit.site)** - Live demo and documentation
+> **[chromakit.site](https://www.chromakit.site)** - Live demo and documentation
 
 A modern React color picker library with first-class support for perceptually uniform color spaces (OKLCH, OKLAB) alongside traditional formats.
 
