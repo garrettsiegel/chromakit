@@ -12,7 +12,7 @@
 [![license](https://img.shields.io/npm/l/chromakit-react.svg)](https://github.com/garrettsiegel/chromakit/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-[**🎨 Live Demo**](https://www.chromakit.site) • [**📚 Documentation**](https://www.chromakit.site) • [**🔄 Migration Guide**](./MIGRATION.md)
+[**Live Demo**](https://www.chromakit.site) • [**Documentation**](https://www.chromakit.site) • [**Migration Guide**](./MIGRATION.md)
 
 ---
 
@@ -22,7 +22,7 @@ npm install chromakit-react
 
 <br />
 
-**[👉 See it in action →](https://www.chromakit.site)**
+**[See it in action →](https://www.chromakit.site)**
 
 <br />
 
@@ -32,7 +32,7 @@ npm install chromakit-react
 
 <br />
 
-## ✨ Why Developers Choose ChromaKit
+## Why Developers Choose ChromaKit
 
 **The only React color picker built for modern design systems.** While other pickers struggle with consistent color scales and muddy gradients, ChromaKit uses perceptually uniform color spaces (OKLCH, OKLAB) to deliver what designers expect and users see.
 
@@ -44,16 +44,16 @@ import 'chromakit-react/chromakit.css';
 <ColorPicker onChange={(color) => console.log(color.oklch)} />;
 ```
 
-### 🎯 Perfect For
+### Perfect For
 
 - **Design System Engineers** - Generate consistent tonal scales with predictable lightness
 - **Accessibility Teams** - Built-in WCAG AA/AAA contrast checking
 - **App Developers** - Zero dependencies, 10KB bundle, works everywhere
 - **UI Libraries** - Composable primitives, full TypeScript support
 
-## 💎 What Makes ChromaKit Different
+## What Makes ChromaKit Different
 
-### 🎨 Perceptually Uniform Colors
+### Perceptually Uniform Colors
 
 **The Problem:** Traditional RGB/HSL create inconsistent color scales. A 10% lightness change in blue looks different than in yellow. Your carefully crafted design system falls apart.
 
@@ -67,7 +67,7 @@ const scale = Array.from({ length: 9 }, (_, i) => {
 });
 ```
 
-### 🧩 Composable Architecture
+### Composable Architecture
 
 Unlike monolithic pickers, ChromaKit gives you building blocks:
 
@@ -92,21 +92,21 @@ function CustomPicker() {
 }
 ```
 
-### ⚡ Built for Performance
+### Built for Performance
 
 - **10KB gzipped** - Competitive with alternatives, but includes OKLCH + composability
 - **Zero dependencies** - No supply chain risk, no version conflicts
 - **Tree-shakeable** - Import only what you use
 - **60fps interactions** - Smooth dragging on all devices
 
-### ♿ Accessibility Baked In
+### Accessibility Baked In
 
 - **WCAG AA compliant** - Full keyboard navigation, proper ARIA labels
 - **Contrast checker included** - `getContrastRatio()`, `meetsContrastRatio()`
 - **Screen reader tested** - Works with NVDA, JAWS, VoiceOver
 - **Touch-friendly** - 44px minimum touch targets
 
-### 📘 TypeScript Excellence
+### TypeScript Excellence
 
 Every color format, every component prop, every utility function - fully typed:
 
@@ -132,9 +132,9 @@ const handleChange = (value: ColorValue) => {
 | Dark Mode      | ✅ Built-in | Manual         | Manual      |
 | Dependencies   | 0           | 0              | Many        |
 
-### 🤔 When to Choose ChromaKit
+### When to Choose ChromaKit
 
-**✅ Use ChromaKit if you:**
+**Use ChromaKit if you:**
 
 - Need consistent color scales for design systems
 - Want OKLCH/OKLAB support for wide-gamut displays
@@ -152,7 +152,7 @@ const handleChange = (value: ColorValue) => {
 
 ---
 
-## 📦 Features
+## Features
 
 - **Modern Color Spaces**: OKLCH, OKLAB support for perceptually uniform colors
 - **Traditional Formats**: RGB(A), HSL(A), HSV(A), HEX, HEX8
@@ -167,7 +167,7 @@ const handleChange = (value: ColorValue) => {
 - **Lightweight**: ~10KB gzipped with zero runtime dependencies
 - **Accessible**: WCAG compliant (keyboard navigation, ARIA labels)
 
-## 🚀 Quick Start
+## Quick Start
 
 **Controlled Component** (recommended)
 
@@ -192,7 +192,7 @@ That's it! You now have a fully-featured color picker with OKLCH support, eyedro
 
 > **💡 Pro Tip:** Use `presetGroups` to give users quick access to your brand colors or popular design system palettes (Material, Tailwind, Bootstrap).
 
-## 🛠️ Framework Setup
+## Framework Setup
 
 ### Next.js
 
@@ -1028,20 +1028,20 @@ clearColorHistory();
 
 \*\*I📚 Documentation & Resources
 
-- 📖 [Migration Guide](./MIGRATION.md) - Switch from react-colorful or react-color
-- ⚡ [Performance Benchmarks](./PERFORMANCE.md) - Bundle size and speed comparisons
-- 🤝 [Contributing Guide](./CONTRIBUTING.md) - Help improve ChromaKit
-- 📝 [Changelog](./CHANGELOG.md) - Version history and release notes
-- 🎓 [OKLCH Explained](https://oklch.com/) - Learn about perceptually uniform colors
+- [Migration Guide](./MIGRATION.md) - Switch from react-colorful or react-color
+- [Performance Benchmarks](./PERFORMANCE.md) - Bundle size and speed comparisons
+- [Contributing Guide](./CONTRIBUTING.md) - Help improve ChromaKit
+- [Changelog](./CHANGELOG.md) - Version history and release notes
+- [OKLCH Explained](https://oklch.com/) - Learn about perceptually uniform colors
 
-## 🌟 Community & Support
+## Community & Support
 
 - **Issues?** [Open an issue](https://github.com/garrettsiegel/chromakit/issues) on GitHub
 - **Questions?** Check existing [discussions](https://github.com/garrettsiegel/chromakit/discussions)
 - **Updates?** Star the repo to get notified of new releases
 - **Share?** Tweet [@garrettsiegel](https://twitter.com/garrettsiegel) with your projects!
 
-## 🤝
+## Contributing
 
 // Or use composable components (smaller bundle)
 import { ColorArea, HueSlider } from 'chromakit-react';
@@ -1050,20 +1050,19 @@ import { ColorArea, HueSlider } from 'chromakit-react';
 
 ## Documentation
 
-- 📖 [Migration Guide](./MIGRATION.md) - Migrating from react-colorful or react-color
-- ⚡ [Performance Benchmarks](./PERFORMANCE.md) - Bundle size and speed comparisons
-- 🤝 [Contributing Guide](./CONTRIBUTING.md) - How to contribute to ChromaKit
-- 📝 [Changelog](./CHANGELOG.md) - Version history and release notes
+- [Migration Guide](./MIGRATION.md) - Migrating from react-colorful or react-color
+- [Performance Benchmarks](./PERFORMANCE.md) - Bundle size and speed comparisons
+- [Contributing Guide](./CONTRIBUTING.md) - How to contribute to ChromaKit
+- [Changelog](./CHANGELOG.md) - Version history and release notes
 
 ## Contributing
-💖 Support ChromaKit
 
 If ChromaKit saves you time or helps build better products, consider:
 
-- ⭐ **Star the repo** - Helps others discover ChromaKit
-- 💬 **Share your project** - Tweet it, blog it, showcase it
-- 🐛 **Report bugs** - Help improve quality for everyone
-- 💰 **Sponsor development** - Keep it maintained and growing
+- **Star the repo** - Helps others discover ChromaKit
+- **Share your project** - Tweet it, blog it, showcase it
+- **Report bugs** - Help improve quality for everyone
+- **Sponsor development** - Keep it maintained and growing
 
 [![Sponsor on GitHub](https://img.shields.io/badge/sponsor-GitHub-pink?style=for-the-badge&logo=github)](https://github.com/sponsors/garrettsiegel)
 
@@ -1087,9 +1086,9 @@ MIT © [Garrett Siegel](https://github.com/garrettsiegel)
 - [React](https://react.dev/) - UI framework
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [Vite](https://vitejs.dev/) - Build tool
-### 🎨 [chromakit.site](https://www.chromakit.site)
+### [chromakit.site](https://www.chromakit.site)
 
-Made with ❤️ by [Garrett Siegel](https://github.com/garrettsiegel)
+Made with love by [Garrett Siegel](https://github.com/garrettsiegel)
 
 **[Star on GitHub](https://github.com/garrettsiegel/chromakit)** • **[Try Live Demo](https://www.chromakit.site)** • **[Report Bug](https://github.com/garrettsiegel/chromakit/issues)**
 **Color science based on:**
@@ -1104,7 +1103,7 @@ Made with ❤️ by [Garrett Siegel](https://github.com/garrettsiegel)
 
 <div align="center">
 
-**[chromakit.site](https://www.chromakit.site)** • Made with ❤️ by [Garrett Siegel](https://github.com/garrettsiegel)
+**[chromakit.site](https://www.chromakit.site)** • Made with love by [Garrett Siegel](https://github.com/garrettsiegel)
 
 </div>
 ```
