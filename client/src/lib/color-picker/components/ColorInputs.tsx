@@ -29,8 +29,11 @@ const ALL_FORMATS: {
   { value: 'rgba', label: 'RGBA', needsAlpha: true },
   { value: 'hsl', label: 'HSL' },
   { value: 'hsla', label: 'HSLA', needsAlpha: true },
+  { value: 'hsv', label: 'HSV' },
+  { value: 'hsva', label: 'HSVA', needsAlpha: true },
   { value: 'oklch', label: 'OKLCH' },
   { value: 'oklcha', label: 'OKLCHA', needsAlpha: true },
+  { value: 'oklab', label: 'OKLAB' },
 ];
 
 export function ColorInputs({

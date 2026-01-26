@@ -77,6 +77,7 @@
     sans-serif;
   color: var(--ck-text);
   box-sizing: border-box;
+  width: 100%;
   max-width: 100%;
   position: relative;
   overflow: hidden;
@@ -112,6 +113,7 @@
   position: relative;
   z-index: 1;
   min-height: 100px;
+  width: 100%;
 }
 
 .ck-picker-controls {
@@ -119,6 +121,7 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  min-width: 0;
 }
 
 /* Color Area - glassmorphic with subtle glow */
