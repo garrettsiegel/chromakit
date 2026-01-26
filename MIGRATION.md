@@ -47,10 +47,9 @@ function App() {
   const [color, setColor] = useState("#aabbcc");
   return (
     <ColorPicker 
-      color={color} 
-      onChange={setColor}
-      format="hex"
-      showFormatToggle={false} // Optional: hide format selector
+      value={color} 
+      onChange={(colorValue) => setColor(colorValue.hex)}
+      formats={['hex']}
     />
   );
 }
@@ -75,14 +74,12 @@ import 'chromakit-react/chromakit.css';
 
 function App() {
   const [color, setColor] = useState("rgb(170, 187, 204)");
-  // ChromaKit uses string formats, convert if needed:
-  // const rgbString = `rgb(${color.r}, ${color.g}, ${color.b})`;
   
   return (
     <ColorPicker 
-      color={color} 
-      onChange={setColor}
-      format="rgb"
+      value={color} 
+      onChange={(colorValue) => setColor(colorValue.rgb)}
+      formats={['rgb']}
     />
   );
 }
@@ -109,9 +106,9 @@ function App() {
   const [color, setColor] = useState("hsl(200, 50%, 28%)");
   return (
     <ColorPicker 
-      color={color} 
-      onChange={setColor}
-      format="hsl"
+      value={color} 
+      onChange={(colorValue) => setColor(colorValue.hsl)}
+      formats={['hsl']}
     />
   );
 }
@@ -156,17 +153,22 @@ import {
   HueSlider, 
   AlphaSlider, 
   ColorPreview,
-  HexInput 
+  useColorState
 } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
 
-<div className="custom-picker">
-  <ColorPreview color={color} size="lg" />
-  <ColorArea color={color} onChange={setColor} />
-  <HueSlider color={color} onChange={setColor} />
-  <AlphaSlider color={color} onChange={setColor} />
-  <HexInput color={color} onChange={setColor} />
-</div>
+function CustomPicker() {
+  const { hsva, colorValue, updateColor } = useColorState('#aabbcc');
+  
+  return (
+    <div className="custom-picker">
+      <ColorPreview colorValue={colorValue} size="lg" />
+      <ColorArea hsva={hsva} onChange={updateColor} />
+      <HueSlider hsva={hsva} onChange={updateColor} />
+      <AlphaSlider hsva={hsva} onChange={updateColor} />
+    </div>
+  );
+}
 ```
 
 ## Styling Differences
@@ -195,7 +197,10 @@ ChromaKit also supports dark mode automatically:
 ```tsx
 // Wrap your app with dark mode class
 <div className="dark">
-  <ColorPicker color={color} onChange={setColor} />
+  <ColorPicker 
+    value={color} 
+    onChange={(colorValue) => setColor(colorValue.hex)} 
+  />
 </div>
 ```
 
@@ -216,16 +221,22 @@ import { HexColorInput } from "react-colorful";
 
 **After (ChromaKit):**
 ```tsx
-import { HexInput } from 'chromakit-react';
+import { ColorInputs } from 'chromakit-react';
+import { useColorState } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
 
-<HexInput 
-  color={color} 
-  onChange={setColor}
-  placeholder="Type a color"
-  showPrefix={true}
-  showAlpha={true}
-/>
+function MyComponent() {
+  const { hsva, colorValue, updateColor, setFromString } = useColorState('#aabbcc');
+  
+  return (
+    <ColorInputs
+      colorValue={colorValue}
+      format="hex"
+      onChange={setFromString}
+    />
+  );
+}
+```
 ```
 
 ## Popover Pattern
@@ -259,13 +270,16 @@ const [isOpen, setIsOpen] = useState(false);
 
 <div className="picker-container">
   <ColorPreview 
-    color={color}
+    colorValue={{ hex: color }}
     onClick={() => setIsOpen(!isOpen)}
     className="cursor-pointer"
   />
   {isOpen && (
     <div className="popover">
-      <ColorPicker color={color} onChange={setColor} />
+      <ColorPicker 
+        value={color} 
+        onChange={(colorValue) => setColor(colorValue.hex)} 
+      />
     </div>
   )}
 </div>
@@ -274,8 +288,8 @@ const [isOpen, setIsOpen] = useState(false);
 Or use the built-in `showPreview` prop:
 ```tsx
 <ColorPicker 
-  color={color} 
-  onChange={setColor}
+  value={color} 
+  onChange={(colorValue) => setColor(colorValue.hex)}
   showPreview={true}
 />
 ```
@@ -292,7 +306,6 @@ const presets = ["#ff0000", "#00ff00", "#0000ff"];
     {presets.map((preset) => (
       <button
         key={preset}
-        style={{ backgroundColor: preset }}
         onClick={() => setColor(preset)}
       />
     ))}
@@ -305,8 +318,8 @@ const presets = ["#ff0000", "#00ff00", "#0000ff"];
 const presets = ["#ff0000", "#00ff00", "#0000ff"];
 
 <ColorPicker 
-  color={color} 
-  onChange={setColor}
+  value={color} 
+  onChange={(colorValue) => setColor(colorValue.hex)}
   showPresets={true}
   presets={presets}
 />
@@ -339,10 +352,14 @@ import 'chromakit-react/chromakit.css';
 
 const [color, setColor] = useState("#aabbcc");
 
+// ChromaKit doesn't have built-in debouncing,
+// but you can use onChangeComplete for debounced updates:
 <ColorPicker 
-  color={color} 
-  onChange={setColor}
-  debounce={200} // Built-in debouncing
+  value={color} 
+  onChange={(colorValue) => {
+    // Real-time preview (optional)
+  }}
+  onChangeComplete={(colorValue) => setColor(colorValue.hex)}
 />
 ```
 
@@ -352,14 +369,19 @@ const [color, setColor] = useState("#aabbcc");
 ```tsx
 import { HexColorPicker } from "react-colorful";
 import type { RgbColor, HslColor } from "react-colorful";
-
-const color: RgbColor = { r: 170, g: 187, b: 204 };
 ```
 
 ### ChromaKit
 ```tsx
 import { ColorPicker } from 'chromakit-react';
-import type { RgbColor, HslColor, ColorFormat } from 'chromakit-react';
+import type { ColorValue, ColorFormat } from 'chromakit-react';
+
+// ChromaKit uses ColorValue objects
+const handleChange = (colorValue: ColorValue) => {
+  console.log(colorValue.hex);     // "#aabbcc"
+  console.log(colorValue.rgb);     // "rgb(170, 187, 204)"
+  console.log(colorValue.oklch);   // "oklch(0.75 0.05 250)"
+};
 
 // ChromaKit uses string-based colors by default
 const color: string = "rgb(170, 187, 204)";
@@ -390,24 +412,23 @@ const hslObj: HslColor = { h: 200, s: 50, l: 28 };
 
 - 📖 [Full Documentation](https://www.chromakit.site)
 - 🐛 [Report Issues](https://github.com/garrettsiegel/chromakit/issues)
-- 💬 [Discussions](https://github.com/garrettsiegel/chromakit/discussions)
 
-## Component Mapping Reference
+## Component Mapping Table
 
 | react-colorful | ChromaKit | Notes |
-|----------------|-----------|-------|
-| `HexColorPicker` | `ColorPicker` with `format="hex"` | Full-featured picker |
-| `HexAlphaColorPicker` | `ColorPicker` with `format="hex"` + `showAlpha={true}` | Alpha included |
-| `RgbColorPicker` | `ColorPicker` with `format="rgb"` | String-based RGB |
-| `RgbaColorPicker` | `ColorPicker` with `format="rgb"` + `showAlpha={true}` | String-based RGBA |
-| `HslColorPicker` | `ColorPicker` with `format="hsl"` | String-based HSL |
-| `HslaColorPicker` | `ColorPicker` with `format="hsl"` + `showAlpha={true}` | String-based HSLA |
-| `HsvColorPicker` | `ColorPicker` with `format="hsv"` | String-based HSV |
-| `HsvaColorPicker` | `ColorPicker` with `format="hsv"` + `showAlpha={true}` | String-based HSVA |
-| `HexColorInput` | `HexInput` | Similar API |
+|---|---|---|
+| `HexColorPicker` | `ColorPicker` with `formats={['hex']}` | Full-featured picker |
+| `HexAlphaColorPicker` | `ColorPicker` with `formats={['hex8']}` | Alpha included |
+| `RgbColorPicker` | `ColorPicker` with `formats={['rgb']}` | ColorValue-based |
+| `RgbaColorPicker` | `ColorPicker` with `formats={['rgba']}` | ColorValue-based |
+| `HslColorPicker` | `ColorPicker` with `formats={['hsl']}` | ColorValue-based |
+| `HslaColorPicker` | `ColorPicker` with `formats={['hsla']}` | ColorValue-based |
+| `HsvColorPicker` | `ColorPicker` with `formats={['hsv']}` | ColorValue-based |
+| `HsvaColorPicker` | `ColorPicker` with `formats={['hsva']}` | ColorValue-based |
+| `HexColorInput` | `ColorInputs` | Use with useColorState hook |
 | N/A | `ColorArea` | Composable primitive |
 | N/A | `HueSlider` | Composable primitive |
 | N/A | `AlphaSlider` | Composable primitive |
 | N/A | `ColorPreview` | Built-in component |
-| N/A | `ColorPicker` with `format="oklch"` | **Unique to ChromaKit** |
-| N/A | `ColorPicker` with `format="oklab"` | **Unique to ChromaKit** |
+| N/A | `ColorPicker` with `formats={['oklch']}` | **Unique to ChromaKit** |
+| N/A | `ColorPicker` with `formats={['oklab']}` | **Unique to ChromaKit** |

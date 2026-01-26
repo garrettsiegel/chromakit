@@ -51,7 +51,7 @@ function ComparisonTable() {
     },
     {
       feature: 'Bundle Size',
-      chromakit: '8KB',
+      chromakit: '10KB',
       reactColorful: '3KB',
       reactColor: '28KB',
     },

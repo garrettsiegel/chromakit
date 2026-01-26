@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 // ============================================================
 
 const basicUsageCode = `import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/chromakit.css';
 import { useState } from 'react';
 
 function App() {
@@ -14,8 +15,8 @@ function App() {
   
   return (
     <ColorPicker 
-      color={color} 
-      onChange={(newColor) => setColor(newColor.hex)} 
+      value={color} 
+      onChange={(colorValue) => setColor(colorValue.hex)} 
     />
   );
 }`;
@@ -24,30 +25,48 @@ const customComponentsCode = `import {
   ColorArea, 
   HueSlider, 
   AlphaSlider,
-  ColorPreview 
+  ColorPreview,
+  useColorState
 } from 'chromakit-react';
+import 'chromakit-react/chromakit.css';
 
 function CustomPicker() {
-  const [color, setColor] = useState('#ff6b35');
+  const { hsva, colorValue, updateColor } = useColorState('#ff6b35');
   
   return (
     <div className="space-y-4">
-      <ColorArea color={color} onChange={setColor} />
-      <HueSlider color={color} onChange={setColor} />
-      <AlphaSlider color={color} onChange={setColor} />
-      <ColorPreview color={color} />
+      <ColorArea hsva={hsva} onChange={updateColor} />
+      <HueSlider hsva={hsva} onChange={updateColor} />
+      <AlphaSlider hsva={hsva} onChange={updateColor} />
+      <ColorPreview colorValue={colorValue} />
     </div>
   );
 }`;
 
-const sizeVariantsCode = `// Compact size (80×70px)
-<ColorPicker color={color} onChange={setColor} size="compact" />
+const advancedOptionsCode = `import { ColorPicker } from 'chromakit-react';
 
-// Default size (200×150px)
-<ColorPicker color={color} onChange={setColor} size="default" />
+// Disable eyedropper and copy buttons
+<ColorPicker 
+  value={color} 
+  onChange={(c) => setColor(c.hex)}
+  showEyeDropper={false}
+  showCopyButton={false}
+/>
 
-// Large size (280×200px)
-<ColorPicker color={color} onChange={setColor} size="large" />`;
+// Custom width and hide presets
+<ColorPicker 
+  value={color}
+  onChange={(c) => setColor(c.hex)}
+  width={300}
+  showPresets={false}
+/>
+
+// Only show specific formats
+<ColorPicker 
+  value={color}
+  onChange={(c) => setColor(c.hex)}
+  formats={['hex', 'oklch']}
+/>`;
 
 const colorConversionsCode = `import { oklch, hex, rgb, hsl } from 'chromakit-react';
 
@@ -133,9 +152,9 @@ export function UsageSection() {
             />
 
             <ExampleCard
-              title="Size Variants"
-              description="Three pre-configured sizes for different use cases"
-              code={sizeVariantsCode}
+              title="Advanced Options"
+              description="Customize visibility and behavior with props"
+              code={advancedOptionsCode}
             />
 
             <ExampleCard

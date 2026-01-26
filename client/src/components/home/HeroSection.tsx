@@ -48,11 +48,11 @@ function SocialProof() {
     <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
       <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border">
         <Github className="w-4 h-4 text-muted-foreground" />
-        <span className="text-sm font-medium">1.2k+ stars</span>
+        <span className="text-sm font-medium">Open Source</span>
       </div>
       <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border">
         <Package className="w-4 h-4 text-muted-foreground" />
-        <span className="text-sm font-medium">50k+ downloads</span>
+        <span className="text-sm font-medium">MIT Licensed</span>
       </div>
       <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border">
         <TrendingUp className="w-4 h-4 text-muted-foreground" />
@@ -244,7 +244,7 @@ export function HeroSection() {
           <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span>8KB gzipped</span>
+              <span>10KB gzipped</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <div className="w-2 h-2 rounded-full bg-green-500" />

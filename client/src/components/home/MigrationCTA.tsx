@@ -18,10 +18,11 @@ function MyPicker() {
 
 const afterCode = `// ChromaKit (OKLCH + all formats)
 import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/chromakit.css';
 
 function MyPicker() {
   const [color, setColor] = useState('#ff6b35');
-  return <ColorPicker color={color} onChange={(c) => setColor(c.hex)} />;
+  return <ColorPicker value={color} onChange={(c) => setColor(c.hex)} />;
 }`;
 
 // ============================================================

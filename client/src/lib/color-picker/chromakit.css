@@ -631,8 +631,10 @@
   -webkit-backdrop-filter: var(--ck-blur);
   border: 1px solid white;
   color: white;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: bold;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -640,6 +642,12 @@
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 10;
+  text-align: center;
+  padding: 0;
+}
+
+.ck-swatch-delete-btn svg {
+  display: block;
 }
 
 .ck-swatch-btn:hover .ck-swatch-delete-btn {

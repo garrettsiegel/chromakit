@@ -38,13 +38,6 @@ describe('ColorPicker', () => {
       expect(picker).toBeInTheDocument();
     });
 
-    it('should render compact size variant', () => {
-      const { container } = render(<ColorPicker size="compact" />);
-      
-      const picker = container.querySelector('.ck-color-picker--compact');
-      expect(picker).toBeInTheDocument();
-    });
-
     it('should apply custom width', () => {
       const { container } = render(<ColorPicker width={400} />);
       

@@ -126,13 +126,17 @@ export function ColorSwatch({
         style={{ backgroundColor: color }}
       />
       {editing && onDelete && (
-        <span
+        <button
+          type="button"
           className="ck-swatch-delete-btn"
           onClick={handleDelete}
           title="Delete preset"
         >
-          ×
-        </span>
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       )}
     </button>
   );

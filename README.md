@@ -26,7 +26,7 @@ Automatic dark mode support without extra configuration. Components adapt seamle
 ### ⚡ Performance Focused
 - **Zero runtime dependencies** (only React peer dependency)
 - **Tree-shakeable** exports—only import what you use
-- **~8KB gzipped**—slightly larger than react-colorful (3KB) but includes OKLCH/OKLAB + composability
+- **~10KB gzipped**—slightly larger than react-colorful (3KB) but includes OKLCH/OKLAB + composability
 - Built with modern React hooks for 60fps interactions
 
 ### ♿ Accessibility First
@@ -42,7 +42,7 @@ Written in TypeScript from the ground up with complete type definitions for all 
 
 | Feature | ChromaKit | react-colorful | react-color |
 |---------|-----------|----------------|-------------|
-| Bundle Size | ~8KB | ~3KB | ~28KB |
+| Bundle Size | ~10KB | ~3KB | ~28KB |
 | OKLCH/OKLAB | ✅ | ❌ | ❌ |
 | Tree-shakeable | ✅ | ✅ | ❌ |
 | TypeScript | ✅ Native | ✅ | ⚠️ @types |
@@ -66,10 +66,9 @@ Written in TypeScript from the ground up with complete type definitions for all 
 - **Copy to Clipboard**: Quick color copying with keyboard shortcuts (Cmd/Ctrl+C)
 - **Color Harmony**: Utilities for complementary, analogous, triadic color schemes
 - **Contrast Checker**: WCAG AA/AAA contrast ratio calculator
-- **Size Variants**: Compact, default, and large sizes for any UI
 - **TypeScript First**: Complete type definitions
 - **Dark Mode**: Built-in dark mode support
-- **Lightweight**: ~9KB gzipped with zero runtime dependencies
+- **Lightweight**: ~10KB gzipped with zero runtime dependencies
 - **Accessible**: WCAG compliant (keyboard navigation, ARIA labels)
 
 ## Installation
@@ -89,9 +88,8 @@ function App() {
 
   return (
     <ColorPicker
-      color={color}
-      onChange={setColor}
-      format="hex"
+      value={color}
+      onChange={(colorValue) => setColor(colorValue.hex)}
     />
   );
 }
@@ -104,7 +102,7 @@ ChromaKit styles can be imported in two ways:
 **Option 1: Automatic Import** (default)
 ```tsx
 import { ColorPicker } from 'chromakit-react';
-// CSS is automatically included (9KB total)
+// CSS is automatically included (~13KB total: 10KB JS + 3KB CSS)
 ```
 
 **Option 2: Manual Import** (recommended for tree-shaking)
@@ -146,7 +144,6 @@ interface ColorPickerProps {
   showInputs?: boolean;
   showPreview?: boolean;
   presets?: string[];
-  size?: 'compact' | 'default' | 'large';
   width?: number;
   height?: number;
   showEyeDropper?: boolean;
@@ -182,16 +179,17 @@ Build custom pickers using primitive components:
 
 ```tsx
 import { ColorArea, HueSlider, AlphaSlider, ColorPreview } from 'chromakit-react';
+import { useColorState } from 'chromakit-react';
 
 function CustomPicker() {
-  const [color, setColor] = useState('#ff0000');
+  const { hsva, colorValue, updateColor } = useColorState('#ff0000');
 
   return (
     <div>
-      <ColorArea color={color} onChange={setColor} />
-      <HueSlider color={color} onChange={setColor} />
-      <AlphaSlider color={color} onChange={setColor} />
-      <ColorPreview color={color} />
+      <ColorArea hsva={hsva} onChange={updateColor} width={200} height={150} />
+      <HueSlider hsva={hsva} onChange={updateColor} />
+      <AlphaSlider hsva={hsva} onChange={updateColor} />
+      <ColorPreview colorValue={colorValue} />
     </div>
   );
 }
@@ -230,7 +228,9 @@ ChromaKit supports the following color formats:
 | HSL | `hsl(0, 100%, 50%)` | Hue, Saturation, Lightness |
 | HSLA | `hsla(0, 100%, 50%, 1)` | HSL with alpha |
 | HSV | `hsv(0, 100%, 100%)` | Hue, Saturation, Value |
+| HSVA | `hsva(0, 100%, 100%, 1)` | HSV with alpha |
 | OKLCH | `oklch(0.63 0.26 29)` | Perceptually uniform cylindrical |
+| OKLCHA | `oklch(0.63 0.26 29 / 1)` | OKLCH with alpha |
 | OKLAB | `oklab(0.63 0.22 0.13)` | Perceptually uniform Cartesian |
 
 ## Examples
@@ -239,9 +239,8 @@ ChromaKit supports the following color formats:
 
 ```tsx
 <ColorPicker
-  color={color}
-  onChange={setColor}
-  format="oklch"
+  value={color}
+  onChange={(colorValue) => setColor(colorValue.hex)}
   formats={['oklch', 'hex', 'rgb']}
 />
 ```
@@ -250,8 +249,8 @@ ChromaKit supports the following color formats:
 
 ```tsx
 <ColorPicker
-  color={color}
-  onChange={setColor}
+  value={color}
+  onChange={(colorValue) => setColor(colorValue.hex)}
   showPresets
   presets={[
     '#FF6B6B', '#4ECDC4', '#45B7D1',
@@ -264,25 +263,32 @@ ChromaKit supports the following color formats:
 
 ```tsx
 <ColorPicker
-  color={color}
-  onChange={setColor}
+  value={color}
+  onChange={(colorValue) => setColor(colorValue.hex)}
   showAlpha={false}
 />
 ```
 
-### Size Variants
+### Custom Width & Options
 
-Choose the perfect size for your UI:
+Customize the picker appearance and behavior:
 
 ```tsx
-// Compact for toolbars and sidebars (80×70px color area, ~450px wide)
-<ColorPicker size="compact" color={color} onChange={setColor} />
+// Custom width (default is calculated based on content)
+<ColorPicker 
+  value={color} 
+  onChange={(colorValue) => setColor(colorValue.hex)}
+  width={320} 
+/>
 
-// Default size for modals and panels (100×85px color area, ~450px wide)
-<ColorPicker size="default" color={color} onChange={setColor} />
-
-// Custom width overrides size
-<ColorPicker width={320} color={color} onChange={setColor} />
+// Hide specific features
+<ColorPicker 
+  value={color}
+  onChange={(colorValue) => setColor(colorValue.hex)}
+  showEyeDropper={false}
+  showCopyButton={false}
+  showPresets={false}
+/>
 ```
 
 ### Eyedropper & Copy
@@ -292,7 +298,7 @@ Enable advanced features for power users:
 ```tsx
 <ColorPicker
   value={color}
-  onChange={setColor}
+  onChange={(colorValue) => setColor(colorValue.hex)}
   showEyeDropper={true}  // Show eyedropper button (requires browser support)
   showCopyButton={true}  // Show copy button + Cmd/Ctrl+C shortcut
 />
@@ -305,7 +311,7 @@ Automatically track recently used colors:
 ```tsx
 <ColorPicker
   value={color}
-  onChange={setColor}
+  onChange={(colorValue) => setColor(colorValue.hex)}
   enableHistory={true}    // Store colors in localStorage
   historySize={10}        // Keep last 10 colors (default)
 />
