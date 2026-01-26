@@ -79,6 +79,7 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+  min-width: 520px;
   position: relative;
   overflow: hidden;
 }
@@ -112,7 +113,7 @@
   align-items: stretch;
   position: relative;
   z-index: 1;
-  min-height: 100px;
+  min-height: 80px;
   width: 100%;
 }
 
@@ -194,7 +195,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 /* Action buttons row */
@@ -208,7 +209,7 @@
 /* Sliders - glassmorphic with glow effects */
 .ck-hue-slider {
   position: relative;
-  height: 6px;
+  height: 10px;
   width: 100%;
   cursor: pointer;
   touch-action: none;
@@ -286,7 +287,7 @@
 /* Alpha Slider - glassmorphic */
 .ck-alpha-slider {
   position: relative;
-  height: 6px;
+  height: 10px;
   width: 100%;
   cursor: pointer;
   touch-action: none;
@@ -358,16 +359,6 @@
   border: 1px solid var(--ck-glass-border);
   overflow: hidden;
   flex-shrink: 0;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.ck-preview:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    var(--ck-glass-shadow-lg),
-    inset 0 0 0 1px var(--ck-glass-border);
 }
 
 .ck-preview-sm {
@@ -391,10 +382,6 @@
   height: 24px;
   min-width: 60px;
   border-radius: var(--ck-radius-sm);
-}
-
-.ck-preview-lg:hover {
-  box-shadow: var(--ck-glass-shadow-lg);
 }
 
 .ck-preview-color {
@@ -595,6 +582,12 @@
   margin-bottom: 4px;
 }
 
+.ck-presets-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .ck-presets-title {
   font-size: 8px;
   font-weight: 600;
@@ -622,6 +615,26 @@
   box-shadow: var(--ck-glass-shadow);
 }
 
+.ck-presets-dropdown {
+  padding: 2px 6px;
+  font-size: 8px;
+  font-weight: 600;
+  background: var(--ck-glass-bg);
+  backdrop-filter: var(--ck-blur);
+  -webkit-backdrop-filter: var(--ck-blur);
+  border: 1px solid var(--ck-glass-border);
+  border-radius: 4px;
+  color: var(--ck-text);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.ck-presets-dropdown:hover {
+  background: var(--ck-glass-bg-strong);
+  box-shadow: var(--ck-glass-shadow);
+}
+
 /* Preset swatches - glassmorphic grid */
 .ck-preset-colors {
   display: grid;
@@ -633,7 +646,6 @@
 .ck-swatch-btn {
   aspect-ratio: 1;
   min-height: 20px;
-  max-height: 20px;
   border: none;
   border-radius: var(--ck-radius-sm);
   cursor: pointer;

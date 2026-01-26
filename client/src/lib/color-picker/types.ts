@@ -81,6 +81,13 @@ export interface ColorTheme {
   colors: string[];
 }
 
+export interface PresetGroup {
+  name: string;
+  colors: string[];
+}
+
+export type PresetGroupsInput = PresetGroup[] | Record<string, string[]>;
+
 export interface ColorPickerTheme {
   background?: string;
   border?: string;
@@ -104,6 +111,7 @@ export interface ColorPickerProps {
   showInputs?: boolean;
   showPreview?: boolean;
   presets?: string[];
+  presetGroups?: PresetGroupsInput;
   themes?: ColorTheme[];
   theme?: ColorPickerTheme;
   className?: string;

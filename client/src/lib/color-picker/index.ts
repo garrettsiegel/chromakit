@@ -16,6 +16,8 @@ export type {
   ColorFormat,
   ColorValue,
   ColorTheme,
+  PresetGroup,
+  PresetGroupsInput,
   ColorPickerTheme,
   ColorPickerProps,
 } from './types';

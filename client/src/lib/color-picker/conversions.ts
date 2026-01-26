@@ -443,21 +443,21 @@ export function formatColor(color: ColorValue, format: string): string {
     case 'rgb':
       return `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`;
     case 'rgba':
-      return `rgba(${color.rgba.r}, ${color.rgba.g}, ${color.rgba.b}, ${color.rgba.a})`;
+      return `rgba(${color.rgba.r}, ${color.rgba.g}, ${color.rgba.b}, ${color.rgba.a.toFixed(2)})`;
     case 'hsl':
-      return `hsl(${color.hsl.h}, ${color.hsl.s}%, ${color.hsl.l}%)`;
+      return `hsl(${Math.round(color.hsl.h)}, ${Math.round(color.hsl.s)}%, ${Math.round(color.hsl.l)}%)`;
     case 'hsla':
-      return `hsla(${color.hsla.h}, ${color.hsla.s}%, ${color.hsla.l}%, ${color.hsla.a})`;
+      return `hsla(${Math.round(color.hsla.h)}, ${Math.round(color.hsla.s)}%, ${Math.round(color.hsla.l)}%, ${color.hsla.a.toFixed(2)})`;
     case 'hsv':
-      return `hsv(${color.hsv.h}, ${color.hsv.s}%, ${color.hsv.v}%)`;
+      return `hsv(${Math.round(color.hsv.h)}, ${Math.round(color.hsv.s)}%, ${Math.round(color.hsv.v)}%)`;
     case 'hsva':
-      return `hsva(${color.hsva.h}, ${color.hsva.s}%, ${color.hsva.v}%, ${color.hsva.a})`;
+      return `hsva(${Math.round(color.hsva.h)}, ${Math.round(color.hsva.s)}%, ${Math.round(color.hsva.v)}%, ${color.hsva.a.toFixed(2)})`;
     case 'oklab':
-      return `oklab(${color.oklab.L} ${color.oklab.a} ${color.oklab.b})`;
+      return `oklab(${color.oklab.L.toFixed(2)} ${color.oklab.a.toFixed(2)} ${color.oklab.b.toFixed(2)})`;
     case 'oklch':
-      return `oklch(${(color.oklch.L * 100).toFixed(1)}% ${color.oklch.C.toFixed(3)} ${color.oklch.h.toFixed(1)})`;
+      return `oklch(${(color.oklch.L * 100).toFixed(0)}% ${color.oklch.C.toFixed(2)} ${Math.round(color.oklch.h)})`;
     case 'oklcha':
-      return `oklch(${(color.oklcha.L * 100).toFixed(1)}% ${color.oklcha.C.toFixed(3)} ${color.oklcha.h.toFixed(1)} / ${color.oklcha.a})`;
+      return `oklch(${(color.oklcha.L * 100).toFixed(0)}% ${color.oklcha.C.toFixed(2)} ${Math.round(color.oklcha.h)} / ${color.oklcha.a.toFixed(2)})`;
     default:
       return color.hex;
   }

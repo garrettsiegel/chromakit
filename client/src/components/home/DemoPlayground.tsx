@@ -1,11 +1,63 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorPicker, type ColorValue } from '@/lib/color-picker';
+import { ColorPicker, type ColorValue, type PresetGroup } from '@/lib/color-picker';
 import { CustomPickerDemo } from '@/components/demo/CustomPickerDemo';
 import { ColorFormatsDisplay } from '@/components/demo/ColorFormatsDisplay';
 import { ThemePalettes } from '@/components/demo/ThemePalettes';
 import { Badge } from '@/components/ui/badge';
+
+// ============================================================
+// PRESET GROUPS
+// ============================================================
+
+const DEMO_PRESET_GROUPS: PresetGroup[] = [
+  {
+    name: 'Material',
+    colors: [
+      '#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5',
+      '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50',
+      '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800',
+      '#FF5722', '#795548', '#9E9E9E', '#607D8B',
+    ],
+  },
+  {
+    name: 'Tailwind',
+    colors: [
+      '#EF4444', '#F97316', '#EAB308', '#22C55E', '#10B981',
+      '#14B8A6', '#06B6D4', '#0EA5E9', '#3B82F6', '#6366F1',
+      '#8B5CF6', '#D946EF', '#EC4899', '#F43F5E',
+    ],
+  },
+  {
+    name: 'shadcn/ui',
+    colors: [
+      '#0F172A', '#1E293B', '#334155', '#475569', '#64748B',
+      '#3B82F6', '#6366F1', '#10B981', '#F59E0B', '#F43F5E',
+    ],
+  },
+  {
+    name: 'Bootstrap',
+    colors: [
+      '#0D6EFD', '#6610F2', '#6F42C1', '#D63384', '#DC3545',
+      '#FD7E14', '#FFC107', '#198754', '#20C997', '#0DCAF0',
+    ],
+  },
+  {
+    name: 'Chakra UI',
+    colors: [
+      '#3182CE', '#2B6CB0', '#2C5282', '#63B3ED', '#90CDF4',
+      '#38A169', '#48BB78', '#68D391', '#D69E2E', '#ED8936',
+    ],
+  },
+  {
+    name: 'Grayscale',
+    colors: [
+      '#000000', '#1F1F1F', '#3F3F3F', '#5F5F5F', '#7F7F7F',
+      '#9F9F9F', '#BFBFBF', '#DFDFDF', '#FFFFFF',
+    ],
+  },
+];
 
 // ============================================================
 // MAIN DEMO PLAYGROUND COMPONENT
@@ -73,7 +125,11 @@ export function DemoPlayground() {
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* PICKER */}
                 <Card className="p-8 flex items-center justify-center bg-gradient-to-br from-background to-muted/30 noise-texture">
-                  <ColorPicker value={color} onChange={handleColorChange} />
+                  <ColorPicker 
+                    value={color} 
+                    onChange={handleColorChange}
+                    presetGroups={DEMO_PRESET_GROUPS}
+                  />
                 </Card>
 
                 {/* OUTPUT */}

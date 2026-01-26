@@ -22,27 +22,60 @@ import { getColorHistory, addToColorHistory, copyToClipboard } from '../utils';
 import { formatColor } from '../conversions';
 
 const DEFAULT_PRESETS = [
-  '#FF0000',
-  '#FF4500',
-  '#FF8C00',
-  '#FFD700',
-  '#FFFF00',
-  '#ADFF2F',
-  '#32CD32',
-  '#00FA9A',
-  '#00CED1',
-  '#1E90FF',
-  '#4169E1',
-  '#8A2BE2',
-  '#FF00FF',
-  '#FF1493',
-  '#DC143C',
-  '#000000',
-  '#333333',
-  '#666666',
-  '#999999',
-  '#CCCCCC',
-  '#FFFFFF',
+  '#6366F1',
+  '#EC4899',
+  '#F97316',
+  '#22C55E',
+  '#06B6D4',
+  '#8B5CF6',
+];
+
+const DEFAULT_PRESET_GROUPS = [
+  {
+    name: 'Material',
+    colors: [
+      '#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5',
+      '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50',
+      '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800',
+      '#FF5722', '#795548', '#9E9E9E', '#607D8B',
+    ],
+  },
+  {
+    name: 'Tailwind',
+    colors: [
+      '#EF4444', '#F97316', '#EAB308', '#22C55E', '#10B981',
+      '#14B8A6', '#06B6D4', '#0EA5E9', '#3B82F6', '#6366F1',
+      '#8B5CF6', '#D946EF', '#EC4899', '#F43F5E',
+    ],
+  },
+  {
+    name: 'shadcn/ui',
+    colors: [
+      '#0F172A', '#1E293B', '#334155', '#475569', '#64748B',
+      '#3B82F6', '#6366F1', '#10B981', '#F59E0B', '#F43F5E',
+    ],
+  },
+  {
+    name: 'Bootstrap',
+    colors: [
+      '#0D6EFD', '#6610F2', '#6F42C1', '#D63384', '#DC3545',
+      '#FD7E14', '#FFC107', '#198754', '#20C997', '#0DCAF0',
+    ],
+  },
+  {
+    name: 'Chakra UI',
+    colors: [
+      '#3182CE', '#2B6CB0', '#2C5282', '#63B3ED', '#90CDF4',
+      '#38A169', '#48BB78', '#68D391', '#D69E2E', '#ED8936',
+    ],
+  },
+  {
+    name: 'Grayscale',
+    colors: [
+      '#000000', '#1F1F1F', '#3F3F3F', '#5F5F5F', '#7F7F7F',
+      '#9F9F9F', '#BFBFBF', '#DFDFDF', '#FFFFFF',
+    ],
+  },
 ];
 
 type InputMode = 'single' | 'rgb' | 'hsl' | 'hsv' | 'oklch';
@@ -67,11 +100,12 @@ export function ColorPicker({
   defaultValue = '#6366F1',
   onChange,
   onChangeComplete,
-  formats = ['hex', 'rgb', 'hsl', 'oklch'],
+  formats = ['hex', 'hex8', 'rgb', 'rgba', 'hsl', 'hsla', 'hsv', 'hsva', 'oklab', 'oklch', 'oklcha'],
   showAlpha = true,
   showInputs = true,
   showPreview = true,
   presets = DEFAULT_PRESETS,
+  presetGroups = DEFAULT_PRESET_GROUPS,
   className = '',
   width,
   showCopyButton = true,
@@ -84,6 +118,18 @@ export function ColorPicker({
   // Track customizable presets
   const [customPresets, setCustomPresets] = useState<string[]>(presets);
 
+  const normalizedPresetGroups = useMemo(() => {
+    if (!presetGroups) return [];
+    if (Array.isArray(presetGroups)) return presetGroups;
+    return Object.entries(presetGroups).map(([name, colors]) => ({
+      name,
+      colors,
+    }));
+  }, [presetGroups]);
+
+  // Track selected preset group
+  const [selectedPresetGroup, setSelectedPresetGroup] = useState<string | null>(null);
+
   // Load color history
   const [history, setHistory] = useState<string[]>(() =>
     enableHistory ? getColorHistory() : []
@@ -92,8 +138,8 @@ export function ColorPicker({
   // Fixed compact dimensions - horizontal compact layout
   const dimensions = useMemo(
     () => ({
-      areaWidth: 80,
-      areaHeight: 70,
+      areaWidth: 160,
+      areaHeight: 100,
     }),
     []
   );
@@ -227,6 +273,18 @@ export function ColorPicker({
     }
   }, [customPresets, colorValue.hex]);
 
+  // Handler to load a preset group
+  const handleLoadPresetGroup = useCallback(
+    (groupName: string) => {
+      const group = normalizedPresetGroups.find((g) => g.name === groupName);
+      if (group) {
+        setCustomPresets(group.colors);
+        setSelectedPresetGroup(groupName);
+      }
+    },
+    [normalizedPresetGroups]
+  );
+
   return (
     <div
       className={`ck-color-picker ${className}`.trim()}
@@ -266,27 +324,6 @@ export function ColorPicker({
             </div>
           </div>
 
-          {/* Preview + Action Buttons */}
-          {(showPreview || showCopyButton) && (
-            <div className="ck-action-buttons-row">
-              {showPreview && (
-                <ColorPreview
-                  colorValue={colorValue}
-                  size="lg"
-                  className="ck-preview-wide"
-                />
-              )}
-              <div className="ck-action-buttons">
-                {showCopyButton && (
-                  <CopyButton
-                    text={formatColor(colorValue, format)}
-                    onCopy={handleCopy}
-                  />
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Inputs */}
           {showInputs && (
             <div className="ck-inputs">
@@ -305,16 +342,55 @@ export function ColorPicker({
                   ))}
                 </div>
               )}
+            </div>
+          )}
 
+          {/* Preview + Format Selector */}
+          {showPreview && (
+            <div className="ck-action-buttons-row">
+              <ColorPreview
+                colorValue={colorValue}
+                size="lg"
+                className="ck-preview-wide"
+              />
+              <div className="ck-action-buttons">
+                {inputMode === 'single' && (
+                  <select
+                    value={format}
+                    onChange={(e) => setFormat(e.target.value as ColorFormat)}
+                    className="ck-select"
+                    data-testid="color-format-select"
+                  >
+                    {formats.map((f) => (
+                      <option key={f} value={f}>
+                        {f.toUpperCase()}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Color Value Inputs */}
+          {showInputs && (
+            <div className="ck-inputs-values">
               {inputMode === 'single' && (
-                <ColorInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  format={format}
-                  onFormatChange={setFormat}
-                  showAlpha={showAlpha}
-                  availableFormats={formats}
-                />
+                <div className="ck-input-row">
+                  <input
+                    type="text"
+                    value={formatColor(colorValue, format)}
+                    onChange={(e) => setFromString(e.target.value)}
+                    className="ck-input"
+                    data-testid="color-input-text"
+                  />
+                  {showCopyButton && (
+                    <CopyButton
+                      text={formatColor(colorValue, format)}
+                      onCopy={handleCopy}
+                    />
+                  )}
+                </div>
               )}
               {inputMode === 'rgb' && (
                 <RGBInputs
@@ -366,6 +442,9 @@ export function ColorPicker({
                 onAddPreset={handleAddPreset}
                 currentColor={colorValue.hex}
                 editable={true}
+                presetGroups={normalizedPresetGroups}
+                selectedPresetGroup={selectedPresetGroup}
+                onLoadPresetGroup={handleLoadPresetGroup}
               />
             </div>
           )}
