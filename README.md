@@ -1088,8 +1088,6 @@ MIT © [Garrett Siegel](https://github.com/garrettsiegel)
 - [Vite](https://vitejs.dev/) - Build tool
 ### [chromakit.site](https://www.chromakit.site)
 
-Made with love by [Garrett Siegel](https://github.com/garrettsiegel)
-
 **[Star on GitHub](https://github.com/garrettsiegel/chromakit)** • **[Try Live Demo](https://www.chromakit.site)** • **[Report Bug](https://github.com/garrettsiegel/chromakit/issues)**
 **Color science based on:**
 - [OKLCH specification](https://www.w3.org/TR/css-color-4/#ok-lab) - W3C standard
@@ -1103,7 +1101,7 @@ Made with love by [Garrett Siegel](https://github.com/garrettsiegel)
 
 <div align="center">
 
-**[chromakit.site](https://www.chromakit.site)** • Made with love by [Garrett Siegel](https://github.com/garrettsiegel)
+**[chromakit.site](https://www.chromakit.site)**
 
 </div>
 ```
