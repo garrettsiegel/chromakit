@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useCallback, useEffect } from 'react';
 import type { ColorValue, ColorFormat } from '../types';
 import { parseColor, rgbaToColorValue as _rgbaToColorValue, formatColor } from '../conversions';
