@@ -93,7 +93,9 @@ export function SectionWrapper({
         )}
 
         {/* CONTENT CONTAINER */}
-        <div className={`container mx-auto px-6 relative z-10 ${containerClassName}`}>
+        <div
+          className={`container mx-auto px-6 relative z-10 ${containerClassName}`}
+        >
           {children}
         </div>
       </section>

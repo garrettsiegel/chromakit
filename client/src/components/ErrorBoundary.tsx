@@ -33,12 +33,15 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="text-center space-y-4 p-8">
-            <h1 className="text-4xl font-bold text-foreground">Oops! Something went wrong</h1>
+            <h1 className="text-4xl font-bold text-foreground">
+              Oops! Something went wrong
+            </h1>
             <p className="text-muted-foreground max-w-md mx-auto">
-              We encountered an unexpected error. Please refresh the page to try again.
+              We encountered an unexpected error. Please refresh the page to try
+              again.
             </p>
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => (window.location.href = '/')}
               className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Go to Homepage

@@ -15,40 +15,46 @@ A modern React color picker library with first-class support for perceptually un
 ChromaKit offers a **modern alternative** to traditional color pickers with unique advantages:
 
 ### 🎨 Modern Color Spaces
+
 Unlike react-colorful and react-color, ChromaKit includes **OKLCH and OKLAB** support—perceptually uniform color spaces that produce visually consistent gradients and better color transformations. Perfect for design systems and accessible color palettes.
 
 ### 🧩 Fully Composable
+
 Build exactly the picker you need using primitive components (`ColorArea`, `HueSlider`, `AlphaSlider`). No bloated all-in-one components—just the pieces you want.
 
-### 🌗 Built-in Dark Mode  
+### 🌗 Built-in Dark Mode
+
 Automatic dark mode support without extra configuration. Components adapt seamlessly to your theme.
 
 ### ⚡ Performance Focused
+
 - **Zero runtime dependencies** (only React peer dependency)
 - **Tree-shakeable** exports—only import what you use
 - **~10KB gzipped**—slightly larger than react-colorful (3KB) but includes OKLCH/OKLAB + composability
 - Built with modern React hooks for 60fps interactions
 
 ### ♿ Accessibility First
+
 - WCAG AA compliant with full keyboard navigation
 - ARIA labels and roles throughout
 - Screen reader tested
 - Touch-friendly for mobile devices
 
 ### 📘 TypeScript Native
+
 Written in TypeScript from the ground up with complete type definitions for all color formats and components.
 
 ### Comparison
 
-| Feature | ChromaKit | react-colorful | react-color |
-|---------|-----------|----------------|-------------|
-| Bundle Size | ~10KB | ~3KB | ~28KB |
-| OKLCH/OKLAB | ✅ | ❌ | ❌ |
-| Tree-shakeable | ✅ | ✅ | ❌ |
-| TypeScript | ✅ Native | ✅ | ⚠️ @types |
-| Composable | ✅ | Limited | ❌ |
-| Dark Mode | ✅ Built-in | Manual | Manual |
-| Dependencies | 0 | 0 | Many |
+| Feature        | ChromaKit   | react-colorful | react-color |
+| -------------- | ----------- | -------------- | ----------- |
+| Bundle Size    | ~10KB       | ~3KB           | ~28KB       |
+| OKLCH/OKLAB    | ✅          | ❌             | ❌          |
+| Tree-shakeable | ✅          | ✅             | ❌          |
+| TypeScript     | ✅ Native   | ✅             | ⚠️ @types   |
+| Composable     | ✅          | Limited        | ❌          |
+| Dark Mode      | ✅ Built-in | Manual         | Manual      |
+| Dependencies   | 0           | 0              | Many        |
 
 **When to use ChromaKit**: Modern design systems, OKLCH-based palettes, custom picker UIs, accessibility-critical apps
 
@@ -100,18 +106,21 @@ function App() {
 ChromaKit styles can be imported in two ways:
 
 **Option 1: Automatic Import** (default)
+
 ```tsx
 import { ColorPicker } from 'chromakit-react';
 // CSS is automatically included (~13KB total: 10KB JS + 3KB CSS)
 ```
 
 **Option 2: Manual Import** (recommended for tree-shaking)
+
 ```tsx
 import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css'; // Explicit CSS import
 ```
 
 For optimal bundle size with tree-shaking, configure your bundler to treat CSS as a side effect:
+
 ```js
 // vite.config.js
 export default {
@@ -119,12 +128,12 @@ export default {
     rollupOptions: {
       output: {
         manualChunks: {
-          'chromakit': ['chromakit-react']
-        }
-      }
-    }
-  }
-}
+          chromakit: ['chromakit-react'],
+        },
+      },
+    },
+  },
+};
 ```
 
 ## API Reference
@@ -178,7 +187,12 @@ interface ColorPickerProps {
 Build custom pickers using primitive components:
 
 ```tsx
-import { ColorArea, HueSlider, AlphaSlider, ColorPreview } from 'chromakit-react';
+import {
+  ColorArea,
+  HueSlider,
+  AlphaSlider,
+  ColorPreview,
+} from 'chromakit-react';
 import { useColorState } from 'chromakit-react';
 
 function CustomPicker() {
@@ -203,7 +217,7 @@ import {
   rgbToHex,
   rgbToOklch,
   oklchToRgb,
-  parseColor
+  parseColor,
 } from 'chromakit-react';
 
 // Convert between formats
@@ -219,19 +233,19 @@ const parsed = parseColor('oklch(0.7 0.2 30)');
 
 ChromaKit supports the following color formats:
 
-| Format | Example | Description |
-|--------|---------|-------------|
-| HEX | `#ff0000` | Hexadecimal RGB |
-| HEX8 | `#ff0000ff` | Hex with alpha |
-| RGB | `rgb(255, 0, 0)` | Red, Green, Blue |
-| RGBA | `rgba(255, 0, 0, 1)` | RGB with alpha |
-| HSL | `hsl(0, 100%, 50%)` | Hue, Saturation, Lightness |
-| HSLA | `hsla(0, 100%, 50%, 1)` | HSL with alpha |
-| HSV | `hsv(0, 100%, 100%)` | Hue, Saturation, Value |
-| HSVA | `hsva(0, 100%, 100%, 1)` | HSV with alpha |
-| OKLCH | `oklch(0.63 0.26 29)` | Perceptually uniform cylindrical |
-| OKLCHA | `oklch(0.63 0.26 29 / 1)` | OKLCH with alpha |
-| OKLAB | `oklab(0.63 0.22 0.13)` | Perceptually uniform Cartesian |
+| Format | Example                   | Description                      |
+| ------ | ------------------------- | -------------------------------- |
+| HEX    | `#ff0000`                 | Hexadecimal RGB                  |
+| HEX8   | `#ff0000ff`               | Hex with alpha                   |
+| RGB    | `rgb(255, 0, 0)`          | Red, Green, Blue                 |
+| RGBA   | `rgba(255, 0, 0, 1)`      | RGB with alpha                   |
+| HSL    | `hsl(0, 100%, 50%)`       | Hue, Saturation, Lightness       |
+| HSLA   | `hsla(0, 100%, 50%, 1)`   | HSL with alpha                   |
+| HSV    | `hsv(0, 100%, 100%)`      | Hue, Saturation, Value           |
+| HSVA   | `hsva(0, 100%, 100%, 1)`  | HSV with alpha                   |
+| OKLCH  | `oklch(0.63 0.26 29)`     | Perceptually uniform cylindrical |
+| OKLCHA | `oklch(0.63 0.26 29 / 1)` | OKLCH with alpha                 |
+| OKLAB  | `oklab(0.63 0.22 0.13)`   | Perceptually uniform Cartesian   |
 
 ## Examples
 
@@ -252,10 +266,7 @@ ChromaKit supports the following color formats:
   value={color}
   onChange={(colorValue) => setColor(colorValue.hex)}
   showPresets
-  presets={[
-    '#FF6B6B', '#4ECDC4', '#45B7D1',
-    '#FFA07A', '#98D8C8', '#F7DC6F'
-  ]}
+  presets={['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F']}
 />
 ```
 
@@ -275,14 +286,14 @@ Customize the picker appearance and behavior:
 
 ```tsx
 // Custom width (default is calculated based on content)
-<ColorPicker 
-  value={color} 
+<ColorPicker
+  value={color}
   onChange={(colorValue) => setColor(colorValue.hex)}
-  width={320} 
+  width={320}
 />
 
 // Hide specific features
-<ColorPicker 
+<ColorPicker
   value={color}
   onChange={(colorValue) => setColor(colorValue.hex)}
   showEyeDropper={false}
@@ -299,8 +310,8 @@ Enable advanced features for power users:
 <ColorPicker
   value={color}
   onChange={(colorValue) => setColor(colorValue.hex)}
-  showEyeDropper={true}  // Show eyedropper button (requires browser support)
-  showCopyButton={true}  // Show copy button + Cmd/Ctrl+C shortcut
+  showEyeDropper={true} // Show eyedropper button (requires browser support)
+  showCopyButton={true} // Show copy button + Cmd/Ctrl+C shortcut
 />
 ```
 
@@ -312,8 +323,8 @@ Automatically track recently used colors:
 <ColorPicker
   value={color}
   onChange={(colorValue) => setColor(colorValue.hex)}
-  enableHistory={true}    // Store colors in localStorage
-  historySize={10}        // Keep last 10 colors (default)
+  enableHistory={true} // Store colors in localStorage
+  historySize={10} // Keep last 10 colors (default)
 />
 ```
 
@@ -327,7 +338,7 @@ import {
   getAnalogousColors,
   getTriadicColors,
   getSplitComplementaryColors,
-  getTetradicColors
+  getTetradicColors,
 } from 'chromakit-react';
 
 const baseColor = { r: 255, g: 107, b: 107 };
@@ -356,7 +367,7 @@ Check WCAG compliance for accessibility:
 import {
   getContrastRatio,
   meetsContrastRatio,
-  getRelativeLuminance
+  getRelativeLuminance,
 } from 'chromakit-react';
 
 const textColor = { r: 0, g: 0, b: 0 };
@@ -366,11 +377,11 @@ const bgColor = { r: 255, g: 255, b: 255 };
 const ratio = getContrastRatio(textColor, bgColor); // Returns 21 (maximum)
 
 // Check WCAG compliance
-const meetsAA = meetsContrastRatio(ratio, 'AA', 'normal');  // true (needs 4.5:1)
+const meetsAA = meetsContrastRatio(ratio, 'AA', 'normal'); // true (needs 4.5:1)
 const meetsAAA = meetsContrastRatio(ratio, 'AAA', 'normal'); // true (needs 7:1)
 
 // Large text has lower requirements
-const meetsLargeAA = meetsContrastRatio(3.5, 'AA', 'large');  // true (needs 3:1)
+const meetsLargeAA = meetsContrastRatio(3.5, 'AA', 'large'); // true (needs 3:1)
 ```
 
 ### Clipboard Utilities
@@ -454,7 +465,7 @@ import type {
   RGBColor,
   HSLColor,
   OKLCHColor,
-  ColorValue
+  ColorValue,
 } from 'chromakit-react';
 ```
 
@@ -483,10 +494,12 @@ MIT © [ChromaKit](LICENSE)
 ## Credits
 
 Built with:
+
 - [React](https://react.dev/)
 - [Radix UI](https://www.radix-ui.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 
 Color science based on:
+
 - [OKLCH specification](https://www.w3.org/TR/css-color-4/#ok-lab)
 - [Oklab color space](https://bottosson.github.io/posts/oklab/)

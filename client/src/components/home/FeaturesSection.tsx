@@ -25,7 +25,9 @@ function FeatureCard({ icon, title, description, gradient }: Feature) {
       />
 
       {/* ICON */}
-      <div className={`w-12 h-12 rounded-xl ${gradient} p-3 relative z-10`}>{icon}</div>
+      <div className={`w-12 h-12 rounded-xl ${gradient} p-3 relative z-10`}>
+        {icon}
+      </div>
 
       {/* CONTENT */}
       <div className="relative z-10 space-y-2">
@@ -82,7 +84,8 @@ export function FeaturesSection() {
               Everything You Need
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A complete color picker solution designed for modern React applications
+              A complete color picker solution designed for modern React
+              applications
             </p>
           </div>
 

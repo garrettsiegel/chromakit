@@ -49,7 +49,9 @@ describe('Color Accessibility Utils', () => {
     it('should be commutative', () => {
       const color1: RGB = { r: 255, g: 0, b: 0 };
       const color2: RGB = { r: 0, g: 0, b: 255 };
-      expect(getContrastRatio(color1, color2)).toBe(getContrastRatio(color2, color1));
+      expect(getContrastRatio(color1, color2)).toBe(
+        getContrastRatio(color2, color1)
+      );
     });
   });
 
@@ -99,7 +101,7 @@ describe('Color Harmony Utils', () => {
     it('should have similar saturation and value', () => {
       const colors = getAnalogousColors(testColor, 30);
       // All should be vibrant reds/oranges/magentas
-      colors.forEach(color => {
+      colors.forEach((color) => {
         const max = Math.max(color.r, color.g, color.b);
         expect(max).toBeGreaterThan(200);
       });

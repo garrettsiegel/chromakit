@@ -1,6 +1,6 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -12,10 +12,14 @@ export default defineConfig(({ mode }) => {
       plugins: [react()],
       build: {
         lib: {
-          entry: path.resolve(__dirname, 'client/src/lib/color-picker/index.ts'),
+          entry: path.resolve(
+            __dirname,
+            'client/src/lib/color-picker/index.ts'
+          ),
           name: 'ChromaKit',
           formats: ['es', 'umd'],
-          fileName: (format) => `chromakit.${format === 'es' ? 'es' : 'umd'}.js`,
+          fileName: (format) =>
+            `chromakit.${format === 'es' ? 'es' : 'umd'}.js`,
         },
         rollupOptions: {
           external: ['react', 'react-dom', 'react/jsx-runtime'],
@@ -39,7 +43,7 @@ export default defineConfig(({ mode }) => {
       },
       resolve: {
         alias: {
-          "@": path.resolve(__dirname, "client", "src"),
+          '@': path.resolve(__dirname, 'client', 'src'),
         },
       },
     };
@@ -50,20 +54,20 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "client", "src"),
-        "@shared": path.resolve(__dirname, "shared"),
-        "@assets": path.resolve(__dirname, "attached_assets"),
+        '@': path.resolve(__dirname, 'client', 'src'),
+        '@shared': path.resolve(__dirname, 'shared'),
+        '@assets': path.resolve(__dirname, 'attached_assets'),
       },
     },
-    root: path.resolve(__dirname, "client"),
+    root: path.resolve(__dirname, 'client'),
     build: {
-      outDir: path.resolve(__dirname, "dist/public"),
+      outDir: path.resolve(__dirname, 'dist/public'),
       emptyOutDir: true,
     },
     server: {
       fs: {
         strict: true,
-        deny: ["**/.*"],
+        deny: ['**/.*'],
       },
     },
   };

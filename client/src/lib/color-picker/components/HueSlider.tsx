@@ -72,10 +72,7 @@ export function HueSlider({
     [hsva, onChange]
   );
 
-  const thumbPosition = useMemo(
-    () => `${(hsva.h / 360) * 100}%`,
-    [hsva.h]
-  );
+  const thumbPosition = useMemo(() => `${(hsva.h / 360) * 100}%`, [hsva.h]);
 
   return (
     <div
@@ -96,13 +93,22 @@ export function HueSlider({
     >
       <div
         className="ck-hue-slider-track"
-        style={vertical ? {
-          background: 'linear-gradient(to bottom, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
-        } : undefined}
+        style={
+          vertical
+            ? {
+                background:
+                  'linear-gradient(to bottom, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
+              }
+            : undefined
+        }
       />
       <div
         className="ck-slider-thumb"
-        style={vertical ? { top: thumbPosition, left: '50%' } : { left: thumbPosition }}
+        style={
+          vertical
+            ? { top: thumbPosition, left: '50%' }
+            : { left: thumbPosition }
+        }
         data-testid="hue-slider-thumb"
       >
         <div className="ck-slider-thumb-inner" />

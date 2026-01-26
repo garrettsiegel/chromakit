@@ -28,14 +28,16 @@ export function DemoPlayground() {
         <div
           className="absolute top-1/4 left-1/3 w-72 h-72 rounded-full opacity-30 blur-3xl animate-float"
           style={{
-            background: 'radial-gradient(circle, hsl(18, 98%, 60%) 0%, transparent 60%)',
+            background:
+              'radial-gradient(circle, hsl(18, 98%, 60%) 0%, transparent 60%)',
             animationDuration: '20s',
           }}
         />
         <div
           className="absolute bottom-1/4 right-1/3 w-72 h-72 rounded-full opacity-20 blur-3xl animate-float-delayed"
           style={{
-            background: 'radial-gradient(circle, hsl(270, 85%, 65%) 0%, transparent 60%)',
+            background:
+              'radial-gradient(circle, hsl(270, 85%, 65%) 0%, transparent 60%)',
             animationDuration: '25s',
             animationDelay: '3s',
           }}
@@ -53,7 +55,8 @@ export function DemoPlayground() {
               Interactive Playground
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Experience OKLCH color picking in action with our pre-built and composable components
+              Experience OKLCH color picking in action with our pre-built and
+              composable components
             </p>
           </div>
 
@@ -70,17 +73,18 @@ export function DemoPlayground() {
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* PICKER */}
                 <Card className="p-8 flex items-center justify-center bg-gradient-to-br from-background to-muted/30 noise-texture">
-                  <ColorPicker
-                    value={color}
-                    onChange={handleColorChange}
-                  />
+                  <ColorPicker value={color} onChange={handleColorChange} />
                 </Card>
 
                 {/* OUTPUT */}
                 <Card className="p-8 space-y-6">
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Color Formats</h3>
-                    {colorValue && <ColorFormatsDisplay colorValue={colorValue} />}
+                    <h3 className="text-lg font-semibold mb-4">
+                      Color Formats
+                    </h3>
+                    {colorValue && (
+                      <ColorFormatsDisplay colorValue={colorValue} />
+                    )}
                   </div>
                   <div className="pt-6 border-t border-border">
                     <div className="flex items-center gap-3">
@@ -90,14 +94,17 @@ export function DemoPlayground() {
                       />
                       <div className="space-y-1">
                         <div className="text-sm font-medium">Current Color</div>
-                        <div className="font-mono text-xs text-muted-foreground">{color}</div>
+                        <div className="font-mono text-xs text-muted-foreground">
+                          {color}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </Card>
               </div>
               <p className="text-center text-sm text-muted-foreground mt-6">
-                Fully featured color picker with OKLCH, eyedropper, recent colors, and presets
+                Fully featured color picker with OKLCH, eyedropper, recent
+                colors, and presets
               </p>
             </TabsContent>
 
@@ -107,8 +114,8 @@ export function DemoPlayground() {
                 <CustomPickerDemo />
               </Card>
               <p className="text-center text-sm text-muted-foreground mt-6">
-                Build your own picker with composable primitives—full control over layout and
-                styling
+                Build your own picker with composable primitives—full control
+                over layout and styling
               </p>
             </TabsContent>
 

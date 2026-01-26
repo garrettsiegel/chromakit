@@ -27,7 +27,10 @@ export function ColorPreview({
 
   if (showComparison && originalColor) {
     return (
-      <div className={`ck-preview ${className}`} style={{ display: 'flex', overflow: 'hidden' }}>
+      <div
+        className={`ck-preview ${className}`}
+        style={{ display: 'flex', overflow: 'hidden' }}
+      >
         <div
           className={`${sizeClass} ck-checkerboard`}
           style={{ position: 'relative' }}
@@ -119,12 +122,15 @@ export function ColorSwatch({
       onTouchEnd={handleMouseUp}
       className={`ck-swatch-btn ${selected ? 'selected' : ''} ${editing ? 'ck-swatch-editing' : ''} ${className}`}
       data-testid="color-swatch"
-      title={editing ? "Click to update color" : (onLongPress ? "Click to select, hold to update with current color" : color)}
+      title={
+        editing
+          ? 'Click to update color'
+          : onLongPress
+            ? 'Click to select, hold to update with current color'
+            : color
+      }
     >
-      <div
-        className="ck-swatch-color"
-        style={{ backgroundColor: color }}
-      />
+      <div className="ck-swatch-color" style={{ backgroundColor: color }} />
       {editing && onDelete && (
         <button
           type="button"
@@ -132,7 +138,15 @@ export function ColorSwatch({
           onClick={handleDelete}
           title="Delete preset"
         >
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+          <svg
+            width="8"
+            height="8"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+          >
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -187,11 +201,25 @@ export function PresetColors({
             title={isEditing ? 'Done editing' : 'Edit presets'}
           >
             {isEditing ? (
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             ) : (
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
               </svg>
@@ -199,15 +227,26 @@ export function PresetColors({
           </button>
         </div>
       )}
-      <div className={`ck-preset-colors ${className}`} data-testid="preset-colors">
+      <div
+        className={`ck-preset-colors ${className}`}
+        data-testid="preset-colors"
+      >
         {colors.map((color, index) => (
           <ColorSwatch
             key={`${color}-${index}`}
             color={color}
             selected={selectedColor?.toLowerCase() === color.toLowerCase()}
             onClick={() => handleSwatchClick(color, index)}
-            onLongPress={onUpdatePreset && !isEditing ? () => onUpdatePreset(index) : undefined}
-            onDelete={isEditing && onDeletePreset ? () => onDeletePreset(index) : undefined}
+            onLongPress={
+              onUpdatePreset && !isEditing
+                ? () => onUpdatePreset(index)
+                : undefined
+            }
+            onDelete={
+              isEditing && onDeletePreset
+                ? () => onDeletePreset(index)
+                : undefined
+            }
             editing={isEditing}
           />
         ))}
@@ -218,7 +257,9 @@ export function PresetColors({
             onClick={onAddPreset}
             title="Add current color as preset"
           >
-            <span style={{ fontSize: '24px', color: 'var(--ck-text-muted)' }}>+</span>
+            <span style={{ fontSize: '24px', color: 'var(--ck-text-muted)' }}>
+              +
+            </span>
           </button>
         )}
       </div>

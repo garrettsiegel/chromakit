@@ -25,8 +25,14 @@ export function CopyButton({ text, className = '' }: CopyButtonProps) {
       data-testid="button-copy"
       aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
     >
-      {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-      <span className="sr-only">{copied ? 'Copied!' : 'Copy to clipboard'}</span>
+      {copied ? (
+        <Check className="h-4 w-4 text-green-500" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}
+      <span className="sr-only">
+        {copied ? 'Copied!' : 'Copy to clipboard'}
+      </span>
     </Button>
   );
 }

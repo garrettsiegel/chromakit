@@ -15,33 +15,41 @@ export function useColorState(
     }
     return { h: 0, s: 100, v: 100, a: 1 };
   });
-  
+
   const [colorValue, setColorValue] = useState<ColorValue>(() => {
     const rgba = parseColor(initialColor);
-    return rgba ? rgbaToColorValue(rgba) : rgbaToColorValue({ r: 0, g: 0, b: 0, a: 1 });
+    return rgba
+      ? rgbaToColorValue(rgba)
+      : rgbaToColorValue({ r: 0, g: 0, b: 0, a: 1 });
   });
 
   const isDragging = useRef(false);
 
-  const updateColor = useCallback((newHsva: HSVA) => {
-    setHsva(newHsva);
-    const rgba = hsvaToRgba(newHsva);
-    const newColorValue = rgbaToColorValue(rgba);
-    setColorValue(newColorValue);
-    onChange?.(newColorValue);
-  }, [onChange]);
-
-  const setFromString = useCallback((colorString: string): ColorValue | null => {
-    const rgba = parseColor(colorString);
-    if (rgba) {
+  const updateColor = useCallback(
+    (newHsva: HSVA) => {
+      setHsva(newHsva);
+      const rgba = hsvaToRgba(newHsva);
       const newColorValue = rgbaToColorValue(rgba);
       setColorValue(newColorValue);
-      setHsva(newColorValue.hsva);
       onChange?.(newColorValue);
-      return newColorValue;
-    }
-    return null;
-  }, [onChange]);
+    },
+    [onChange]
+  );
+
+  const setFromString = useCallback(
+    (colorString: string): ColorValue | null => {
+      const rgba = parseColor(colorString);
+      if (rgba) {
+        const newColorValue = rgbaToColorValue(rgba);
+        setColorValue(newColorValue);
+        setHsva(newColorValue.hsva);
+        onChange?.(newColorValue);
+        return newColorValue;
+      }
+      return null;
+    },
+    [onChange]
+  );
 
   const startDrag = useCallback(() => {
     isDragging.current = true;
@@ -75,37 +83,43 @@ export function usePointerDrag(
   const containerRef = externalRef || internalRef;
   const isDragging = useRef(false);
 
-  const getPosition = useCallback((e: PointerEvent | React.PointerEvent) => {
-    if (!containerRef.current) return { x: 0, y: 0 };
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    return { x, y };
-  }, [containerRef]);
+  const getPosition = useCallback(
+    (e: PointerEvent | React.PointerEvent) => {
+      if (!containerRef.current) return { x: 0, y: 0 };
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+      return { x, y };
+    },
+    [containerRef]
+  );
 
-  const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    e.preventDefault();
-    isDragging.current = true;
-    onStart?.();
-    const pos = getPosition(e);
-    onMove(pos);
-    
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging.current) return;
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      isDragging.current = true;
+      onStart?.();
       const pos = getPosition(e);
       onMove(pos);
-    };
 
-    const handlePointerUp = () => {
-      isDragging.current = false;
-      onEnd?.();
-      document.removeEventListener('pointermove', handlePointerMove);
-      document.removeEventListener('pointerup', handlePointerUp);
-    };
+      const handlePointerMove = (e: PointerEvent) => {
+        if (!isDragging.current) return;
+        const pos = getPosition(e);
+        onMove(pos);
+      };
 
-    document.addEventListener('pointermove', handlePointerMove);
-    document.addEventListener('pointerup', handlePointerUp);
-  }, [getPosition, onMove, onStart, onEnd]);
+      const handlePointerUp = () => {
+        isDragging.current = false;
+        onEnd?.();
+        document.removeEventListener('pointermove', handlePointerMove);
+        document.removeEventListener('pointerup', handlePointerUp);
+      };
+
+      document.addEventListener('pointermove', handlePointerMove);
+      document.addEventListener('pointerup', handlePointerUp);
+    },
+    [getPosition, onMove, onStart, onEnd]
+  );
 
   return {
     containerRef,

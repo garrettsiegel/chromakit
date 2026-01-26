@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - ESLint configuration for code quality and consistency
 - Prettier configuration for code formatting
 - GitHub Actions CI/CD workflow for automated testing and building
@@ -17,15 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Node.js version specification in package.json
 
 ### Fixed
+
 - TypeScript type errors in test files by adding proper vitest jest-dom imports
 - Test coverage gaps in main components
 
 ### Changed
+
 - Improved development tooling and automation
 
 ## [0.1.7] - 2026-01-26
 
 ### Added
+
 - Modern color picker library with OKLCH/OKLAB support
 - Traditional color space support (RGB, HSL, HSV, HEX)
 - Fully composable architecture with standalone components
@@ -45,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extensive test coverage for utilities and hooks
 
 ### Features
+
 - `ColorPicker` - Main orchestrator component
 - `ColorArea` - Composable saturation/lightness picker
 - `HueSlider` - Standalone hue control
@@ -54,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EyeDropperButton` - Screen color picker integration
 
 ### Technical
+
 - Built with React 18.3.1
 - Vite 7.3.0 for blazing fast builds
 - Vitest 4.0.18 for modern testing

@@ -1,7 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useCallback, useEffect } from 'react';
 import type { ColorValue, ColorFormat } from '../types';
-import { parseColor, rgbaToColorValue as _rgbaToColorValue, formatColor } from '../conversions';
+import {
+  parseColor,
+  rgbaToColorValue as _rgbaToColorValue,
+  formatColor,
+} from '../conversions';
 
 interface ColorInputsProps {
   colorValue: ColorValue;
@@ -14,7 +18,11 @@ interface ColorInputsProps {
 }
 
 // All possible formats for the dropdown
-const ALL_FORMATS: { value: ColorFormat; label: string; needsAlpha?: boolean }[] = [
+const ALL_FORMATS: {
+  value: ColorFormat;
+  label: string;
+  needsAlpha?: boolean;
+}[] = [
   { value: 'hex', label: 'HEX' },
   { value: 'hex8', label: 'HEX8', needsAlpha: true },
   { value: 'rgb', label: 'RGB' },
@@ -43,33 +51,39 @@ export function ColorInputs({
     }
   }, [colorValue, format, isEditing]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    setIsEditing(true);
-    
-    // Only validate the color, pass the original input to preserve user's format
-    const parsed = parseColor(value);
-    if (parsed) {
-      // Pass through the original input string to preserve the user's intended format
-      onChange(value);
-    }
-  }, [onChange]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setInputValue(value);
+      setIsEditing(true);
+
+      // Only validate the color, pass the original input to preserve user's format
+      const parsed = parseColor(value);
+      if (parsed) {
+        // Pass through the original input string to preserve the user's intended format
+        onChange(value);
+      }
+    },
+    [onChange]
+  );
 
   const handleBlur = useCallback(() => {
     setIsEditing(false);
     setInputValue(formatColor(colorValue, format));
   }, [colorValue, format]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      setIsEditing(false);
-      const parsed = parseColor(inputValue);
-      if (!parsed) {
-        setInputValue(formatColor(colorValue, format));
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        setIsEditing(false);
+        const parsed = parseColor(inputValue);
+        if (!parsed) {
+          setInputValue(formatColor(colorValue, format));
+        }
       }
-    }
-  }, [inputValue, colorValue, format]);
+    },
+    [inputValue, colorValue, format]
+  );
 
   return (
     <div className={`ck-inputs ${className}`}>
@@ -141,24 +155,31 @@ export function RGBInputs({
     });
   }, [colorValue]);
 
-  const handleChange = useCallback((key: 'r' | 'g' | 'b' | 'a', value: string) => {
-    const numValue = key === 'a' ? parseFloat(value) || 0 : parseInt(value) || 0;
-    const clamped = key === 'a' 
-      ? Math.max(0, Math.min(1, numValue))
-      : Math.max(0, Math.min(255, numValue));
-    
-    const newValues = { ...values, [key]: clamped };
-    setValues(newValues);
-    onChange(`rgba(${newValues.r}, ${newValues.g}, ${newValues.b}, ${newValues.a})`);
-  }, [values, onChange]);
+  const handleChange = useCallback(
+    (key: 'r' | 'g' | 'b' | 'a', value: string) => {
+      const numValue =
+        key === 'a' ? parseFloat(value) || 0 : parseInt(value) || 0;
+      const clamped =
+        key === 'a'
+          ? Math.max(0, Math.min(1, numValue))
+          : Math.max(0, Math.min(255, numValue));
+
+      const newValues = { ...values, [key]: clamped };
+      setValues(newValues);
+      onChange(
+        `rgba(${newValues.r}, ${newValues.g}, ${newValues.b}, ${newValues.a})`
+      );
+    },
+    [values, onChange]
+  );
 
   return (
-    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+    <div
+      className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}
+    >
       {(['r', 'g', 'b'] as const).map((key) => (
         <div key={key} className="ck-channel">
-          <label className="ck-channel-label">
-            {key}
-          </label>
+          <label className="ck-channel-label">{key}</label>
           <input
             type="number"
             min={0}
@@ -172,9 +193,7 @@ export function RGBInputs({
       ))}
       {showAlpha && (
         <div className="ck-channel">
-          <label className="ck-channel-label">
-            A
-          </label>
+          <label className="ck-channel-label">A</label>
           <input
             type="number"
             min={0}
@@ -220,20 +239,27 @@ export function HSLInputs({
     });
   }, [colorValue]);
 
-  const handleChange = useCallback((key: 'h' | 's' | 'l' | 'a', value: string) => {
-    const numValue = parseFloat(value) || 0;
-    let clamped: number;
-    if (key === 'a') clamped = Math.max(0, Math.min(1, numValue));
-    else if (key === 'h') clamped = Math.max(0, Math.min(360, numValue));
-    else clamped = Math.max(0, Math.min(100, numValue));
-    
-    const newValues = { ...values, [key]: clamped };
-    setValues(newValues);
-    onChange(`hsla(${newValues.h}, ${newValues.s}%, ${newValues.l}%, ${newValues.a})`);
-  }, [values, onChange]);
+  const handleChange = useCallback(
+    (key: 'h' | 's' | 'l' | 'a', value: string) => {
+      const numValue = parseFloat(value) || 0;
+      let clamped: number;
+      if (key === 'a') clamped = Math.max(0, Math.min(1, numValue));
+      else if (key === 'h') clamped = Math.max(0, Math.min(360, numValue));
+      else clamped = Math.max(0, Math.min(100, numValue));
+
+      const newValues = { ...values, [key]: clamped };
+      setValues(newValues);
+      onChange(
+        `hsla(${newValues.h}, ${newValues.s}%, ${newValues.l}%, ${newValues.a})`
+      );
+    },
+    [values, onChange]
+  );
 
   return (
-    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+    <div
+      className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}
+    >
       <div className="ck-channel">
         <label className="ck-channel-label">H</label>
         <input
@@ -318,27 +344,33 @@ export function HSVInputs({
     });
   }, [colorValue]);
 
-  const handleChange = useCallback((key: 'h' | 's' | 'v' | 'a', value: string) => {
-    const numValue = parseFloat(value) || 0;
-    let clamped: number;
-    if (key === 'a') clamped = Math.max(0, Math.min(1, numValue));
-    else if (key === 'h') clamped = Math.max(0, Math.min(360, numValue));
-    else clamped = Math.max(0, Math.min(100, numValue));
-    
-    const newValues = { ...values, [key]: clamped };
-    setValues(newValues);
-    // Convert HSV to HSLA for parsing (using same hue, saturation as brightness)
-    const h = newValues.h;
-    const s = newValues.s;
-    const v = newValues.v;
-    // HSV to HSL conversion
-    const l = v * (1 - s / 200);
-    const sl = l === 0 || l === 100 ? 0 : (v - l) / Math.min(l, 100 - l) * 100;
-    onChange(`hsla(${h}, ${sl}%, ${l}%, ${newValues.a})`);
-  }, [values, onChange]);
+  const handleChange = useCallback(
+    (key: 'h' | 's' | 'v' | 'a', value: string) => {
+      const numValue = parseFloat(value) || 0;
+      let clamped: number;
+      if (key === 'a') clamped = Math.max(0, Math.min(1, numValue));
+      else if (key === 'h') clamped = Math.max(0, Math.min(360, numValue));
+      else clamped = Math.max(0, Math.min(100, numValue));
+
+      const newValues = { ...values, [key]: clamped };
+      setValues(newValues);
+      // Convert HSV to HSLA for parsing (using same hue, saturation as brightness)
+      const h = newValues.h;
+      const s = newValues.s;
+      const v = newValues.v;
+      // HSV to HSL conversion
+      const l = v * (1 - s / 200);
+      const sl =
+        l === 0 || l === 100 ? 0 : ((v - l) / Math.min(l, 100 - l)) * 100;
+      onChange(`hsla(${h}, ${sl}%, ${l}%, ${newValues.a})`);
+    },
+    [values, onChange]
+  );
 
   return (
-    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+    <div
+      className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}
+    >
       <div className="ck-channel">
         <label className="ck-channel-label">H</label>
         <input
@@ -423,21 +455,28 @@ export function OKLCHInputs({
     });
   }, [colorValue]);
 
-  const handleChange = useCallback((key: 'L' | 'C' | 'h' | 'a', value: string) => {
-    const numValue = parseFloat(value) || 0;
-    let clamped: number;
-    if (key === 'a') clamped = Math.max(0, Math.min(1, numValue));
-    else if (key === 'L') clamped = Math.max(0, Math.min(1, numValue));
-    else if (key === 'C') clamped = Math.max(0, Math.min(0.4, numValue));
-    else clamped = Math.max(0, Math.min(360, numValue));
-    
-    const newValues = { ...values, [key]: clamped };
-    setValues(newValues);
-    onChange(`oklch(${newValues.L} ${newValues.C} ${newValues.h} / ${newValues.a})`);
-  }, [values, onChange]);
+  const handleChange = useCallback(
+    (key: 'L' | 'C' | 'h' | 'a', value: string) => {
+      const numValue = parseFloat(value) || 0;
+      let clamped: number;
+      if (key === 'a') clamped = Math.max(0, Math.min(1, numValue));
+      else if (key === 'L') clamped = Math.max(0, Math.min(1, numValue));
+      else if (key === 'C') clamped = Math.max(0, Math.min(0.4, numValue));
+      else clamped = Math.max(0, Math.min(360, numValue));
+
+      const newValues = { ...values, [key]: clamped };
+      setValues(newValues);
+      onChange(
+        `oklch(${newValues.L} ${newValues.C} ${newValues.h} / ${newValues.a})`
+      );
+    },
+    [values, onChange]
+  );
 
   return (
-    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+    <div
+      className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}
+    >
       <div className="ck-channel">
         <label className="ck-channel-label">L</label>
         <input

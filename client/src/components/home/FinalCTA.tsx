@@ -32,7 +32,9 @@ export function FinalCTA() {
 
           {/* INSTALL COMMAND */}
           <div className="flex items-center justify-center gap-3 p-4 rounded-xl bg-muted/50 border border-border max-w-lg mx-auto">
-            <code className="font-mono text-sm flex-1 text-left">{installCommand}</code>
+            <code className="font-mono text-sm flex-1 text-left">
+              {installCommand}
+            </code>
             <button
               onClick={handleCopy}
               className="p-2 rounded-lg hover:bg-background/80 transition-colors"
@@ -51,7 +53,12 @@ export function FinalCTA() {
             <Button size="lg" asChild className="text-base px-8">
               <a href="#demo">Try Interactive Demo</a>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-base px-8">
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="text-base px-8"
+            >
               <a
                 href="https://github.com/garrettsiegel/chromakit"
                 target="_blank"

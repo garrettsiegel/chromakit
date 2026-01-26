@@ -55,8 +55,18 @@ export { useColorState, usePointerDrag, useDebounce } from './hooks';
 export { ColorArea } from './components/ColorArea';
 export { HueSlider } from './components/HueSlider';
 export { AlphaSlider } from './components/AlphaSlider';
-export { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './components/ColorInputs';
-export { ColorPreview, ColorSwatch, PresetColors } from './components/ColorPreview';
+export {
+  ColorInputs,
+  RGBInputs,
+  HSLInputs,
+  HSVInputs,
+  OKLCHInputs,
+} from './components/ColorInputs';
+export {
+  ColorPreview,
+  ColorSwatch,
+  PresetColors,
+} from './components/ColorPreview';
 export { ColorPicker } from './components/ColorPicker';
 export { CopyButton } from './components/CopyButton';
 export { RecentColors } from './components/RecentColors';

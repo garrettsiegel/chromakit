@@ -1,10 +1,20 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import type { ColorPickerProps, ColorFormat, ColorValue as _ColorValue } from '../types';
+import type {
+  ColorPickerProps,
+  ColorFormat,
+  ColorValue as _ColorValue,
+} from '../types';
 import { useColorState } from '../hooks';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
-import { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './ColorInputs';
+import {
+  ColorInputs,
+  RGBInputs,
+  HSLInputs,
+  HSVInputs,
+  OKLCHInputs,
+} from './ColorInputs';
 import { ColorPreview, PresetColors } from './ColorPreview';
 import { CopyButton } from './CopyButton';
 import { RecentColors } from './RecentColors';
@@ -12,10 +22,27 @@ import { getColorHistory, addToColorHistory, copyToClipboard } from '../utils';
 import { formatColor } from '../conversions';
 
 const DEFAULT_PRESETS = [
-  '#FF0000', '#FF4500', '#FF8C00', '#FFD700', '#FFFF00',
-  '#ADFF2F', '#32CD32', '#00FA9A', '#00CED1', '#1E90FF',
-  '#4169E1', '#8A2BE2', '#FF00FF', '#FF1493', '#DC143C',
-  '#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#FFFFFF',
+  '#FF0000',
+  '#FF4500',
+  '#FF8C00',
+  '#FFD700',
+  '#FFFF00',
+  '#ADFF2F',
+  '#32CD32',
+  '#00FA9A',
+  '#00CED1',
+  '#1E90FF',
+  '#4169E1',
+  '#8A2BE2',
+  '#FF00FF',
+  '#FF1493',
+  '#DC143C',
+  '#000000',
+  '#333333',
+  '#666666',
+  '#999999',
+  '#CCCCCC',
+  '#FFFFFF',
 ];
 
 type InputMode = 'single' | 'rgb' | 'hsl' | 'hsv' | 'oklch';
@@ -53,35 +80,32 @@ export function ColorPicker({
   _historySize = 10,
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
-  
+
   // Track customizable presets
   const [customPresets, setCustomPresets] = useState<string[]>(presets);
-  
+
   // Load color history
-  const [history, setHistory] = useState<string[]>(() => 
+  const [history, setHistory] = useState<string[]>(() =>
     enableHistory ? getColorHistory() : []
   );
-  
+
   // Fixed compact dimensions - horizontal compact layout
-  const dimensions = useMemo(() => ({
-    areaWidth: 80,
-    areaHeight: 70
-  }), []);
-  
-  const {
-    hsva,
-    colorValue,
-    updateColor,
-    setFromString,
-    startDrag,
-    endDrag,
-  } = useColorState(initialColor, onChange, onChangeComplete);
+  const dimensions = useMemo(
+    () => ({
+      areaWidth: 80,
+      areaHeight: 70,
+    }),
+    []
+  );
+
+  const { hsva, colorValue, updateColor, setFromString, startDrag, endDrag } =
+    useColorState(initialColor, onChange, onChangeComplete);
 
   const [format, setFormat] = useState<ColorFormat>(() => {
     // Default to first available format
     return formats[0] || 'hex';
   });
-  
+
   // Determine available input modes based on formats prop
   const availableModes = useMemo(() => {
     const modes = new Set<InputMode>();
@@ -91,7 +115,7 @@ export function ColorPicker({
     }
     return Array.from(modes);
   }, [formats]);
-  
+
   const [inputMode, setInputMode] = useState<InputMode>('single');
 
   // Sync inputMode when availableModes changes
@@ -114,33 +138,45 @@ export function ColorPicker({
     }
   }, [value, setFromString]);
 
-  const handlePresetSelect = useCallback((color: string) => {
-    const newColorValue = setFromString(color);
-    if (newColorValue) {
-      onChangeComplete?.(newColorValue);
-      if (enableHistory) {
-        const updated = addToColorHistory(color);
+  const handlePresetSelect = useCallback(
+    (color: string) => {
+      const newColorValue = setFromString(color);
+      if (newColorValue) {
+        onChangeComplete?.(newColorValue);
+        if (enableHistory) {
+          const updated = addToColorHistory(color);
+          setHistory(updated);
+        }
+      }
+    },
+    [setFromString, onChangeComplete, enableHistory]
+  );
+
+  const handleCopy = useCallback(
+    (success: boolean) => {
+      if (success && enableHistory) {
+        const currentColor = colorValue.hex;
+        const updated = addToColorHistory(currentColor);
         setHistory(updated);
       }
-    }
-  }, [setFromString, onChangeComplete, enableHistory]);
-
-  const handleCopy = useCallback((success: boolean) => {
-    if (success && enableHistory) {
-      const currentColor = colorValue.hex;
-      const updated = addToColorHistory(currentColor);
-      setHistory(updated);
-    }
-  }, [colorValue, enableHistory]);
+    },
+    [colorValue, enableHistory]
+  );
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isInInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+      const isInInput =
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
 
       // Cmd/Ctrl + C to copy color
-      if ((e.metaKey || e.ctrlKey) && e.key === 'c' && !isInInput && showCopyButton) {
+      if (
+        (e.metaKey || e.ctrlKey) &&
+        e.key === 'c' &&
+        !isInInput &&
+        showCopyButton
+      ) {
         e.preventDefault();
         const colorText = formatColor(colorValue, format);
         copyToClipboard(colorText).then((success) => {
@@ -164,19 +200,25 @@ export function ColorPicker({
 
   // Use custom presets (allows user modification)
   const allPresets = customPresets;
-  
+
   // Handler to update a preset color (e.g., on long-press or right-click)
-  const handleUpdatePreset = useCallback((index: number, color: string) => {
-    const newPresets = [...customPresets];
-    newPresets[index] = color;
-    setCustomPresets(newPresets);
-  }, [customPresets]);
+  const handleUpdatePreset = useCallback(
+    (index: number, color: string) => {
+      const newPresets = [...customPresets];
+      newPresets[index] = color;
+      setCustomPresets(newPresets);
+    },
+    [customPresets]
+  );
 
   // Handler to delete a preset
-  const handleDeletePreset = useCallback((index: number) => {
-    const newPresets = customPresets.filter((_, i) => i !== index);
-    setCustomPresets(newPresets);
-  }, [customPresets]);
+  const handleDeletePreset = useCallback(
+    (index: number) => {
+      const newPresets = customPresets.filter((_, i) => i !== index);
+      setCustomPresets(newPresets);
+    },
+    [customPresets]
+  );
 
   // Handler to add current color as a new preset
   const handleAddPreset = useCallback(() => {
@@ -228,15 +270,19 @@ export function ColorPicker({
           {(showPreview || showCopyButton) && (
             <div className="ck-action-buttons-row">
               {showPreview && (
-                <ColorPreview colorValue={colorValue} size="lg" className="ck-preview-wide" />
+                <ColorPreview
+                  colorValue={colorValue}
+                  size="lg"
+                  className="ck-preview-wide"
+                />
               )}
               <div className="ck-action-buttons">
                 {showCopyButton && (
-                  <CopyButton 
-                    text={formatColor(colorValue, format)} 
+                  <CopyButton
+                    text={formatColor(colorValue, format)}
                     onCopy={handleCopy}
                   />
-                  )}
+                )}
               </div>
             </div>
           )}
@@ -303,9 +349,7 @@ export function ColorPicker({
 
           {/* Recent Colors */}
           {enableHistory && history.length > 0 && (
-            <RecentColors
-              onColorSelect={handlePresetSelect}
-            />
+            <RecentColors onColorSelect={handlePresetSelect} />
           )}
 
           {/* Presets */}
@@ -315,7 +359,9 @@ export function ColorPicker({
                 colors={allPresets}
                 selectedColor={colorValue.hex}
                 onSelect={handlePresetSelect}
-                onUpdatePreset={(index) => handleUpdatePreset(index, colorValue.hex)}
+                onUpdatePreset={(index) =>
+                  handleUpdatePreset(index, colorValue.hex)
+                }
                 onDeletePreset={handleDeletePreset}
                 onAddPreset={handleAddPreset}
                 currentColor={colorValue.hex}

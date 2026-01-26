@@ -1,4 +1,10 @@
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   ColorArea,
@@ -19,14 +25,8 @@ const COLOR_AREA_CONFIG = {
 } as const;
 
 export function CustomPickerDemo() {
-  const {
-    hsva,
-    colorValue,
-    updateColor,
-    setFromString,
-    startDrag,
-    endDrag,
-  } = useColorState('#6366F1');
+  const { hsva, colorValue, updateColor, setFromString, startDrag, endDrag } =
+    useColorState('#6366F1');
 
   return (
     <Card>
@@ -63,13 +63,21 @@ export function CustomPickerDemo() {
             </div>
           </div>
         </div>
-        
+
         <Tabs defaultValue="rgb" className="w-full">
           <TabsList className="w-full">
-            <TabsTrigger value="rgb" className="flex-1">RGB</TabsTrigger>
-            <TabsTrigger value="hsl" className="flex-1">HSL</TabsTrigger>
-            <TabsTrigger value="hsv" className="flex-1">HSV</TabsTrigger>
-            <TabsTrigger value="oklch" className="flex-1">OKLCH</TabsTrigger>
+            <TabsTrigger value="rgb" className="flex-1">
+              RGB
+            </TabsTrigger>
+            <TabsTrigger value="hsl" className="flex-1">
+              HSL
+            </TabsTrigger>
+            <TabsTrigger value="hsv" className="flex-1">
+              HSV
+            </TabsTrigger>
+            <TabsTrigger value="oklch" className="flex-1">
+              OKLCH
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="rgb" className="mt-4">
             <RGBInputs colorValue={colorValue} onChange={setFromString} />

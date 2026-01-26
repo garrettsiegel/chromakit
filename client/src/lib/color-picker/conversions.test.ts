@@ -89,16 +89,28 @@ describe('Color Conversions', () => {
     it('converts hsl to rgb', () => {
       // Red
       expect(hslToRgb({ h: 0, s: 100, l: 50 })).toEqual({ r: 255, g: 0, b: 0 });
-      
+
       // Green
-      expect(hslToRgb({ h: 120, s: 100, l: 50 })).toEqual({ r: 0, g: 255, b: 0 });
-      
+      expect(hslToRgb({ h: 120, s: 100, l: 50 })).toEqual({
+        r: 0,
+        g: 255,
+        b: 0,
+      });
+
       // Blue
-      expect(hslToRgb({ h: 240, s: 100, l: 50 })).toEqual({ r: 0, g: 0, b: 255 });
-      
+      expect(hslToRgb({ h: 240, s: 100, l: 50 })).toEqual({
+        r: 0,
+        g: 0,
+        b: 255,
+      });
+
       // White
-      expect(hslToRgb({ h: 0, s: 0, l: 100 })).toEqual({ r: 255, g: 255, b: 255 });
-      
+      expect(hslToRgb({ h: 0, s: 0, l: 100 })).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+      });
+
       // Black
       expect(hslToRgb({ h: 0, s: 0, l: 0 })).toEqual({ r: 0, g: 0, b: 0 });
     });
@@ -107,7 +119,7 @@ describe('Color Conversions', () => {
       const original = { r: 123, g: 45, b: 200 };
       const hsl = rgbToHsl(original);
       const backToRgb = hslToRgb(hsl);
-      
+
       expect(backToRgb.r).toBeCloseTo(original.r, 0);
       expect(backToRgb.g).toBeCloseTo(original.g, 0);
       expect(backToRgb.b).toBeCloseTo(original.b, 0);
@@ -137,13 +149,25 @@ describe('Color Conversions', () => {
 
     it('converts hsv to rgb', () => {
       // Red
-      expect(hsvToRgb({ h: 0, s: 100, v: 100 })).toEqual({ r: 255, g: 0, b: 0 });
-      
+      expect(hsvToRgb({ h: 0, s: 100, v: 100 })).toEqual({
+        r: 255,
+        g: 0,
+        b: 0,
+      });
+
       // Green
-      expect(hsvToRgb({ h: 120, s: 100, v: 100 })).toEqual({ r: 0, g: 255, b: 0 });
-      
+      expect(hsvToRgb({ h: 120, s: 100, v: 100 })).toEqual({
+        r: 0,
+        g: 255,
+        b: 0,
+      });
+
       // Blue
-      expect(hsvToRgb({ h: 240, s: 100, v: 100 })).toEqual({ r: 0, g: 0, b: 255 });
+      expect(hsvToRgb({ h: 240, s: 100, v: 100 })).toEqual({
+        r: 0,
+        g: 0,
+        b: 255,
+      });
     });
   });
 
@@ -186,7 +210,7 @@ describe('Color Conversions', () => {
       const original = { r: 100, g: 150, b: 200 };
       const oklab = rgbToOklab(original);
       const backToRgb = oklabToRgb(oklab);
-      
+
       expect(backToRgb.r).toBeCloseTo(original.r, 0);
       expect(backToRgb.g).toBeCloseTo(original.g, 0);
       expect(backToRgb.b).toBeCloseTo(original.b, 0);
@@ -230,7 +254,7 @@ describe('Color Conversions', () => {
       const original = { r: 100, g: 150, b: 200 };
       const oklch = rgbToOklch(original);
       const backToRgb = oklchToRgb(oklch);
-      
+
       expect(backToRgb.r).toBeCloseTo(original.r, 0);
       expect(backToRgb.g).toBeCloseTo(original.g, 0);
       expect(backToRgb.b).toBeCloseTo(original.b, 0);
@@ -242,10 +266,14 @@ describe('Color Conversions', () => {
       // RGB boundaries
       expect(rgbToHex({ r: 0, g: 0, b: 0 })).toBe('#000000');
       expect(rgbToHex({ r: 255, g: 255, b: 255 })).toBe('#ffffff');
-      
+
       // HSL boundaries
       expect(hslToRgb({ h: 0, s: 0, l: 0 })).toEqual({ r: 0, g: 0, b: 0 });
-      expect(hslToRgb({ h: 360, s: 100, l: 100 })).toEqual({ r: 255, g: 255, b: 255 });
+      expect(hslToRgb({ h: 360, s: 100, l: 100 })).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+      });
     });
 
     it('clamps out-of-range values', () => {

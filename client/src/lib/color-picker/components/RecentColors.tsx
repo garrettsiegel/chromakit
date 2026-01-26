@@ -11,7 +11,10 @@ export interface RecentColorsProps {
   className?: string;
 }
 
-export function RecentColors({ onColorSelect, className = '' }: RecentColorsProps) {
+export function RecentColors({
+  onColorSelect,
+  className = '',
+}: RecentColorsProps) {
   // Get color history from localStorage
   const recentColors = useMemo(() => getColorHistory(), []);
 

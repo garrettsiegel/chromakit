@@ -8,7 +8,9 @@ import { rgbToHsv, hsvToRgb } from './conversions';
 export function getRelativeLuminance(rgb: RGB): number {
   const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((channel) => {
     const sRGB = channel / 255;
-    return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
+    return sRGB <= 0.03928
+      ? sRGB / 12.92
+      : Math.pow((sRGB + 0.055) / 1.055, 2.4);
   });
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
@@ -153,7 +155,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
       return false;
     }
   }
-  
+
   try {
     await navigator.clipboard.writeText(text);
     return true;

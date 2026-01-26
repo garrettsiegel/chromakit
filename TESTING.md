@@ -8,23 +8,26 @@
 ## 📦 Bundle Sizes (Verified)
 
 - **ES Module:** 10.32 KB gzipped
-- **UMD:** 9.14 KB gzipped  
+- **UMD:** 9.14 KB gzipped
 - **CSS:** 2.90 KB gzipped
 - **Total:** ~13 KB gzipped
 
 ## 🔗 Link to Your Test Project
 
 1. Navigate to your test project:
+
    ```bash
    cd /path/to/your/test-project
    ```
 
 2. Link chromakit-react:
+
    ```bash
    npm link chromakit-react
    ```
 
 3. Import in your test app:
+
    ```tsx
    import { ColorPicker } from 'chromakit-react';
    import 'chromakit-react/chromakit.css';
@@ -44,6 +47,7 @@
 ## ✨ What Changed
 
 ### Fixed Specifications:
+
 - ✅ Bundle size updated: 8KB → 10KB (accurate)
 - ✅ Removed non-existent `size` prop from docs
 - ✅ Fixed Quick Start example to use `value` instead of `color`
@@ -52,6 +56,7 @@
 - ✅ Social proof badges updated to be factual
 
 ### Available Components:
+
 - `ColorPicker` - Full-featured color picker
 - `ColorArea` - 2D saturation/lightness picker
 - `HueSlider` - Hue selection slider
@@ -61,6 +66,7 @@
 - `useColorState` - Hook for managing color state
 
 ### Supported Formats:
+
 - HEX, HEX8
 - RGB, RGBA
 - HSL, HSLA

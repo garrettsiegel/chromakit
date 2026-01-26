@@ -235,7 +235,9 @@ describe('AlphaSlider', () => {
     });
 
     it('should render vertical slider when specified', () => {
-      render(<AlphaSlider hsva={defaultHsva} onChange={mockOnChange} vertical />);
+      render(
+        <AlphaSlider hsva={defaultHsva} onChange={mockOnChange} vertical />
+      );
       const slider = screen.getByRole('slider', { name: /alpha/i });
       expect(slider).toHaveClass('ck-alpha-slider--vertical');
     });
@@ -294,7 +296,10 @@ describe('AlphaSlider', () => {
       expect(slider).toHaveAttribute('aria-valuenow', '50');
 
       rerender(
-        <AlphaSlider hsva={{ ...defaultHsva, a: 0.75 }} onChange={mockOnChange} />
+        <AlphaSlider
+          hsva={{ ...defaultHsva, a: 0.75 }}
+          onChange={mockOnChange}
+        />
       );
       expect(slider).toHaveAttribute('aria-valuenow', '75');
     });

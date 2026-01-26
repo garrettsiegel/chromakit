@@ -39,6 +39,7 @@ chromakit/
 ### Making Changes
 
 1. **Create a new branch** for your feature or bugfix:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -48,11 +49,13 @@ chromakit/
    - Demo/website code goes in `client/src/pages/` and `client/src/components/`
 
 3. **Run tests** to ensure everything works:
+
    ```bash
    npm test
    ```
 
 4. **Build the library** to check for errors:
+
    ```bash
    npm run build
    ```
@@ -85,6 +88,7 @@ chromakit/
 ## Submitting a Pull Request
 
 1. **Push your changes** to your fork:
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -113,6 +117,7 @@ chromakit/
 ## Feature Requests
 
 We welcome feature requests! Please:
+
 - Check existing issues/PRs first
 - Clearly describe the feature and use case
 - Explain why it would benefit the library

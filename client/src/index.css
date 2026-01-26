@@ -4,15 +4,15 @@
 
 /* LIGHT MODE */
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(0, 0, 0, 0.1);
+  --badge-outline: rgba(0, 0, 0, 0.05);
 
   /* Automatic computation of border around primary / danger buttons */
   --opaque-button-border-intensity: -8; /* In terms of percentages */
 
   /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(0, 0, 0, 0.03);
+  --elevate-2: rgba(0, 0, 0, 0.08);
 
   --background: 0 0% 100%;
   --foreground: 240 10% 4%;
@@ -63,15 +63,19 @@
   --font-sans: 'Inter', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --radius: .5rem;
+  --radius: 0.5rem;
   --shadow-2xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-  --shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 2px -1px rgba(0, 0, 0, 0.10);
-  --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.12), 0 3px 6px -3px rgba(0, 0, 0, 0.10);
-  --shadow-lg: 0 14px 20px -4px rgba(0, 0, 0, 0.12), 0 6px 10px -5px rgba(0, 0, 0, 0.10);
-  --shadow-xl: 0 24px 32px -6px rgba(0, 0, 0, 0.14), 0 10px 14px -7px rgba(0, 0, 0, 0.12);
-  --shadow-2xl: 0 32px 64px -16px rgba(0, 0, 0, 0.20);
+  --shadow-sm:
+    0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md:
+    0 6px 12px -2px rgba(0, 0, 0, 0.12), 0 3px 6px -3px rgba(0, 0, 0, 0.1);
+  --shadow-lg:
+    0 14px 20px -4px rgba(0, 0, 0, 0.12), 0 6px 10px -5px rgba(0, 0, 0, 0.1);
+  --shadow-xl:
+    0 24px 32px -6px rgba(0, 0, 0, 0.14), 0 10px 14px -7px rgba(0, 0, 0, 0.12);
+  --shadow-2xl: 0 32px 64px -16px rgba(0, 0, 0, 0.2);
   --tracking-normal: -0.01em;
   --tracking-tight: -0.025em;
   --tracking-tighter: -0.05em;
@@ -79,36 +83,57 @@
 
   /* Automatically computed borders */
   --sidebar-primary-border: hsl(var(--sidebar-primary));
-  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-primary-border: hsl(
+    from hsl(var(--sidebar-primary)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --sidebar-accent-border: hsl(var(--sidebar-accent));
-  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-accent-border: hsl(
+    from hsl(var(--sidebar-accent)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --primary-border: hsl(var(--primary));
-  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --primary-border: hsl(
+    from hsl(var(--primary)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --secondary-border: hsl(var(--secondary));
-  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --secondary-border: hsl(
+    from hsl(var(--secondary)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --muted-border: hsl(var(--muted));
-  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --muted-border: hsl(
+    from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) /
+      alpha
+  );
 
   --accent-border: hsl(var(--accent));
-  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --accent-border: hsl(
+    from hsl(var(--accent)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --destructive-border: hsl(var(--destructive));
-  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --destructive-border: hsl(
+    from hsl(var(--destructive)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 }
 
 .dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --button-outline: rgba(255, 255, 255, 0.1);
+  --badge-outline: rgba(255, 255, 255, 0.05);
 
   --opaque-button-border-intensity: 9;
 
   /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
+  --elevate-1: rgba(255, 255, 255, 0.04);
+  --elevate-2: rgba(255, 255, 255, 0.09);
 
   --background: 240 10% 4%;
   --foreground: 0 0% 95%;
@@ -158,11 +183,15 @@
 
   --shadow-2xs: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-sm:
+    0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35), 0 1px 2px -1px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45), 0 4px 6px -4px rgba(0, 0, 0, 0.45);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.45), 0 4px 6px -4px rgba(0, 0, 0, 0.45);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
@@ -181,9 +210,8 @@
  * Automatic contrast adjustment.
  */
 @layer utilities {
-
   /* Hide ugly search cancel button in Chrome until we can style it properly */
-  input[type="search"]::-webkit-search-cancel-button {
+  input[type='search']::-webkit-search-cancel-button {
     @apply hidden;
   }
 
@@ -194,12 +222,14 @@
     pointer-events: none;
   }
 
-  .no-default-hover-elevate {}
-  .no-default-active-elevate {}
+  .no-default-hover-elevate {
+  }
+  .no-default-active-elevate {
+  }
 
   .toggle-elevate::before,
   .toggle-elevate-2::before {
-    content: "";
+    content: '';
     pointer-events: none;
     position: absolute;
     inset: 0px;
@@ -227,7 +257,7 @@
   .active-elevate:not(.no-default-active-elevate)::after,
   .hover-elevate-2:not(.no-default-hover-elevate)::after,
   .active-elevate-2:not(.no-default-active-elevate)::after {
-    content: "";
+    content: '';
     pointer-events: none;
     position: absolute;
     inset: 0px;
@@ -256,33 +286,49 @@
 
 /* Typography */
 body {
-  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Geist',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   letter-spacing: var(--tracking-normal);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Space Grotesk', 'Geist', sans-serif;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;
 }
 
-.font-mono, code, pre {
+.font-mono,
+code,
+pre {
   font-family: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
 }
 
 /* Color picker specific styles */
 .color-picker-checkerboard {
-  background-image: 
+  background-image:
     linear-gradient(45deg, #ccc 25%, transparent 25%),
     linear-gradient(-45deg, #ccc 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #ccc 75%),
     linear-gradient(-45deg, transparent 75%, #ccc 75%);
   background-size: 8px 8px;
-  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+  background-position:
+    0 0,
+    0 4px,
+    4px -4px,
+    -4px 0px;
 }
 
 .dark .color-picker-checkerboard {
-  background-image: 
+  background-image:
     linear-gradient(45deg, #444 25%, transparent 25%),
     linear-gradient(-45deg, #444 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #444 75%),
@@ -300,8 +346,7 @@ h1, h2, h3, h4, h5, h6 {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
   pointer-events: none;
   border-radius: inherit;
 }
@@ -312,11 +357,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Enhanced shadows with warmth */
 .shadow-soft {
-  box-shadow: 0 4px 24px rgba(255, 107, 53, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 4px 24px rgba(255, 107, 53, 0.08),
+    0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .shadow-glow {
-  box-shadow: 0 0 24px rgba(255, 107, 53, 0.2), 0 0 12px rgba(255, 107, 53, 0.1);
+  box-shadow:
+    0 0 24px rgba(255, 107, 53, 0.2),
+    0 0 12px rgba(255, 107, 53, 0.1);
 }
 
 /* Glassmorphism effects */
@@ -334,13 +383,16 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Interactive card animations */
 .interactive-card {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .interactive-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(255, 107, 53, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 12px 40px rgba(255, 107, 53, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .interactive-card:active {
@@ -348,24 +400,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Button enhancements */
-button:not(:disabled), 
-a[role="button"] {
+button:not(:disabled),
+a[role='button'] {
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-button:not(:disabled):hover, 
-a[role="button"]:hover {
+button:not(:disabled):hover,
+a[role='button']:hover {
   transform: translateY(-1px);
 }
 
-button:not(:disabled):active, 
-a[role="button"]:active {
+button:not(:disabled):active,
+a[role='button']:active {
   transform: scale(0.98);
 }
 
 /* Animated gradient background utility */
 @keyframes gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -380,7 +433,8 @@ a[role="button"]:active {
 
 /* Float animation for gradient orbs */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   25% {
@@ -395,7 +449,8 @@ a[role="button"]:active {
 }
 
 @keyframes float-slow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) rotate(0deg);
   }
   33% {
@@ -485,10 +540,10 @@ a[role="button"]:active {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #FF5F56;
-  box-shadow: 
-    20px 0 0 #FFBD2E,
-    40px 0 0 #27C93F;
+  background: #ff5f56;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #27c93f;
 }
 
 /* Smooth scroll behavior */

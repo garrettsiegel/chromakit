@@ -99,7 +99,13 @@ interface ExampleCardProps {
   fullWidth?: boolean;
 }
 
-function ExampleCard({ title, description, code, badge, fullWidth }: ExampleCardProps) {
+function ExampleCard({
+  title,
+  description,
+  code,
+  badge,
+  fullWidth,
+}: ExampleCardProps) {
   return (
     <Card className={`overflow-hidden ${fullWidth ? 'col-span-full' : ''}`}>
       <div className="p-6 space-y-3 border-b border-border">

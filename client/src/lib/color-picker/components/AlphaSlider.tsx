@@ -84,10 +84,7 @@ export function AlphaSlider({
     };
   }, [rgb, vertical]);
 
-  const thumbPosition = useMemo(
-    () => `${hsva.a * 100}%`,
-    [hsva.a]
-  );
+  const thumbPosition = useMemo(() => `${hsva.a * 100}%`, [hsva.a]);
 
   const alphaPercentage = Math.round(hsva.a * 100);
 
@@ -109,10 +106,7 @@ export function AlphaSlider({
       data-testid="alpha-slider"
     >
       <div className="ck-alpha-slider-track ck-checkerboard" />
-      <div
-        className="ck-alpha-slider-track"
-        style={gradientStyle}
-      />
+      <div className="ck-alpha-slider-track" style={gradientStyle} />
       <div
         className="ck-slider-thumb"
         style={

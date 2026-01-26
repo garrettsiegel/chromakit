@@ -104,10 +104,7 @@ export function ColorArea({
       onKeyDown={handleKeyDown}
       data-testid="color-area"
     >
-      <div
-        className="ck-color-area-layer"
-        style={backgroundStyle}
-      />
+      <div className="ck-color-area-layer" style={backgroundStyle} />
       <div
         className="ck-color-area-layer"
         style={{

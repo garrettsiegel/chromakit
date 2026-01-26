@@ -16,7 +16,8 @@ interface GradientComparisonProps {
 // ============================================================
 
 function GradientComparison({ isOklch }: GradientComparisonProps) {
-  const rgbGradient = 'linear-gradient(90deg, #FF0000 0%, #00FF00 50%, #0000FF 100%)';
+  const rgbGradient =
+    'linear-gradient(90deg, #FF0000 0%, #00FF00 50%, #0000FF 100%)';
   const oklchGradient =
     'linear-gradient(90deg in oklch, oklch(0.63 0.26 29) 0%, oklch(0.87 0.22 142) 50%, oklch(0.55 0.31 264) 100%)';
 
@@ -68,7 +69,9 @@ function SocialProof() {
 
 function InstallCommand() {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'npm' | 'yarn' | 'pnpm' | 'bun'>('npm');
+  const [activeTab, setActiveTab] = useState<'npm' | 'yarn' | 'pnpm' | 'bun'>(
+    'npm'
+  );
 
   const commands = {
     npm: 'npm install chromakit-react',
@@ -111,7 +114,9 @@ function InstallCommand() {
 
       {/* TERMINAL BODY */}
       <div className="relative flex items-center justify-between px-6 py-4 bg-muted/50 backdrop-blur-sm border border-t-0 border-border rounded-b-xl font-mono text-sm">
-        <span className="text-muted-foreground select-all">{commands[activeTab]}</span>
+        <span className="text-muted-foreground select-all">
+          {commands[activeTab]}
+        </span>
         <button
           onClick={handleCopy}
           className="ml-4 p-2 rounded-lg hover:bg-background/80 transition-colors"
@@ -149,14 +154,16 @@ export function HeroSection() {
         <div
           className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full opacity-20 blur-3xl animate-float noise-texture"
           style={{
-            background: 'radial-gradient(circle, hsl(18, 98%, 60%) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, hsl(18, 98%, 60%) 0%, transparent 70%)',
             animationDuration: '25s',
           }}
         />
         <div
           className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full opacity-15 blur-3xl animate-float-delayed noise-texture"
           style={{
-            background: 'radial-gradient(circle, hsl(270, 85%, 65%) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, hsl(270, 85%, 65%) 0%, transparent 70%)',
             animationDuration: '30s',
             animationDelay: '5s',
           }}
@@ -164,7 +171,8 @@ export function HeroSection() {
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-float"
           style={{
-            background: 'radial-gradient(circle, hsl(180, 85%, 60%) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, hsl(180, 85%, 60%) 0%, transparent 70%)',
             animationDuration: '20s',
             animationDelay: '2s',
           }}
@@ -194,8 +202,9 @@ export function HeroSection() {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Stop fighting muddy gradients. ChromaKit uses <strong>OKLCH color space</strong> for
-              smooth, natural color transitions that match human perception—not legacy RGB math.
+              Stop fighting muddy gradients. ChromaKit uses{' '}
+              <strong>OKLCH color space</strong> for smooth, natural color
+              transitions that match human perception—not legacy RGB math.
             </p>
           </div>
 
@@ -203,9 +212,13 @@ export function HeroSection() {
           <div className="max-w-3xl mx-auto space-y-4">
             <div className="flex items-center justify-between px-2">
               <p className="text-sm text-muted-foreground">
-                {showOklch ? '✨ Smooth OKLCH gradient' : '⚠️ Muddy RGB gradient'}
+                {showOklch
+                  ? '✨ Smooth OKLCH gradient'
+                  : '⚠️ Muddy RGB gradient'}
               </p>
-              <p className="text-sm text-muted-foreground">Red → Green → Blue</p>
+              <p className="text-sm text-muted-foreground">
+                Red → Green → Blue
+              </p>
             </div>
             <GradientComparison isOklch={showOklch} />
             <p className="text-center text-xs text-muted-foreground">
@@ -223,7 +236,12 @@ export function HeroSection() {
             <Button size="lg" asChild className="text-base px-8">
               <a href="#demo">See the OKLCH Difference</a>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-base px-8">
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="text-base px-8"
+            >
               <a
                 href="https://github.com/garrettsiegel/chromakit"
                 target="_blank"

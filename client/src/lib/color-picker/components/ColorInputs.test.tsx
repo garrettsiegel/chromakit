@@ -1,7 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor as _waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs as _OKLCHInputs } from './ColorInputs';
+import {
+  ColorInputs,
+  RGBInputs,
+  HSLInputs,
+  HSVInputs,
+  OKLCHInputs as _OKLCHInputs,
+} from './ColorInputs';
 import type { ColorValue } from '../types';
 
 const mockColorValue: ColorValue = {
@@ -28,7 +34,7 @@ describe('ColorInputs', () => {
           format="hex"
         />
       );
-      
+
       const input = screen.getByTestId('color-input-text');
       expect(input).toBeInTheDocument();
     });
@@ -42,7 +48,7 @@ describe('ColorInputs', () => {
           onFormatChange={vi.fn()}
         />
       );
-      
+
       const select = screen.getByTestId('color-format-select');
       expect(select).toBeInTheDocument();
     });
@@ -55,8 +61,10 @@ describe('ColorInputs', () => {
           format="hex"
         />
       );
-      
-      expect(screen.queryByTestId('color-format-select')).not.toBeInTheDocument();
+
+      expect(
+        screen.queryByTestId('color-format-select')
+      ).not.toBeInTheDocument();
     });
 
     it('should apply custom className', () => {
@@ -68,7 +76,7 @@ describe('ColorInputs', () => {
           className="custom-class"
         />
       );
-      
+
       const inputs = container.querySelector('.custom-class');
       expect(inputs).toBeInTheDocument();
     });
@@ -83,7 +91,7 @@ describe('ColorInputs', () => {
           format="hex"
         />
       );
-      
+
       const input = screen.getByTestId('color-input-text') as HTMLInputElement;
       expect(input).toBeInTheDocument();
     });
@@ -93,7 +101,7 @@ describe('ColorInputs', () => {
     it('should call onChange when input value changes', async () => {
       const onChange = vi.fn();
       const user = userEvent.setup();
-      
+
       render(
         <ColorInputs
           colorValue={mockColorValue}
@@ -101,18 +109,18 @@ describe('ColorInputs', () => {
           format="hex"
         />
       );
-      
+
       const input = screen.getByTestId('color-input-text');
       await user.clear(input);
       await user.type(input, '#00FF00');
-      
+
       expect(onChange).toHaveBeenCalled();
     });
 
     it('should call onFormatChange when format is changed', async () => {
       const onFormatChange = vi.fn();
       const user = userEvent.setup();
-      
+
       render(
         <ColorInputs
           colorValue={mockColorValue}
@@ -122,16 +130,16 @@ describe('ColorInputs', () => {
           availableFormats={['hex', 'rgb', 'hsl']}
         />
       );
-      
+
       const select = screen.getByTestId('color-format-select');
       await user.selectOptions(select, 'rgb');
-      
+
       expect(onFormatChange).toHaveBeenCalledWith('rgb');
     });
 
     it('should handle invalid input without crashing', async () => {
       const user = userEvent.setup();
-      
+
       render(
         <ColorInputs
           colorValue={mockColorValue}
@@ -139,12 +147,12 @@ describe('ColorInputs', () => {
           format="hex"
         />
       );
-      
+
       const input = screen.getByTestId('color-input-text') as HTMLInputElement;
-      
+
       await user.clear(input);
       await user.type(input, 'invalid');
-      
+
       // Should not crash
       expect(input).toBeInTheDocument();
     });
@@ -152,7 +160,7 @@ describe('ColorInputs', () => {
     it('should handle Enter key to submit', async () => {
       const onChange = vi.fn();
       const user = userEvent.setup();
-      
+
       render(
         <ColorInputs
           colorValue={mockColorValue}
@@ -160,11 +168,11 @@ describe('ColorInputs', () => {
           format="hex"
         />
       );
-      
+
       const input = screen.getByTestId('color-input-text');
       await user.clear(input);
       await user.type(input, '#00FF00{Enter}');
-      
+
       expect(onChange).toHaveBeenCalled();
     });
   });
@@ -180,10 +188,12 @@ describe('ColorInputs', () => {
           availableFormats={['hex', 'rgb']}
         />
       );
-      
-      const select = screen.getByTestId('color-format-select') as HTMLSelectElement;
-      const options = Array.from(select.options).map(opt => opt.value);
-      
+
+      const select = screen.getByTestId(
+        'color-format-select'
+      ) as HTMLSelectElement;
+      const options = Array.from(select.options).map((opt) => opt.value);
+
       expect(options).toContain('hex');
       expect(options).toContain('rgb');
       expect(options).not.toContain('oklch');
@@ -200,10 +210,12 @@ describe('ColorInputs', () => {
           availableFormats={['hex', 'hex8', 'rgb', 'rgba']}
         />
       );
-      
-      const select = screen.getByTestId('color-format-select') as HTMLSelectElement;
-      const options = Array.from(select.options).map(opt => opt.value);
-      
+
+      const select = screen.getByTestId(
+        'color-format-select'
+      ) as HTMLSelectElement;
+      const options = Array.from(select.options).map((opt) => opt.value);
+
       expect(options).toContain('hex');
       expect(options).toContain('rgb');
       expect(options).not.toContain('hex8');
@@ -215,31 +227,43 @@ describe('ColorInputs', () => {
 describe('RGBInputs', () => {
   it('should render RGB channel inputs', () => {
     render(<RGBInputs colorValue={mockColorValue} onChange={vi.fn()} />);
-    
+
     expect(screen.getByTestId('rgb-input-r')).toBeInTheDocument();
     expect(screen.getByTestId('rgb-input-g')).toBeInTheDocument();
     expect(screen.getByTestId('rgb-input-b')).toBeInTheDocument();
   });
 
   it('should render alpha input when showAlpha is true', () => {
-    render(<RGBInputs colorValue={mockColorValue} onChange={vi.fn()} showAlpha={true} />);
-    
+    render(
+      <RGBInputs
+        colorValue={mockColorValue}
+        onChange={vi.fn()}
+        showAlpha={true}
+      />
+    );
+
     expect(screen.getByTestId('rgb-input-a')).toBeInTheDocument();
   });
 
   it('should hide alpha input when showAlpha is false', () => {
-    render(<RGBInputs colorValue={mockColorValue} onChange={vi.fn()} showAlpha={false} />);
-    
+    render(
+      <RGBInputs
+        colorValue={mockColorValue}
+        onChange={vi.fn()}
+        showAlpha={false}
+      />
+    );
+
     expect(screen.queryByTestId('rgb-input-a')).not.toBeInTheDocument();
   });
 
   it('should display correct RGB values', () => {
     render(<RGBInputs colorValue={mockColorValue} onChange={vi.fn()} />);
-    
+
     const rInput = screen.getByTestId('rgb-input-r') as HTMLInputElement;
     const gInput = screen.getByTestId('rgb-input-g') as HTMLInputElement;
     const bInput = screen.getByTestId('rgb-input-b') as HTMLInputElement;
-    
+
     expect(rInput.value).toBe('255');
     expect(gInput.value).toBe('0');
     expect(bInput.value).toBe('0');
@@ -248,13 +272,13 @@ describe('RGBInputs', () => {
   it('should call onChange when RGB value changes', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<RGBInputs colorValue={mockColorValue} onChange={onChange} />);
-    
+
     const rInput = screen.getByTestId('rgb-input-r');
     await user.clear(rInput);
     await user.type(rInput, '128');
-    
+
     expect(onChange).toHaveBeenCalled();
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/rgba\(128,/));
   });
@@ -262,52 +286,66 @@ describe('RGBInputs', () => {
   it('should clamp RGB values to 0-255 range', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<RGBInputs colorValue={mockColorValue} onChange={onChange} />);
-    
+
     const rInput = screen.getByTestId('rgb-input-r');
     await user.clear(rInput);
     await user.type(rInput, '300');
-    
+
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/rgba\(255,/));
   });
 
   it('should clamp alpha values to 0-1 range', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    
-    render(<RGBInputs colorValue={mockColorValue} onChange={onChange} showAlpha={true} />);
-    
+
+    render(
+      <RGBInputs
+        colorValue={mockColorValue}
+        onChange={onChange}
+        showAlpha={true}
+      />
+    );
+
     const aInput = screen.getByTestId('rgb-input-a');
     await user.clear(aInput);
     await user.type(aInput, '2');
-    
-    expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/rgba\([^)]+,\s*1\)/));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.stringMatching(/rgba\([^)]+,\s*1\)/)
+    );
   });
 });
 
 describe('HSLInputs', () => {
   it('should render HSL channel inputs', () => {
     render(<HSLInputs colorValue={mockColorValue} onChange={vi.fn()} />);
-    
+
     expect(screen.getByTestId('hsl-input-h')).toBeInTheDocument();
     expect(screen.getByTestId('hsl-input-s')).toBeInTheDocument();
     expect(screen.getByTestId('hsl-input-l')).toBeInTheDocument();
   });
 
   it('should render alpha input when showAlpha is true', () => {
-    render(<HSLInputs colorValue={mockColorValue} onChange={vi.fn()} showAlpha={true} />);
-    
+    render(
+      <HSLInputs
+        colorValue={mockColorValue}
+        onChange={vi.fn()}
+        showAlpha={true}
+      />
+    );
+
     expect(screen.getByTestId('hsl-input-a')).toBeInTheDocument();
   });
 
   it('should display correct HSL values', () => {
     render(<HSLInputs colorValue={mockColorValue} onChange={vi.fn()} />);
-    
+
     const hInput = screen.getByTestId('hsl-input-h') as HTMLInputElement;
     const sInput = screen.getByTestId('hsl-input-s') as HTMLInputElement;
     const lInput = screen.getByTestId('hsl-input-l') as HTMLInputElement;
-    
+
     expect(hInput.value).toBe('0');
     expect(sInput.value).toBe('100');
     expect(lInput.value).toBe('50');
@@ -316,13 +354,13 @@ describe('HSLInputs', () => {
   it('should call onChange when HSL value changes', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<HSLInputs colorValue={mockColorValue} onChange={onChange} />);
-    
+
     const hInput = screen.getByTestId('hsl-input-h');
     await user.clear(hInput);
     await user.type(hInput, '180');
-    
+
     expect(onChange).toHaveBeenCalled();
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/hsla\(180,/));
   });
@@ -331,7 +369,7 @@ describe('HSLInputs', () => {
 describe('HSVInputs', () => {
   it('should render HSV channel inputs', () => {
     render(<HSVInputs colorValue={mockColorValue} onChange={vi.fn()} />);
-    
+
     expect(screen.getByTestId('hsv-input-h')).toBeInTheDocument();
     expect(screen.getByTestId('hsv-input-s')).toBeInTheDocument();
     expect(screen.getByTestId('hsv-input-v')).toBeInTheDocument();
@@ -339,11 +377,11 @@ describe('HSVInputs', () => {
 
   it('should display correct HSV values', () => {
     render(<HSVInputs colorValue={mockColorValue} onChange={vi.fn()} />);
-    
+
     const hInput = screen.getByTestId('hsv-input-h') as HTMLInputElement;
     const sInput = screen.getByTestId('hsv-input-s') as HTMLInputElement;
     const vInput = screen.getByTestId('hsv-input-v') as HTMLInputElement;
-    
+
     expect(hInput.value).toBe('0');
     expect(sInput.value).toBe('100');
     expect(vInput.value).toBe('100');
@@ -352,13 +390,13 @@ describe('HSVInputs', () => {
   it('should call onChange when HSV value changes', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<HSVInputs colorValue={mockColorValue} onChange={onChange} />);
-    
+
     const vInput = screen.getByTestId('hsv-input-v');
     await user.clear(vInput);
     await user.type(vInput, '50');
-    
+
     expect(onChange).toHaveBeenCalled();
   });
 });

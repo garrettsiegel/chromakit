@@ -97,7 +97,9 @@ function ComparisonTable() {
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left py-4 px-4 text-sm font-semibold">Feature</th>
+            <th className="text-left py-4 px-4 text-sm font-semibold">
+              Feature
+            </th>
             <th className="text-center py-4 px-4 text-sm font-semibold">
               <div className="flex items-center justify-center gap-2">
                 ChromaKit
@@ -124,8 +126,12 @@ function ComparisonTable() {
               <td className="py-4 px-4 text-center bg-primary/5">
                 {renderCell(row.chromakit)}
               </td>
-              <td className="py-4 px-4 text-center">{renderCell(row.reactColorful)}</td>
-              <td className="py-4 px-4 text-center">{renderCell(row.reactColor)}</td>
+              <td className="py-4 px-4 text-center">
+                {renderCell(row.reactColorful)}
+              </td>
+              <td className="py-4 px-4 text-center">
+                {renderCell(row.reactColor)}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -193,7 +199,10 @@ function LivePickerComparison() {
 
 export function InteractiveComparison() {
   return (
-    <section id="comparison" className="relative py-20 md:py-32 overflow-hidden">
+    <section
+      id="comparison"
+      className="relative py-20 md:py-32 overflow-hidden"
+    >
       {/* BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-muted/20 to-transparent" />
 
@@ -208,7 +217,8 @@ export function InteractiveComparison() {
               Built for Modern Design Systems
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              The only React color picker with native OKLCH support and composable architecture
+              The only React color picker with native OKLCH support and
+              composable architecture
             </p>
           </div>
 
@@ -258,7 +268,8 @@ export function InteractiveComparison() {
             <TabsContent value="live" className="mt-8">
               <LivePickerComparison />
               <p className="text-center text-sm text-muted-foreground mt-6">
-                Try adjusting colors on both pickers to see the difference in gradient quality
+                Try adjusting colors on both pickers to see the difference in
+                gradient quality
               </p>
             </TabsContent>
           </Tabs>

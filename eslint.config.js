@@ -8,7 +8,13 @@ import prettier from 'eslint-config-prettier';
 
 export default [
   {
-    ignores: ['dist/**', 'coverage/**', 'node_modules/**', '.vite/**', 'build/**'],
+    ignores: [
+      'dist/**',
+      'coverage/**',
+      'node_modules/**',
+      '.vite/**',
+      'build/**',
+    ],
   },
   js.configs.recommended,
   {
@@ -50,7 +56,7 @@ export default [
         URL: 'readonly',
         URLSearchParams: 'readonly',
         FormData: 'readonly',
-        
+
         // Node globals
         console: 'readonly',
         process: 'readonly',
@@ -61,12 +67,12 @@ export default [
         __filename: 'readonly',
         Buffer: 'readonly',
         NodeJS: 'readonly',
-        
+
         // React globals
         React: 'readonly',
         JSX: 'readonly',
-        
-        // Test globals  
+
+        // Test globals
         jest: 'readonly',
         describe: 'readonly',
         it: 'readonly',
@@ -81,7 +87,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      'react': react,
+      react: react,
       'react-hooks': reactHooks,
       'jsx-a11y': jsxA11y,
     },
@@ -90,12 +96,12 @@ export default [
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       ...jsxA11y.configs.recommended.rules,
-      
+
       // React specific rules
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react/jsx-uses-react': 'off',
-      
+
       // TypeScript specific rules
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -109,16 +115,16 @@ export default [
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-empty-object-type': 'warn',
       '@typescript-eslint/no-require-imports': 'warn',
-      
+
       // React hooks rules - downgrade to warnings
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/immutability': 'warn',
-      
+
       // Accessibility - warn only (pre-existing issues)
       'jsx-a11y/label-has-associated-control': 'warn',
       'jsx-a11y/click-events-have-key-events': 'warn',
       'jsx-a11y/no-static-element-interactions': 'warn',
-      
+
       // General rules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'warn',

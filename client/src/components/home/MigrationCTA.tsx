@@ -43,8 +43,12 @@ export function MigrationCTA() {
               Migrate in 2 Minutes
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Already using <code className="text-sm bg-muted px-2 py-1 rounded">react-colorful</code>?
-              Switch to ChromaKit with zero breaking changes and instant OKLCH support.
+              Already using{' '}
+              <code className="text-sm bg-muted px-2 py-1 rounded">
+                react-colorful
+              </code>
+              ? Switch to ChromaKit with zero breaking changes and instant OKLCH
+              support.
             </p>
           </div>
 
@@ -53,7 +57,10 @@ export function MigrationCTA() {
             {/* BEFORE */}
             <Card className="relative overflow-hidden">
               <div className="absolute top-4 right-4 z-10">
-                <Badge variant="outline" className="bg-background/80 backdrop-blur-sm">
+                <Badge
+                  variant="outline"
+                  className="bg-background/80 backdrop-blur-sm"
+                >
                   Before
                 </Badge>
               </div>
@@ -63,7 +70,9 @@ export function MigrationCTA() {
             {/* AFTER */}
             <Card className="relative overflow-hidden border-primary/20">
               <div className="absolute top-4 right-4 z-10">
-                <Badge className="bg-primary/10 text-primary border-primary/20">After</Badge>
+                <Badge className="bg-primary/10 text-primary border-primary/20">
+                  After
+                </Badge>
               </div>
               <CodeBlock code={afterCode} language="tsx" />
             </Card>
@@ -128,7 +137,11 @@ export function MigrationCTA() {
           {/* CTA */}
           <div className="text-center">
             <Button size="lg" asChild className="text-base px-8">
-              <a href="https://github.com/garrettsiegel/chromakit#migration" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://github.com/garrettsiegel/chromakit#migration"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 View Migration Guide
                 <ArrowRight className="w-4 h-4 ml-2" />
               </a>

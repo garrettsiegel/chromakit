@@ -48,7 +48,7 @@ export interface OKLABA extends OKLAB {
   alpha: number; // 0-1
 }
 
-export type ColorFormat = 
+export type ColorFormat =
   | 'hex'
   | 'hex8'
   | 'rgb'
@@ -118,4 +118,3 @@ export interface ColorPickerProps {
   /** Maximum number of colors to keep in history */
   _historySize?: number;
 }
-
