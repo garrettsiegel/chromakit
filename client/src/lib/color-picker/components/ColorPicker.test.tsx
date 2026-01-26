@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor as _waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen, waitFor as _waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { ColorPicker } from './ColorPicker';
 

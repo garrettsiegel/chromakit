@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/dom';
 import { useColorState, usePointerDrag, useDebounce } from './hooks';
 import type { HSVA } from './types';
 
