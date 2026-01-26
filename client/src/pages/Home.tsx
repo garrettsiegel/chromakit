@@ -80,19 +80,6 @@ function CustomPicker() {
     </div>
   );
 }`,
-  sizeVariants: `import { ColorPicker } from '@chromakit/react';
-
-// Compact for toolbars and sidebars
-<ColorPicker size="compact" value={color} onChange={setColor} />
-
-// Default for modals and panels
-<ColorPicker size="default" value={color} onChange={setColor} />
-
-// Large for feature-rich UIs
-<ColorPicker size="large" value={color} onChange={setColor} />
-
-// Custom width overrides size
-<ColorPicker width={320} value={color} onChange={setColor} />`,
   conversion: `import { 
   parseColor, 
   rgbaToColorValue,
@@ -413,18 +400,18 @@ export default function Home() {
           <ThemePalettes />
         </section>
 
-        {/* SIZE VARIANTS SECTION */}
+        {/* DESIGN SHOWCASE SECTION */}
         <section className="mb-32">
           <h3 className="text-4xl font-bold text-center mb-4">Modern Glassmorphic Design</h3>
           <p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
             Horizontal compact layout with frosted glass aesthetics, smooth animations, and editable preset swatches
           </p>
-          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <Card className="backdrop-blur-sm bg-card/80 border-border/50">
+          <div className="flex justify-center max-w-6xl mx-auto">
+            <Card className="backdrop-blur-sm bg-card/80 border-border/50 w-full max-w-md">
               <CardHeader>
-                <CardTitle className="text-lg">Compact Size</CardTitle>
+                <CardTitle className="text-lg">Compact Design</CardTitle>
                 <CardDescription>
-                  Perfect for sidebars and toolbars • 80×70px color area
+                  Optimized for sidebars, toolbars, and modals • 80×70px color area
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex justify-center p-6">
@@ -438,37 +425,6 @@ export default function Home() {
                 >
                   <ColorPicker
                     defaultValue="#FF6B6B"
-                    size="compact"
-                    showAlpha
-                    showInputs
-                    showPreview
-                    showEyeDropper
-                    showCopyButton
-                    enableHistory
-                  />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="backdrop-blur-sm bg-card/80 border-border/50">
-              <CardHeader>
-                <CardTitle className="text-lg">Default Size</CardTitle>
-                <CardDescription>
-                  Full-featured with generous space • 100×85px color area
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex justify-center p-6">
-                <div style={{ 
-                  padding: '1.5rem',
-                  borderRadius: '1.5rem',
-                  background: 'linear-gradient(135deg, rgba(249, 250, 251, 0.8), rgba(243, 244, 246, 0.6))',
-                  backdropFilter: 'blur(10px)',
-                }}
-                className="dark:bg-gradient-to-br dark:from-slate-900/80 dark:to-slate-800/60"
-                >
-                  <ColorPicker
-                    defaultValue="#4ECDC4"
-                    size="default"
                     showAlpha
                     showInputs
                     showPreview

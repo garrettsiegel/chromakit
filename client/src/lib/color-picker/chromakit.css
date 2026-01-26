@@ -55,12 +55,12 @@
   }
 }
 
-/* Main container - horizontal glassmorphic layout */
+/* Main container - horizontal glassmorphic compact layout */
 .ck-color-picker {
   display: flex;
   flex-direction: row;
-  gap: 6px;
-  padding: 8px;
+  gap: 5px;
+  padding: 6px;
   background: var(--ck-glass-bg);
   backdrop-filter: var(--ck-blur);
   -webkit-backdrop-filter: var(--ck-blur);
@@ -96,7 +96,7 @@
 .ck-picker-main {
   display: flex;
   flex-direction: row;
-  gap: 6px;
+  gap: 5px;
   align-items: stretch;
   position: relative;
   z-index: 1;
@@ -108,60 +108,6 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
-}
-
-/* Compact variant - tighter spacing */
-.ck-color-picker--compact {
-  gap: 5px;
-  padding: 6px;
-}
-
-.ck-color-picker--compact .ck-picker-main {
-  gap: 5px;
-}
-
-.ck-color-picker--compact .ck-picker-controls {
-  gap: 4px;
-}
-
-.ck-color-picker--compact .ck-hue-slider,
-.ck-color-picker--compact .ck-alpha-slider {
-  height: 6px;
-}
-
-.ck-color-picker--compact .ck-slider-thumb {
-  width: 10px;
-  height: 10px;
-}
-
-.ck-color-picker--compact .ck-color-area-thumb {
-  width: 10px;
-  height: 10px;
-}
-
-.ck-color-picker--compact .ck-preview-lg {
-  width: 28px;
-  height: 40px;
-}
-
-.ck-color-picker--compact .ck-input-mode-btn {
-  padding: 4px 2px;
-  font-size: 10px;
-}
-
-.ck-color-picker--compact .ck-channel-input {
-  padding: 4px 2px;
-  font-size: 12px;
-}
-
-.ck-color-picker--compact .ck-action-buttons {
-  gap: 4px;
-}
-
-.ck-color-picker--compact .ck-eyedropper-btn,
-.ck-color-picker--compact .ck-copy-btn {
-  width: 28px;
-  height: 28px;
 }
 
 /* Color Area - glassmorphic with subtle glow */
@@ -245,7 +191,7 @@
 /* Sliders - glassmorphic with glow effects */
 .ck-hue-slider {
   position: relative;
-  height: 8px;
+  height: 6px;
   width: 100%;
   cursor: pointer;
   touch-action: none;
@@ -310,7 +256,7 @@
 /* Alpha Slider - glassmorphic */
 .ck-alpha-slider {
   position: relative;
-  height: 8px;
+  height: 6px;
   width: 100%;
   cursor: pointer;
   touch-action: none;
@@ -386,8 +332,8 @@
 .ck-preview-sm { width: 32px; height: 32px; }
 .ck-preview-md { width: 48px; height: 48px; }
 .ck-preview-lg { 
-  width: 32px; 
-  height: 32px;
+  width: 28px; 
+  height: 40px;
   border-radius: var(--ck-radius-md);
   box-shadow: var(--ck-glass-shadow);
 }
@@ -423,8 +369,8 @@
 }
 
 .ck-input-mode-btn {
-  padding: 3px 5px;
-  font-size: 9px;
+  padding: 4px 2px;
+  font-size: 10px;
   font-weight: 600;
   border: none;
   border-radius: 6px;
@@ -546,8 +492,8 @@
 }
 
 .ck-channel-input {
-  padding: 3px 2px;
-  font-size: 10px;
+  padding: 4px 2px;
+  font-size: 12px;
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
   text-align: center;
   background: var(--ck-glass-bg);
@@ -743,13 +689,13 @@
 /* Action buttons (eyedropper, copy) - glassmorphic */
 .ck-action-buttons {
   display: flex;
-  gap: 3px;
+  gap: 4px;
 }
 
 .ck-eyedropper-btn,
 .ck-copy-btn {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -804,18 +750,6 @@
 .ck-copy-btn--copied:hover {
   background: linear-gradient(135deg, var(--ck-primary), var(--ck-accent));
   transform: translateY(-2px);
-}
-/* Compact variant action buttons */
-.ck-color-picker--compact .ck-eyedropper-btn,
-.ck-color-picker--compact .ck-copy-btn {
-  width: 20px;
-  height: 20px;
-}
-
-.ck-color-picker--compact .ck-eyedropper-btn svg,
-.ck-color-picker--compact .ck-copy-btn svg {
-  width: 12px;
-  height: 12px;
 }
 
 /* ============================================================ */
@@ -874,11 +808,6 @@
 
 .ck-recent-color-swatch:active {
   transform: translateY(0) scale(0.95);
-}
-
-/* Compact variant recent colors */
-.ck-color-picker--compact .ck-recent-color-swatch {
-  min-height: 32px;
 }
 
 /* ============================================================ */

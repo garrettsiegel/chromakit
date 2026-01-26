@@ -47,7 +47,6 @@ export function ColorPicker({
   showPreview = true,
   presets = DEFAULT_PRESETS,
   className = '',
-  size = 'default',
   width,
   showEyeDropper = true,
   showCopyButton = true,
@@ -65,17 +64,11 @@ export function ColorPicker({
     enableHistory ? getColorHistory() : []
   );
   
-  // Compute dimensions based on size prop - horizontal compact layout
-  const dimensions = useMemo(() => {
-    switch (size) {
-      case 'compact':
-        return { areaWidth: 80, areaHeight: 70 };
-      default:
-        return { areaWidth: 100, areaHeight: 85 };
-    }
-  }, [size]);
-  
-  const sizeClass = size !== 'default' ? `ck-color-picker--${size}` : '';
+  // Fixed compact dimensions - horizontal compact layout
+  const dimensions = useMemo(() => ({
+    areaWidth: 80,
+    areaHeight: 70
+  }), []);
   
   const {
     hsva,
@@ -212,7 +205,7 @@ export function ColorPicker({
 
   return (
     <div
-      className={`ck-color-picker ${sizeClass} ${className}`.trim()}
+      className={`ck-color-picker ${className}`.trim()}
       style={width ? { width } : undefined}
       data-testid="color-picker"
     >

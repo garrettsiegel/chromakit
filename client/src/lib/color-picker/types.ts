@@ -107,8 +107,6 @@ export interface ColorPickerProps {
   themes?: ColorTheme[];
   theme?: ColorPickerTheme;
   className?: string;
-  /** Size variant for the color picker */
-  size?: 'compact' | 'default';
   /** Show preset color swatches */
   showPresets?: boolean;
   width?: number;

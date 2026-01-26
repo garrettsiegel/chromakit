@@ -168,8 +168,7 @@ interface ColorPickerProps {
 - `showInputs` - Show color input fields (default: `true`)
 - `showPreview` - Show color preview swatch (default: `true`)
 - `presets` - Custom preset colors array
-- `size` - Size variant: `'compact' | 'default' | 'large'` (default: `'default'`)
-- `width` - Custom width in pixels (overrides size)
+- `width` - Custom width in pixels
 - `height` - Custom color area height in pixels
 - `showEyeDropper` - Show eyedropper button for screen color picking (default: `true`, requires browser support)
 - `showCopyButton` - Show copy button and enable Cmd/Ctrl+C shortcut (default: `true`)
