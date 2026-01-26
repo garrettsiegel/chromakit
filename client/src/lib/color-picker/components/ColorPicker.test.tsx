@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '@testing-library/react';
-import { screen, waitFor as _waitFor } from '@testing-library/dom';
+import { screen, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { ColorPicker } from './ColorPicker';
 
@@ -146,10 +146,13 @@ describe('ColorPicker', () => {
       render(<ColorPicker defaultValue="#FF0000" onChange={onChange} />);
 
       const input = screen.getByTestId('color-input-text');
-      await user.clear(input);
-      await user.type(input, '#00FF00');
+      await user.click(input);
+      await user.tripleClick(input);
+      await user.paste('#00FF00');
 
-      expect(onChange).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(onChange).toHaveBeenCalled();
+      });
     });
 
     it('should have onChangeComplete prop', () => {
@@ -321,12 +324,15 @@ describe('ColorPicker', () => {
       const input = screen.getByTestId('color-input-text');
 
       // Rapid changes
-      await user.clear(input);
-      await user.type(input, '#FF0000');
-      await user.clear(input);
-      await user.type(input, '#00FF00');
+      await user.click(input);
+      await user.tripleClick(input);
+      await user.paste('#FF0000');
+      await user.tripleClick(input);
+      await user.paste('#00FF00');
 
-      expect(onChange).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(onChange).toHaveBeenCalled();
+      });
     });
 
     it('should handle value prop updates', () => {

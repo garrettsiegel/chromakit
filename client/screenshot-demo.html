@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChromaKit Screenshot Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .screenshot-container {
+      background: white;
+      border-radius: 24px;
+      padding: 60px;
+      box-shadow: 0 50px 100px rgba(0, 0, 0, 0.3);
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-size: 48px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    .color-picker-container {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-picker-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .picker-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      grid-column: 1 / -1;
+      margin-top: 30px;
+    }
+
+    .feature-badge {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .feature-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .color-formats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .format-item {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+    }
+
+    .format-label {
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .format-value {
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    .gradient-comparison {
+      display: flex;
+      gap: 16px;
+    }
+
+    .gradient-box {
+      flex: 1;
+      height: 120px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gradient-label {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .rgb-gradient {
+      background: linear-gradient(90deg, 
+        rgb(100, 126, 234) 0%,
+        rgb(118, 75, 162) 50%,
+        rgb(240, 147, 251) 100%
+      );
+    }
+
+    .oklch-gradient {
+      background: linear-gradient(90deg, 
+        oklch(0.6 0.2 270) 0%,
+        oklch(0.6 0.2 300) 50%,
+        oklch(0.6 0.2 330) 100%
+      );
+    }
+
+    .note {
+      text-align: center;
+      margin-top: 30px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .note strong {
+      color: #667eea;
+    }
+  </style>
+</head>
+<body>
+  <div class="screenshot-container">
+    <div class="header">
+      <div class="logo">ChromaKit</div>
+      <div class="tagline">The Modern React Color Picker with Perceptually Uniform Colors</div>
+    </div>
+
+    <div class="color-picker-container">
+      <div class="picker-wrapper">
+        <div id="picker-root"></div>
+      </div>
+    </div>
+
+    <div class="demo-grid">
+      <div class="feature-card">
+        <div class="feature-title">Color Formats</div>
+        <div class="color-formats">
+          <div class="format-item">
+            <div class="format-label">HEX</div>
+            <div class="format-value">#8B5CF6</div>
+          </div>
+          <div class="format-item">
+            <div class="format-label">RGB</div>
+            <div class="format-value">139, 92, 246</div>
+          </div>
+          <div class="format-item">
+            <div class="format-label">HSL</div>
+            <div class="format-value">258°, 90%, 66%</div>
+          </div>
+          <div class="format-item">
+            <div class="format-label">OKLCH</div>
+            <div class="format-value">0.65 0.27 292</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-title">Gradient Comparison</div>
+        <div class="gradient-comparison">
+          <div class="gradient-box rgb-gradient">
+            <div class="gradient-label">RGB Gradient</div>
+          </div>
+          <div class="gradient-box oklch-gradient">
+            <div class="gradient-label">OKLCH Gradient</div>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: #64748b; text-align: center;">
+          Notice: OKLCH maintains consistent lightness
+        </div>
+      </div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-badge">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-name">OKLCH Support</div>
+        <div class="feature-desc">Perceptually uniform</div>
+      </div>
+      <div class="feature-badge">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-name">10KB Bundle</div>
+        <div class="feature-desc">Zero dependencies</div>
+      </div>
+      <div class="feature-badge">
+        <div class="feature-icon">♿</div>
+        <div class="feature-name">Accessible</div>
+        <div class="feature-desc">WCAG AA compliant</div>
+      </div>
+      <div class="feature-badge">
+        <div class="feature-icon">🧩</div>
+        <div class="feature-name">Composable</div>
+        <div class="feature-desc">Build custom UIs</div>
+      </div>
+      <div class="feature-badge">
+        <div class="feature-icon">📘</div>
+        <div class="feature-name">TypeScript</div>
+        <div class="feature-desc">Fully typed</div>
+      </div>
+      <div class="feature-badge">
+        <div class="feature-icon">🌗</div>
+        <div class="feature-name">Dark Mode</div>
+        <div class="feature-desc">Built-in support</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>npm install chromakit-react</strong> • Visit chromakit.site for live demos
+    </div>
+  </div>
+
+  <script type="module">
+    import { createRoot } from 'https://esm.sh/react@18.2.0/client';
+    import React from 'https://esm.sh/react@18.2.0';
+    import { ColorPicker } from './src/lib/color-picker/index.ts';
+    import './src/lib/color-picker/chromakit.css';
+
+    const App = () => {
+      const [color, setColor] = React.useState('#8B5CF6');
+      
+      return React.createElement(ColorPicker, {
+        value: color,
+        onChange: (colorValue) => setColor(colorValue.hex),
+        presetGroups: [
+          {
+            name: 'Material',
+            colors: ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3']
+          },
+          {
+            name: 'Tailwind',
+            colors: ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#06B6D4', '#8B5CF6']
+          }
+        ]
+      });
+    };
+
+    const root = createRoot(document.getElementById('picker-root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

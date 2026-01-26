@@ -19,7 +19,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "og-image.png"
   ],
   "sideEffects": [
     "*.css",
