@@ -8,7 +8,7 @@
 - **Purpose:** Facebook, LinkedIn, and general social sharing
 - **Design Requirements:**
   - ChromaKit logo/gradient
-  - Headline: "The Color Picker React Developers Love"
+  - Headline: "Modern React Color Picker for Design Systems"
   - Visual: Color picker preview or gradient showcase
   - Key features: "OKLCH • 8KB • TypeScript • Accessible"
   - Modern, professional design matching brand colors
