@@ -45,6 +45,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run build:lib && npm run build:types",
+    "build:site": "vite build",
     "build:lib": "vite build --mode lib",
     "build:types": "tsc --project tsconfig.build.json",
     "prepublishOnly": "npm run build",
