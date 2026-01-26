@@ -16,11 +16,7 @@ export function ColorPreview({
   size = 'md',
   className = '',
 }: ColorPreviewProps) {
-  const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-12 h-12',
-    lg: 'w-16 h-16',
-  };
+  const sizeClass = `ck-preview-${size}`;
 
   const currentColorStyle = useMemo(
     () => ({
@@ -31,19 +27,21 @@ export function ColorPreview({
 
   if (showComparison && originalColor) {
     return (
-      <div className={`flex rounded-md overflow-hidden shadow-sm border border-border ${className}`}>
+      <div className={`ck-preview ${className}`} style={{ display: 'flex', overflow: 'hidden' }}>
         <div
-          className={`${sizeClasses[size]} color-picker-checkerboard relative`}
+          className={`${sizeClass} ck-checkerboard`}
+          style={{ position: 'relative' }}
         >
           <div
-            className="absolute inset-0"
+            className="ck-preview-color"
             style={{ backgroundColor: originalColor }}
           />
         </div>
         <div
-          className={`${sizeClasses[size]} color-picker-checkerboard relative`}
+          className={`${sizeClass} ck-checkerboard`}
+          style={{ position: 'relative' }}
         >
-          <div className="absolute inset-0" style={currentColorStyle} />
+          <div className="ck-preview-color" style={currentColorStyle} />
         </div>
       </div>
     );
@@ -51,10 +49,10 @@ export function ColorPreview({
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-md color-picker-checkerboard relative shadow-sm border border-border overflow-hidden ${className}`}
+      className={`ck-preview ${sizeClass} ck-checkerboard ${className}`}
       data-testid="color-preview"
     >
-      <div className="absolute inset-0" style={currentColorStyle} />
+      <div className="ck-preview-color" style={currentColorStyle} />
     </div>
   );
 }
@@ -74,25 +72,15 @@ export function ColorSwatch({
   size = 'sm',
   className = '',
 }: ColorSwatchProps) {
-  const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8',
-    lg: 'w-10 h-10',
-  };
-
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`${sizeClasses[size]} rounded-md color-picker-checkerboard relative cursor-pointer border-2 transition-all ${
-        selected
-          ? 'border-primary ring-2 ring-primary/30 scale-110'
-          : 'border-transparent hover:scale-105'
-      } ${className}`}
+      className={`ck-swatch ck-checkerboard ${selected ? 'selected' : ''} ${className}`}
       data-testid="color-swatch"
     >
       <div
-        className="absolute inset-0 rounded-[4px]"
+        className="ck-swatch-color"
         style={{ backgroundColor: color }}
       />
     </button>
@@ -113,7 +101,7 @@ export function PresetColors({
   className = '',
 }: PresetColorsProps) {
   return (
-    <div className={`flex flex-wrap gap-1.5 ${className}`} data-testid="preset-colors">
+    <div className={`ck-presets-grid ${className}`} data-testid="preset-colors">
       {colors.map((color, index) => (
         <ColorSwatch
           key={`${color}-${index}`}

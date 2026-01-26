@@ -88,28 +88,23 @@ export function HueSlider({
       aria-valuetext={`${hsva.h}°`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
-      className={`relative cursor-pointer select-none touch-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-        vertical ? 'w-4 h-full' : 'h-4 w-full'
-      } ${className}`}
+      className={`ck-hue-slider ${className}`}
+      style={vertical ? { width: '16px', height: '100%' } : undefined}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="hue-slider"
     >
       <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: vertical
-            ? 'linear-gradient(to bottom, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)'
-            : 'linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
-        }}
+        className="ck-hue-slider-track"
+        style={vertical ? {
+          background: 'linear-gradient(to bottom, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
+        } : undefined}
       />
       <div
-        className={`absolute w-5 h-5 -translate-x-1/2 -translate-y-1/2 pointer-events-none ${
-          vertical ? 'left-1/2' : 'top-1/2'
-        }`}
-        style={vertical ? { top: thumbPosition } : { left: thumbPosition }}
+        className="ck-slider-thumb"
+        style={vertical ? { top: thumbPosition, left: '50%' } : { left: thumbPosition }}
       >
-        <div className="w-full h-full rounded-full bg-white border-2 border-white shadow-md ring-1 ring-black/20" />
+        <div className="ck-slider-thumb-inner" />
       </div>
     </div>
   );

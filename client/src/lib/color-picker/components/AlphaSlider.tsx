@@ -102,29 +102,26 @@ export function AlphaSlider({
       aria-valuetext={`${alphaPercentage}%`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
-      className={`relative cursor-pointer select-none touch-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-        vertical ? 'w-4 h-full' : 'h-4 w-full'
-      } ${className}`}
+      className={`ck-alpha-slider ${className}`}
+      style={vertical ? { width: '16px', height: '100%' } : undefined}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="alpha-slider"
     >
-      <div className="absolute inset-0 rounded-full color-picker-checkerboard" />
+      <div className="ck-alpha-slider-track ck-checkerboard" />
       <div
-        className="absolute inset-0 rounded-full"
+        className="ck-alpha-slider-track"
         style={gradientStyle}
       />
       <div
-        className={`absolute w-5 h-5 -translate-x-1/2 -translate-y-1/2 pointer-events-none ${
-          vertical ? 'left-1/2' : 'top-1/2'
-        }`}
+        className="ck-slider-thumb"
         style={
           vertical
-            ? { top: `${100 - hsva.a * 100}%` }
+            ? { top: `${100 - hsva.a * 100}%`, left: '50%' }
             : { left: thumbPosition }
         }
       >
-        <div className="w-full h-full rounded-full bg-white border-2 border-white shadow-md ring-1 ring-black/20" />
+        <div className="ck-slider-thumb-inner" />
       </div>
     </div>
   );

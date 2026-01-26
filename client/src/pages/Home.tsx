@@ -118,7 +118,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-md bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-400 shadow-md ring-1 ring-black/10" />
             <h1 className="text-xl font-bold">ChromaKit</h1>
-            <Badge variant="secondary" className="text-xs">v0.1.3</Badge>
+            <Badge variant="secondary" className="text-xs">v0.1.5</Badge>
           </div>
           <div className="flex items-center gap-2">
             <a 

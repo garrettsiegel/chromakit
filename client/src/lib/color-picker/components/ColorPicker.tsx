@@ -101,7 +101,7 @@ export function ColorPicker({
 
   return (
     <div
-      className={`flex flex-col gap-4 p-4 bg-card border border-card-border rounded-lg shadow-lg ${className}`}
+      className={`ck-color-picker ${className}`}
       style={{ width }}
       data-testid="color-picker"
     >
@@ -114,11 +114,11 @@ export function ColorPicker({
         height={180}
       />
 
-      <div className="flex gap-3 items-center">
+      <div className="ck-slider-row">
         {showPreview && (
           <ColorPreview colorValue={colorValue} size="lg" />
         )}
-        <div className="flex-1 flex flex-col gap-3">
+        <div className="ck-slider-column">
           <HueSlider
             hsva={hsva}
             onChange={updateColor}
@@ -137,19 +137,15 @@ export function ColorPicker({
       </div>
 
       {showInputs && (
-        <div className="flex flex-col gap-3">
+        <div className="ck-inputs">
           {availableModes.length > 1 && (
-            <div className="flex gap-1 p-0.5 bg-secondary/50 rounded-md">
+            <div className="ck-input-modes">
               {availableModes.map((mode) => (
                 <button
                   key={mode}
                   type="button"
                   onClick={() => setInputMode(mode)}
-                  className={`flex-1 px-2 py-1 text-xs font-medium rounded transition-colors ${
-                    inputMode === mode
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
+                  className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
                   data-testid={`input-mode-${mode}`}
                 >
                   {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
@@ -200,7 +196,7 @@ export function ColorPicker({
       )}
 
       {presets && presets.length > 0 && (
-        <div className="border-t border-border pt-3">
+        <div className="ck-presets">
           <PresetColors
             colors={presets}
             selectedColor={colorValue.hex}

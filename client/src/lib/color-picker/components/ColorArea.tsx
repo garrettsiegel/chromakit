@@ -98,33 +98,33 @@ export function ColorArea({
       aria-valuenow={hsva.s}
       aria-valuetext={`Saturation ${hsva.s}%, Value ${hsva.v}%`}
       tabIndex={0}
-      className={`relative rounded-md cursor-crosshair select-none touch-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className}`}
+      className={`ck-color-area ${className}`}
       style={{ width, height }}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="color-area"
     >
       <div
-        className="absolute inset-0 rounded-md"
+        className="ck-color-area-layer"
         style={backgroundStyle}
       />
       <div
-        className="absolute inset-0 rounded-md"
+        className="ck-color-area-layer"
         style={{
           background: 'linear-gradient(to right, white, transparent)',
         }}
       />
       <div
-        className="absolute inset-0 rounded-md"
+        className="ck-color-area-layer"
         style={{
           background: 'linear-gradient(to top, black, transparent)',
         }}
       />
       <div
-        className="absolute w-4 h-4 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="ck-color-area-thumb"
         style={thumbStyle}
       >
-        <div className="w-full h-full rounded-full border-2 border-white shadow-md ring-1 ring-black/20" />
+        <div className="ck-color-area-thumb-inner" />
       </div>
     </div>
   );

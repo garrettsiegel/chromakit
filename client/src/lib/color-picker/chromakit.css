@@ -1,7 +1,187 @@
-/* ChromaKit - Essential styles for color picker components */
+/* ChromaKit - Standalone Color Picker Styles */
+/* No Tailwind required - works out of the box */
 
-/* Checkerboard pattern for transparent color preview */
-.color-picker-checkerboard {
+/* CSS Custom Properties for theming */
+:root {
+  --ck-bg: #ffffff;
+  --ck-bg-secondary: #f3f4f6;
+  --ck-border: #e5e7eb;
+  --ck-text: #111827;
+  --ck-text-muted: #6b7280;
+  --ck-primary: #6366f1;
+  --ck-primary-light: rgba(99, 102, 241, 0.3);
+  --ck-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --ck-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --ck-radius: 8px;
+  --ck-radius-sm: 4px;
+}
+
+/* Dark mode support */
+.dark, [data-theme="dark"] {
+  --ck-bg: #1f2937;
+  --ck-bg-secondary: #374151;
+  --ck-border: #4b5563;
+  --ck-text: #f9fafb;
+  --ck-text-muted: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme="light"]) {
+    --ck-bg: #1f2937;
+    --ck-bg-secondary: #374151;
+    --ck-border: #4b5563;
+    --ck-text: #f9fafb;
+    --ck-text-muted: #9ca3af;
+  }
+}
+
+/* Main container */
+.ck-color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--ck-bg);
+  border: 1px solid var(--ck-border);
+  border-radius: var(--ck-radius);
+  box-shadow: var(--ck-shadow);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--ck-text);
+  box-sizing: border-box;
+}
+
+.ck-color-picker *, .ck-color-picker *::before, .ck-color-picker *::after {
+  box-sizing: border-box;
+}
+
+/* Color Area */
+.ck-color-area {
+  position: relative;
+  cursor: crosshair;
+  touch-action: none;
+  border-radius: var(--ck-radius-sm);
+  overflow: hidden;
+  user-select: none;
+}
+
+.ck-color-area:focus {
+  outline: none;
+}
+
+.ck-color-area:focus-visible {
+  outline: 2px solid var(--ck-primary);
+  outline-offset: 2px;
+}
+
+.ck-color-area-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ck-radius-sm);
+}
+
+.ck-color-area-thumb {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ck-color-area-thumb-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: var(--ck-shadow), 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Slider row */
+.ck-slider-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.ck-slider-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Hue Slider */
+.ck-hue-slider {
+  position: relative;
+  height: 16px;
+  width: 100%;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  border-radius: 9999px;
+}
+
+.ck-hue-slider:focus {
+  outline: none;
+}
+
+.ck-hue-slider:focus-visible {
+  outline: 2px solid var(--ck-primary);
+  outline-offset: 2px;
+}
+
+.ck-hue-slider-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+}
+
+.ck-slider-thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ck-slider-thumb-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid white;
+  box-shadow: var(--ck-shadow), 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Alpha Slider */
+.ck-alpha-slider {
+  position: relative;
+  height: 16px;
+  width: 100%;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  border-radius: 9999px;
+}
+
+.ck-alpha-slider:focus {
+  outline: none;
+}
+
+.ck-alpha-slider:focus-visible {
+  outline: 2px solid var(--ck-primary);
+  outline-offset: 2px;
+}
+
+.ck-alpha-slider-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+}
+
+/* Checkerboard pattern */
+.ck-checkerboard {
   background-image: 
     linear-gradient(45deg, #ccc 25%, transparent 25%),
     linear-gradient(-45deg, #ccc 25%, transparent 25%),
@@ -11,9 +191,8 @@
   background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
 }
 
-/* Dark mode checkerboard */
-.dark .color-picker-checkerboard,
-[data-theme="dark"] .color-picker-checkerboard {
+.dark .ck-checkerboard,
+[data-theme="dark"] .ck-checkerboard {
   background-image: 
     linear-gradient(45deg, #444 25%, transparent 25%),
     linear-gradient(-45deg, #444 25%, transparent 25%),
@@ -21,82 +200,203 @@
     linear-gradient(-45deg, transparent 75%, #444 75%);
 }
 
-/* Focus ring for accessibility */
-.color-picker-focus-ring:focus-visible {
-  outline: 2px solid #6366f1;
-  outline-offset: 2px;
-}
-
-/* Base component styles */
-.color-picker-area {
+/* Color Preview */
+.ck-preview {
   position: relative;
-  cursor: crosshair;
-  touch-action: none;
-  border-radius: 4px;
+  border-radius: var(--ck-radius-sm);
+  box-shadow: var(--ck-shadow-sm);
+  border: 1px solid var(--ck-border);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
-.color-picker-slider {
-  position: relative;
-  cursor: pointer;
-  touch-action: none;
-  border-radius: 9999px;
-  height: 12px;
-}
+.ck-preview-sm { width: 32px; height: 32px; }
+.ck-preview-md { width: 48px; height: 48px; }
+.ck-preview-lg { width: 64px; height: 64px; }
 
-.color-picker-thumb {
+.ck-preview-color {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 2px solid white;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
+  inset: 0;
 }
 
-.color-picker-preview {
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+/* Input mode tabs */
+.ck-input-modes {
+  display: flex;
+  gap: 4px;
+  padding: 2px;
+  background-color: var(--ck-bg-secondary);
+  border-radius: var(--ck-radius-sm);
 }
 
-/* Input styles */
-.color-picker-input {
+.ck-input-mode-btn {
+  flex: 1;
   padding: 6px 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
   border-radius: 4px;
-  font-size: 14px;
-  font-family: monospace;
-  width: 100%;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent;
+  color: var(--ck-text-muted);
 }
 
-.color-picker-input:focus {
-  outline: 2px solid #6366f1;
-  outline-offset: 0;
-  border-color: transparent;
+.ck-input-mode-btn:hover {
+  color: var(--ck-text);
 }
 
-/* Preset colors grid */
-.color-picker-presets {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
+.ck-input-mode-btn.active {
+  background-color: var(--ck-bg);
+  color: var(--ck-text);
+  box-shadow: var(--ck-shadow-sm);
+}
+
+/* Input container */
+.ck-inputs {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-.color-picker-preset-button {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: transform 0.1s;
+/* Text input row */
+.ck-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-.color-picker-preset-button:hover {
+/* Text input */
+.ck-input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  background-color: var(--ck-bg-secondary);
+  border: 1px solid var(--ck-border);
+  border-radius: var(--ck-radius-sm);
+  color: var(--ck-text);
+  outline: none;
+}
+
+.ck-input:focus {
+  border-color: var(--ck-primary);
+  box-shadow: 0 0 0 2px var(--ck-primary-light);
+}
+
+/* Format select */
+.ck-select {
+  padding: 8px;
+  font-size: 14px;
+  background-color: var(--ck-bg-secondary);
+  border: 1px solid var(--ck-border);
+  border-radius: var(--ck-radius-sm);
+  color: var(--ck-text);
+  cursor: pointer;
+  outline: none;
+}
+
+.ck-select:focus {
+  border-color: var(--ck-primary);
+  box-shadow: 0 0 0 2px var(--ck-primary-light);
+}
+
+/* Channel inputs grid */
+.ck-channel-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.ck-channel-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.ck-channel-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.ck-channel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ck-channel-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--ck-text-muted);
+}
+
+.ck-channel-input {
+  padding: 6px 4px;
+  font-size: 14px;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  text-align: center;
+  background-color: var(--ck-bg-secondary);
+  border: 1px solid var(--ck-border);
+  border-radius: var(--ck-radius-sm);
+  color: var(--ck-text);
+  outline: none;
+  width: 100%;
+}
+
+.ck-channel-input:focus {
+  border-color: var(--ck-primary);
+  box-shadow: 0 0 0 2px var(--ck-primary-light);
+}
+
+/* Remove number input spinners */
+.ck-channel-input::-webkit-outer-spin-button,
+.ck-channel-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ck-channel-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Presets section */
+.ck-presets {
+  border-top: 1px solid var(--ck-border);
+  padding-top: 12px;
+}
+
+.ck-presets-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Color swatch */
+.ck-swatch {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--ck-radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.1s ease, border-color 0.1s ease;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ck-swatch:hover {
   transform: scale(1.1);
 }
 
-.color-picker-preset-button:focus-visible {
-  outline: 2px solid #6366f1;
+.ck-swatch:focus {
+  outline: none;
+}
+
+.ck-swatch:focus-visible {
+  outline: 2px solid var(--ck-primary);
   outline-offset: 2px;
+}
+
+.ck-swatch.selected {
+  border-color: var(--ck-primary);
+  box-shadow: 0 0 0 2px var(--ck-primary-light);
+  transform: scale(1.1);
+}
+
+.ck-swatch-color {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
 }

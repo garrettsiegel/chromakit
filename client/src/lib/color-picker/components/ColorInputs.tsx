@@ -71,22 +71,22 @@ export function ColorInputs({
   }, [inputValue, colorValue, format]);
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="flex gap-2 items-center">
+    <div className={`ck-inputs ${className}`}>
+      <div className="ck-input-row">
         <input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="flex-1 px-3 py-2 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+          className="ck-input"
           data-testid="color-input-text"
         />
         {onFormatChange && (
           <select
             value={format}
             onChange={(e) => onFormatChange(e.target.value as ColorFormat)}
-            className="px-2 py-2 text-sm bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+            className="ck-select"
             data-testid="color-format-select"
           >
             {ALL_FORMATS.filter((f) => {
@@ -152,10 +152,10 @@ export function RGBInputs({
   }, [values, onChange]);
 
   return (
-    <div className={`grid gap-2 ${showAlpha ? 'grid-cols-4' : 'grid-cols-3'} ${className}`}>
+    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
       {(['r', 'g', 'b'] as const).map((key) => (
-        <div key={key} className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground uppercase font-medium">
+        <div key={key} className="ck-channel">
+          <label className="ck-channel-label">
             {key}
           </label>
           <input
@@ -164,14 +164,14 @@ export function RGBInputs({
             max={255}
             value={values[key]}
             onChange={(e) => handleChange(key, e.target.value)}
-            className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+            className="ck-channel-input"
             data-testid={`rgb-input-${key}`}
           />
         </div>
       ))}
       {showAlpha && (
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground uppercase font-medium">
+        <div className="ck-channel">
+          <label className="ck-channel-label">
             A
           </label>
           <input
@@ -181,7 +181,7 @@ export function RGBInputs({
             step={0.01}
             value={values.a}
             onChange={(e) => handleChange('a', e.target.value)}
-            className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+            className="ck-channel-input"
             data-testid="rgb-input-a"
           />
         </div>
@@ -232,46 +232,46 @@ export function HSLInputs({
   }, [values, onChange]);
 
   return (
-    <div className={`grid gap-2 ${showAlpha ? 'grid-cols-4' : 'grid-cols-3'} ${className}`}>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">H</label>
+    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+      <div className="ck-channel">
+        <label className="ck-channel-label">H</label>
         <input
           type="number"
           min={0}
           max={360}
           value={Math.round(values.h)}
           onChange={(e) => handleChange('h', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="hsl-input-h"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">S</label>
+      <div className="ck-channel">
+        <label className="ck-channel-label">S</label>
         <input
           type="number"
           min={0}
           max={100}
           value={Math.round(values.s)}
           onChange={(e) => handleChange('s', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="hsl-input-s"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">L</label>
+      <div className="ck-channel">
+        <label className="ck-channel-label">L</label>
         <input
           type="number"
           min={0}
           max={100}
           value={Math.round(values.l)}
           onChange={(e) => handleChange('l', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="hsl-input-l"
         />
       </div>
       {showAlpha && (
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground uppercase font-medium">A</label>
+        <div className="ck-channel">
+          <label className="ck-channel-label">A</label>
           <input
             type="number"
             min={0}
@@ -279,7 +279,7 @@ export function HSLInputs({
             step={0.01}
             value={values.a}
             onChange={(e) => handleChange('a', e.target.value)}
-            className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+            className="ck-channel-input"
             data-testid="hsl-input-a"
           />
         </div>
@@ -337,46 +337,46 @@ export function HSVInputs({
   }, [values, onChange]);
 
   return (
-    <div className={`grid gap-2 ${showAlpha ? 'grid-cols-4' : 'grid-cols-3'} ${className}`}>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">H</label>
+    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+      <div className="ck-channel">
+        <label className="ck-channel-label">H</label>
         <input
           type="number"
           min={0}
           max={360}
           value={Math.round(values.h)}
           onChange={(e) => handleChange('h', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="hsv-input-h"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">S</label>
+      <div className="ck-channel">
+        <label className="ck-channel-label">S</label>
         <input
           type="number"
           min={0}
           max={100}
           value={Math.round(values.s)}
           onChange={(e) => handleChange('s', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="hsv-input-s"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">V</label>
+      <div className="ck-channel">
+        <label className="ck-channel-label">V</label>
         <input
           type="number"
           min={0}
           max={100}
           value={Math.round(values.v)}
           onChange={(e) => handleChange('v', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="hsv-input-v"
         />
       </div>
       {showAlpha && (
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground uppercase font-medium">A</label>
+        <div className="ck-channel">
+          <label className="ck-channel-label">A</label>
           <input
             type="number"
             min={0}
@@ -384,7 +384,7 @@ export function HSVInputs({
             step={0.01}
             value={values.a}
             onChange={(e) => handleChange('a', e.target.value)}
-            className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+            className="ck-channel-input"
             data-testid="hsv-input-a"
           />
         </div>
@@ -436,9 +436,9 @@ export function OKLCHInputs({
   }, [values, onChange]);
 
   return (
-    <div className={`grid gap-2 ${showAlpha ? 'grid-cols-4' : 'grid-cols-3'} ${className}`}>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">L</label>
+    <div className={`ck-channel-grid ${showAlpha ? 'ck-channel-grid-4' : 'ck-channel-grid-3'} ${className}`}>
+      <div className="ck-channel">
+        <label className="ck-channel-label">L</label>
         <input
           type="number"
           min={0}
@@ -446,12 +446,12 @@ export function OKLCHInputs({
           step={0.01}
           value={values.L.toFixed(2)}
           onChange={(e) => handleChange('L', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="oklch-input-l"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">C</label>
+      <div className="ck-channel">
+        <label className="ck-channel-label">C</label>
         <input
           type="number"
           min={0}
@@ -459,25 +459,25 @@ export function OKLCHInputs({
           step={0.001}
           value={values.C.toFixed(3)}
           onChange={(e) => handleChange('C', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="oklch-input-c"
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground uppercase font-medium">H</label>
+      <div className="ck-channel">
+        <label className="ck-channel-label">H</label>
         <input
           type="number"
           min={0}
           max={360}
           value={Math.round(values.h)}
           onChange={(e) => handleChange('h', e.target.value)}
-          className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+          className="ck-channel-input"
           data-testid="oklch-input-h"
         />
       </div>
       {showAlpha && (
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-muted-foreground uppercase font-medium">A</label>
+        <div className="ck-channel">
+          <label className="ck-channel-label">A</label>
           <input
             type="number"
             min={0}
@@ -485,7 +485,7 @@ export function OKLCHInputs({
             step={0.01}
             value={values.a.toFixed(2)}
             onChange={(e) => handleChange('a', e.target.value)}
-            className="px-2 py-1.5 text-sm font-mono bg-secondary/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-center"
+            className="ck-channel-input"
             data-testid="oklch-input-a"
           />
         </div>
