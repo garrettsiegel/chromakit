@@ -38,8 +38,13 @@ export function ThemeToggle() {
       size="icon"
       onClick={() => setIsDark(!isDark)}
       data-testid="button-theme-toggle"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="min-h-[44px] min-w-[44px]"
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      <span className="sr-only">
+        {isDark ? "Switch to light mode" : "Switch to dark mode"}
+      </span>
     </Button>
   );
 }
