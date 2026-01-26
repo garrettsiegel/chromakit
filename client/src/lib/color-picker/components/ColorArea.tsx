@@ -18,7 +18,7 @@ export function ColorArea({
   onStart,
   onEnd,
   width = 256,
-  height = 200,
+  height: _height = 200,
   className = '',
 }: ColorAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);

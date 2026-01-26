@@ -111,8 +111,6 @@ export interface ColorPickerProps {
   showPresets?: boolean;
   width?: number;
   height?: number;
-  /** Show eyedropper button (requires browser support) */
-  showEyeDropper?: boolean;
   /** Show copy button for quick color copying */
   showCopyButton?: boolean;
   /** Enable color history (stored in localStorage) */

@@ -5,7 +5,7 @@ interface CodeBlockProps {
   language?: string;
 }
 
-export function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
+export function CodeBlock({ code, language: _language = 'tsx' }: CodeBlockProps) {
   return (
     <div className="relative group terminal-window">
       <pre 

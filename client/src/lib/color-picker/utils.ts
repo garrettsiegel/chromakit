@@ -1,4 +1,4 @@
-import type { RGB, RGBA, ColorValue } from './types';
+import type { RGB, RGBA as _RGBA, ColorValue as _ColorValue } from './types';
 import { rgbToHsv, hsvToRgb } from './conversions';
 
 /**
@@ -165,25 +165,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 /**
  * Check if EyeDropper API is supported
  */
-export function isEyeDropperSupported(): boolean {
-  return typeof window !== 'undefined' && 'EyeDropper' in window;
-}
 
 /**
  * Open native eyedropper to pick color from screen
  */
-export async function pickColorFromScreen(): Promise<string | null> {
-  if (!isEyeDropperSupported()) {
-    return null;
-  }
-  
-  try {
-    // @ts-ignore - EyeDropper API is not in TypeScript types yet
-    const eyeDropper = new window.EyeDropper();
-    const result = await eyeDropper.open();
-    return result.sRGBHex;
-  } catch {
-    // User cancelled or error occurred
-    return null;
-  }
-}

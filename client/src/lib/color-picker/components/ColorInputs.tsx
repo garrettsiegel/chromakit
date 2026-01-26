@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { ColorValue, ColorFormat } from '../types';
-import { parseColor, rgbaToColorValue, formatColor } from '../conversions';
+import { parseColor, rgbaToColorValue as _rgbaToColorValue, formatColor } from '../conversions';
 
 interface ColorInputsProps {
   colorValue: ColorValue;

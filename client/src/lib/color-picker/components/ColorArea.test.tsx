@@ -264,7 +264,7 @@ describe('ColorArea', () => {
     });
 
     it('should update color on pointer drag', () => {
-      const { container } = render(
+      const { container: _container } = render(
         <ColorArea hsva={defaultHsva} onChange={mockOnChange} width={256} height={200} />
       );
       const area = screen.getByTestId('color-area');

@@ -7,9 +7,8 @@ import { AlphaSlider } from './AlphaSlider';
 import { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './ColorInputs';
 import { ColorPreview, PresetColors } from './ColorPreview';
 import { CopyButton } from './CopyButton';
-import { EyeDropperButton } from './EyeDropperButton';
 import { RecentColors } from './RecentColors';
-import { getColorHistory, addToColorHistory, copyToClipboard, pickColorFromScreen } from '../utils';
+import { getColorHistory, addToColorHistory, copyToClipboard } from '../utils';
 import { formatColor } from '../conversions';
 
 const DEFAULT_PRESETS = [
@@ -48,7 +47,6 @@ export function ColorPicker({
   presets = DEFAULT_PRESETS,
   className = '',
   width,
-  showEyeDropper = true,
   showCopyButton = true,
   showPresets = true,
   enableHistory = true,
@@ -127,18 +125,6 @@ export function ColorPicker({
     }
   }, [setFromString, onChangeComplete, enableHistory, colorValue.hex]);
 
-  const handleEyeDropperPick = useCallback((color: string) => {
-    const newColorValue = setFromString(color);
-    if (newColorValue) {
-      onChange?.(newColorValue);
-      onChangeComplete?.(newColorValue);
-      if (enableHistory) {
-        const updated = addToColorHistory(color);
-        setHistory(updated);
-      }
-    }
-  }, [setFromString, onChange, onChangeComplete, enableHistory, colorValue.hex]);
-
   const handleCopy = useCallback((success: boolean) => {
     if (success && enableHistory) {
       const currentColor = colorValue.hex;
@@ -165,20 +151,16 @@ export function ColorPicker({
         });
       }
 
-      // Cmd/Ctrl + E to open eyedropper
-      if ((e.metaKey || e.ctrlKey) && e.key === 'e' && !isInInput && showEyeDropper) {
+      // Cmd/Ctrl + C to copy color
+      if ((e.metaKey || e.ctrlKey) && e.key === 'c' && showCopyButton) {
         e.preventDefault();
-        pickColorFromScreen().then((color) => {
-          if (color) {
-            handleEyeDropperPick(color);
-          }
-        });
+        copyToClipboard(formatColor(colorValue, format));
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [colorValue, format, showCopyButton, showEyeDropper, enableHistory, handleEyeDropperPick]);
+  }, [colorValue, format, showCopyButton]);
 
   // Use custom presets (allows user modification)
   const allPresets = customPresets;
@@ -243,15 +225,12 @@ export function ColorPicker({
           </div>
 
           {/* Preview + Action Buttons */}
-          {(showPreview || showEyeDropper || showCopyButton) && (
+          {(showPreview || showCopyButton) && (
             <div className="ck-action-buttons-row">
               {showPreview && (
                 <ColorPreview colorValue={colorValue} size="lg" className="ck-preview-wide" />
               )}
               <div className="ck-action-buttons">
-                {showEyeDropper && (
-                  <EyeDropperButton onColorPick={handleEyeDropperPick} />
-                )}
                 {showCopyButton && (
                   <CopyButton 
                     text={formatColor(colorValue, format)} 

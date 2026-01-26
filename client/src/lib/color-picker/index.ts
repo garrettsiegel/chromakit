@@ -59,7 +59,6 @@ export { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './com
 export { ColorPreview, ColorSwatch, PresetColors } from './components/ColorPreview';
 export { ColorPicker } from './components/ColorPicker';
 export { CopyButton } from './components/CopyButton';
-export { EyeDropperButton } from './components/EyeDropperButton';
 export { RecentColors } from './components/RecentColors';
 
 // Utility functions
@@ -76,6 +75,4 @@ export {
   addToColorHistory,
   clearColorHistory,
   copyToClipboard,
-  isEyeDropperSupported,
-  pickColorFromScreen,
 } from './utils';
