@@ -276,14 +276,11 @@ ChromaKit supports the following color formats:
 Choose the perfect size for your UI:
 
 ```tsx
-// Compact for toolbars and sidebars (240px × 120px area)
+// Compact for toolbars and sidebars (80×70px color area, ~450px wide)
 <ColorPicker size="compact" color={color} onChange={setColor} />
 
-// Default size for modals and panels (280px × 180px area)
+// Default size for modals and panels (100×85px color area, ~450px wide)
 <ColorPicker size="default" color={color} onChange={setColor} />
-
-// Large for feature-rich UIs (360px × 240px area)
-<ColorPicker size="large" color={color} onChange={setColor} />
 
 // Custom width overrides size
 <ColorPicker width={320} color={color} onChange={setColor} />

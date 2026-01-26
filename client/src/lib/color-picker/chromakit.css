@@ -542,6 +542,7 @@
   font-weight: 500;
   text-transform: uppercase;
   color: var(--ck-text-muted);
+  text-align: center;
 }
 
 .ck-channel-input {

@@ -424,7 +424,7 @@ export default function Home() {
               <CardHeader>
                 <CardTitle className="text-lg">Compact Size</CardTitle>
                 <CardDescription>
-                  Perfect for sidebars and toolbars • 200×200px color area
+                  Perfect for sidebars and toolbars • 80×70px color area
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex justify-center p-6">
@@ -454,7 +454,7 @@ export default function Home() {
               <CardHeader>
                 <CardTitle className="text-lg">Default Size</CardTitle>
                 <CardDescription>
-                  Full-featured with generous space • 280×280px color area
+                  Full-featured with generous space • 100×85px color area
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex justify-center p-6">
