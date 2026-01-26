@@ -116,6 +116,6 @@ export interface ColorPickerProps {
   /** Enable color history (stored in localStorage) */
   enableHistory?: boolean;
   /** Maximum number of colors to keep in history */
-  historySize?: number;
+  _historySize?: number;
 }
 

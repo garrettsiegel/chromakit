@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import type { ColorPickerProps, ColorFormat, ColorValue } from '../types';
+import type { ColorPickerProps, ColorFormat, ColorValue as _ColorValue } from '../types';
 import { useColorState } from '../hooks';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
@@ -50,7 +50,7 @@ export function ColorPicker({
   showCopyButton = true,
   showPresets = true,
   enableHistory = true,
-  historySize = 10,
+  _historySize = 10,
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
   
@@ -123,7 +123,7 @@ export function ColorPicker({
         setHistory(updated);
       }
     }
-  }, [setFromString, onChangeComplete, enableHistory, colorValue.hex]);
+  }, [setFromString, onChangeComplete, enableHistory]);
 
   const handleCopy = useCallback((success: boolean) => {
     if (success && enableHistory) {
@@ -160,7 +160,7 @@ export function ColorPicker({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [colorValue, format, showCopyButton]);
+  }, [colorValue, format, showCopyButton, enableHistory]);
 
   // Use custom presets (allows user modification)
   const allPresets = customPresets;

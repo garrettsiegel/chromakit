@@ -102,7 +102,7 @@ describe('useColorState', () => {
       const onChange = vi.fn();
       const { result } = renderHook(() => useColorState('#000000', onChange));
 
-      let returnValue: any;
+      let returnValue: unknown;
       act(() => {
         returnValue = result.current.setFromString('#00ff00');
       });
@@ -115,7 +115,7 @@ describe('useColorState', () => {
     it('should parse and set color from RGB string', () => {
       const { result } = renderHook(() => useColorState());
 
-      let returnValue: any;
+      let returnValue: unknown;
       act(() => {
         returnValue = result.current.setFromString('rgb(255, 0, 0)');
       });
@@ -127,7 +127,7 @@ describe('useColorState', () => {
     it('should return null for invalid color string', () => {
       const { result } = renderHook(() => useColorState());
 
-      let returnValue: any;
+      let returnValue: unknown;
       act(() => {
         returnValue = result.current.setFromString('not-a-color');
       });

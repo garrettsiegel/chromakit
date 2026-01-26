@@ -75,7 +75,7 @@ export function ColorSwatch({
   onLongPress,
   onDelete,
   editing = false,
-  size = 'sm',
+  size: _size = 'sm',
   className = '',
 }: ColorSwatchProps) {
   let pressTimer: NodeJS.Timeout | null = null;
@@ -95,7 +95,7 @@ export function ColorSwatch({
     }
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (_e: React.MouseEvent) => {
     if (pressTimer) {
       clearTimeout(pressTimer);
       pressTimer = null;
@@ -161,7 +161,7 @@ export function PresetColors({
   onUpdatePreset,
   onDeletePreset,
   onAddPreset,
-  currentColor,
+  currentColor: _currentColor,
   editable = true,
   className = '',
 }: PresetColorsProps) {
