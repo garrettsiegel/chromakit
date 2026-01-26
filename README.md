@@ -219,6 +219,14 @@ import type {
 
 Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
 
+## Support the Project
+
+If ChromaKit has helped you build something awesome, consider supporting its development:
+
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub-pink?style=for-the-badge&logo=github)](https://github.com/sponsors/garrettsiegel)
+
+Your support helps maintain the project and develop new features.
+
 ## License
 
 MIT © [ChromaKit](LICENSE)

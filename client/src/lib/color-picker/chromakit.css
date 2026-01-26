@@ -293,6 +293,8 @@
   color: var(--ck-text);
   cursor: pointer;
   outline: none;
+  min-width: 60px;
+  max-width: 100px;
 }
 
 .ck-select:focus {

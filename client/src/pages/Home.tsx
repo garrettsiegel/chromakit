@@ -11,6 +11,7 @@ import { ColorFormatsDisplay } from '@/components/demo/ColorFormatsDisplay';
 import { FeatureCard } from '@/components/demo/FeatureCard';
 import { CustomPickerDemo } from '@/components/demo/CustomPickerDemo';
 import { ThemePalettes } from '@/components/demo/ThemePalettes';
+import packageJson from '../../../package.json';
 
 const FEATURES = [
   {
@@ -118,7 +119,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-md bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-400 shadow-md ring-1 ring-black/10" />
             <h1 className="text-xl font-bold">ChromaKit</h1>
-            <Badge variant="secondary" className="text-xs">v0.1.6</Badge>
+            <Badge variant="secondary" className="text-xs">v{packageJson.version}</Badge>
           </div>
           <div className="flex items-center gap-2">
             <a 
