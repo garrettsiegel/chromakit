@@ -9,16 +9,17 @@ import {
 import { ColorFormatsDisplay } from './ColorFormatsDisplay';
 
 const THEME_PRESETS = {
-  vibrant: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'],
-  pastel: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#E0BBE4', '#957DAD', '#D4A5A5'],
-  dark: ['#1A1A2E', '#16213E', '#0F3460', '#E94560', '#533483', '#2C3E50', '#34495E', '#5D6D7E'],
-  nature: ['#2D5A27', '#4A7C59', '#6B8E23', '#9ACD32', '#556B2F', '#8B4513', '#D2691E', '#CD853F'],
-  ocean: ['#006994', '#0077B6', '#00B4D8', '#48CAE4', '#90E0EF', '#023E8A', '#03045E', '#ADE8F4'],
+  tailwind: ['#0f172a', '#334155', '#64748b', '#94a3b8', '#cbd5e1', '#f1f5f9', '#f8fafc'],
+  dracula: ['#282a36', '#44475a', '#6272a4', '#bd93f9', '#ff79c6', '#ffb86c', '#f8f8f2'],
+  nord: ['#2e3440', '#3b4252', '#434c5e', '#4c566a', '#88c0d0', '#8fbcbb', '#eceff4'],
+  github: ['#0d1117', '#161b22', '#21262d', '#30363d', '#1f6feb', '#58a6ff', '#c8e1ff'],
+  vercel: ['#000000', '#111111', '#333333', '#666666', '#888888', '#eaeaea', '#fafafa'],
+  radix: ['#11181c', '#1e2a3a', '#3254a1', '#3e63dd', '#5373e7', '#849dff', '#d4f1f4'],
 } as const;
 
 export function ThemePalettes() {
-  const [selectedTheme, setSelectedTheme] = useState<keyof typeof THEME_PRESETS>('vibrant');
-  const [selectedColor, setSelectedColor] = useState<string>(THEME_PRESETS.vibrant[0]);
+  const [selectedTheme, setSelectedTheme] = useState<keyof typeof THEME_PRESETS>('tailwind');
+  const [selectedColor, setSelectedColor] = useState<string>(THEME_PRESETS.tailwind[0]);
   const {
     colorValue,
     setFromString,

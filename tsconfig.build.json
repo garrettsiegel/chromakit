@@ -6,10 +6,9 @@
     "emitDeclarationOnly": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./client/src/*"]
-    }
+    "ignoreDeprecations": "5.0",
+    "jsx": "react-jsx",
+    "skipLibCheck": true
   },
   "include": [
     "client/src/lib/color-picker/**/*"

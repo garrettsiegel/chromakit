@@ -10,7 +10,7 @@ interface ColorFormatsDisplayProps {
 
 export function ColorFormatsDisplay({ colorValue }: ColorFormatsDisplayProps) {
   return (
-    <div className="grid gap-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {COLOR_FORMATS.map((format) => {
         const formatted = formatColor(colorValue, format);
         return (
@@ -18,7 +18,7 @@ export function ColorFormatsDisplay({ colorValue }: ColorFormatsDisplayProps) {
             key={format}
             className="flex items-center justify-between gap-2 p-2 bg-secondary/30 rounded-md"
           >
-            <span className="text-xs font-medium text-muted-foreground uppercase w-16">
+            <span className="text-xs font-medium text-muted-foreground uppercase w-14">
               {format}
             </span>
             <code className="flex-1 text-xs font-mono truncate">{formatted}</code>
