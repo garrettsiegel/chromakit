@@ -68,9 +68,11 @@ export function useColorState(
 export function usePointerDrag(
   onMove: (position: { x: number; y: number }) => void,
   onStart?: () => void,
-  onEnd?: () => void
+  onEnd?: () => void,
+  externalRef?: React.RefObject<HTMLDivElement>
 ) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const internalRef = useRef<HTMLDivElement>(null);
+  const containerRef = externalRef || internalRef;
   const isDragging = useRef(false);
 
   const getPosition = useCallback((e: PointerEvent | React.PointerEvent) => {
@@ -79,7 +81,7 @@ export function usePointerDrag(
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
     return { x, y };
-  }, []);
+  }, [containerRef]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, KeyboardEvent } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 
@@ -21,6 +21,8 @@ export function ColorArea({
   height = 200,
   className = '',
 }: ColorAreaProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const handleMove = useCallback(
     (position: { x: number; y: number }) => {
       onChange({
@@ -32,10 +34,43 @@ export function ColorArea({
     [hsva, onChange]
   );
 
-  const { containerRef, handlePointerDown } = usePointerDrag(
+  const { handlePointerDown } = usePointerDrag(
     handleMove,
     onStart,
-    onEnd
+    onEnd,
+    containerRef
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      const step = e.shiftKey ? 10 : 1;
+      let newS = hsva.s;
+      let newV = hsva.v;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          newS = Math.max(0, hsva.s - step);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          newS = Math.min(100, hsva.s + step);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          newV = Math.min(100, hsva.v + step);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          newV = Math.max(0, hsva.v - step);
+          break;
+        default:
+          return;
+      }
+
+      onChange({ ...hsva, s: newS, v: newV });
+    },
+    [hsva, onChange]
   );
 
   const thumbStyle = useMemo(
@@ -56,9 +91,17 @@ export function ColorArea({
   return (
     <div
       ref={containerRef}
-      className={`relative rounded-md cursor-crosshair select-none touch-none ${className}`}
+      role="slider"
+      aria-label="Color saturation and value"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={hsva.s}
+      aria-valuetext={`Saturation ${hsva.s}%, Value ${hsva.v}%`}
+      tabIndex={0}
+      className={`relative rounded-md cursor-crosshair select-none touch-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className}`}
       style={{ width, height }}
       onPointerDown={handlePointerDown}
+      onKeyDown={handleKeyDown}
       data-testid="color-area"
     >
       <div

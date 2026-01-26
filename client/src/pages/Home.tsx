@@ -491,7 +491,7 @@ console.log(formatColor(colorValue, 'hsl'));
       <footer className="border-t border-border py-6">
         <div className="container mx-auto px-4 flex items-center justify-between text-sm text-muted-foreground">
           <p>ChromaKit - Modern Color Picker for React</p>
-          <p>Built with care</p>
+          <p>2026 - Garrett Siegel</p>
         </div>
       </footer>
     </div>

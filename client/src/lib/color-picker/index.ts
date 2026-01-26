@@ -1,3 +1,6 @@
+// Import styles
+import './chromakit.css';
+
 // Types
 export type {
   RGB,

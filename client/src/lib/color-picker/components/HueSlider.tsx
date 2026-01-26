@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, KeyboardEvent } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 
@@ -19,6 +19,8 @@ export function HueSlider({
   vertical = false,
   className = '',
 }: HueSliderProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const handleMove = useCallback(
     (position: { x: number; y: number }) => {
       const hue = vertical ? position.y * 360 : position.x * 360;
@@ -30,10 +32,44 @@ export function HueSlider({
     [hsva, onChange, vertical]
   );
 
-  const { containerRef, handlePointerDown } = usePointerDrag(
+  const { handlePointerDown } = usePointerDrag(
     handleMove,
     onStart,
-    onEnd
+    onEnd,
+    containerRef
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      const step = e.shiftKey ? 10 : 1;
+      let newH = hsva.h;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+        case 'ArrowDown':
+          e.preventDefault();
+          newH = (hsva.h - step + 360) % 360;
+          break;
+        case 'ArrowRight':
+        case 'ArrowUp':
+          e.preventDefault();
+          newH = (hsva.h + step) % 360;
+          break;
+        case 'Home':
+          e.preventDefault();
+          newH = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          newH = 359;
+          break;
+        default:
+          return;
+      }
+
+      onChange({ ...hsva, h: newH });
+    },
+    [hsva, onChange]
   );
 
   const thumbPosition = useMemo(
@@ -44,10 +80,19 @@ export function HueSlider({
   return (
     <div
       ref={containerRef}
-      className={`relative cursor-pointer select-none touch-none ${
+      role="slider"
+      aria-label="Hue"
+      aria-valuemin={0}
+      aria-valuemax={360}
+      aria-valuenow={hsva.h}
+      aria-valuetext={`${hsva.h}°`}
+      aria-orientation={vertical ? 'vertical' : 'horizontal'}
+      tabIndex={0}
+      className={`relative cursor-pointer select-none touch-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
         vertical ? 'w-4 h-full' : 'h-4 w-full'
       } ${className}`}
       onPointerDown={handlePointerDown}
+      onKeyDown={handleKeyDown}
       data-testid="hue-slider"
     >
       <div

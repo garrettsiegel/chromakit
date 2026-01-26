@@ -12,6 +12,11 @@ const round = (value: number, precision: number = 2): number =>
 export function parseHex(hex: string): RGBA | null {
   const cleaned = hex.replace('#', '');
   
+  // Validate hex string contains only valid hex characters
+  if (!/^[0-9A-Fa-f]+$/.test(cleaned)) {
+    return null;
+  }
+  
   if (cleaned.length === 3) {
     const r = parseInt(cleaned[0] + cleaned[0], 16);
     const g = parseInt(cleaned[1] + cleaned[1], 16);
@@ -49,7 +54,7 @@ export function rgbaToHex(rgba: RGBA): string {
   const r = Math.round(rgba.r).toString(16).padStart(2, '0');
   const g = Math.round(rgba.g).toString(16).padStart(2, '0');
   const b = Math.round(rgba.b).toString(16).padStart(2, '0');
-  return `#${r}${g}${b}`.toUpperCase();
+  return `#${r}${g}${b}`;
 }
 
 export function rgbaToHex8(rgba: RGBA): string {
@@ -57,7 +62,7 @@ export function rgbaToHex8(rgba: RGBA): string {
   const g = Math.round(rgba.g).toString(16).padStart(2, '0');
   const b = Math.round(rgba.b).toString(16).padStart(2, '0');
   const a = Math.round(rgba.a * 255).toString(16).padStart(2, '0');
-  return `#${r}${g}${b}${a}`.toUpperCase();
+  return `#${r}${g}${b}${a}`;
 }
 
 // RGB to HSL conversion

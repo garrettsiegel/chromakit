@@ -1,0 +1,36 @@
+# Source files
+client/
+server/
+script/
+scripts/
+shared/
+
+# Config files
+.gitignore
+.npmignore
+vite.config.ts
+tsconfig.json
+postcss.config.js
+tailwind.config.ts
+components.json
+drizzle.config.ts
+replit.md
+
+# Development
+node_modules/
+.vscode/
+.idea/
+*.log
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+vitest.config.ts
+coverage/
+
+# Other
+.DS_Store
+.env
+.env.*
