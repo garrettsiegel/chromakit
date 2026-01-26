@@ -99,7 +99,7 @@ export function ColorArea({
       aria-valuetext={`Saturation ${hsva.s}%, Value ${hsva.v}%`}
       tabIndex={0}
       className={`ck-color-area ${className}`}
-      style={{ width, height }}
+      style={{ width }}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="color-area"

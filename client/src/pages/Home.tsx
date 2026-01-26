@@ -80,6 +80,19 @@ function CustomPicker() {
     </div>
   );
 }`,
+  sizeVariants: `import { ColorPicker } from '@chromakit/react';
+
+// Compact for toolbars and sidebars
+<ColorPicker size="compact" value={color} onChange={setColor} />
+
+// Default for modals and panels
+<ColorPicker size="default" value={color} onChange={setColor} />
+
+// Large for feature-rich UIs
+<ColorPicker size="large" value={color} onChange={setColor} />
+
+// Custom width overrides size
+<ColorPicker width={320} value={color} onChange={setColor} />`,
   conversion: `import { 
   parseColor, 
   rgbaToColorValue,
@@ -91,10 +104,10 @@ const rgba = parseColor('#FF5733');
 const colorValue = rgbaToColorValue(rgba);
 
 // Get any format you need
-console.log(formatColor(colorValue, 'oklch'));
+formatColor(colorValue, 'oklch');
 // oklch(63.4% 0.193 36.2)
 
-console.log(formatColor(colorValue, 'hsl'));
+formatColor(colorValue, 'hsl');
 // hsl(10, 100%, 60%)`,
 } as const;
 
@@ -308,34 +321,64 @@ export default function Home() {
         <div className="section-divider" />
 
         {/* DEMO SECTION */}
-        <section id="demo" className="mb-32">
+        <section id="demo" className="mb-32 relative">
+          {/* Glassmorphic Background */}
+          <div className="absolute inset-0 -z-10 overflow-hidden rounded-3xl">
+            <div 
+              className="absolute w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
+              style={{
+                background: 'radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%)',
+                top: '-200px',
+                left: '10%',
+                animation: 'float 20s ease-in-out infinite',
+              }}
+            />
+            <div 
+              className="absolute w-[500px] h-[500px] rounded-full opacity-30 blur-3xl"
+              style={{
+                background: 'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%)',
+                bottom: '-150px',
+                right: '5%',
+                animation: 'float 15s ease-in-out infinite reverse',
+              }}
+            />
+          </div>
+
           <h3 className="text-4xl font-bold text-center mb-4">Interactive Demo</h3>
           <p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
-            Try it yourself and see how easy it is to work with
+            Experience the modern glassmorphic design with horizontal layout and editable presets
           </p>
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="space-y-6">
-              <Card>
+              <Card className="backdrop-blur-sm bg-card/80 border-border/50">
                 <CardHeader>
                   <CardTitle className="text-lg">Full Color Picker</CardTitle>
                   <CardDescription>
-                    The complete picker with all features enabled
+                    Horizontal compact layout with glassmorphic styling
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex justify-center">
-                  <ColorPicker
-                    defaultValue="#6366F1"
-                    onChange={handleColorChange}
-                    showAlpha
-                    showInputs
-                    showPreview
-                    width={320}
-                  />
+                <CardContent className="flex justify-center p-6">
+                  <div style={{ 
+                    padding: '2rem',
+                    borderRadius: '1.5rem',
+                    background: 'linear-gradient(135deg, rgba(249, 250, 251, 0.8), rgba(243, 244, 246, 0.6))',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                  className="dark:bg-gradient-to-br dark:from-slate-900/80 dark:to-slate-800/60"
+                  >
+                    <ColorPicker
+                      defaultValue="#6366F1"
+                      onChange={handleColorChange}
+                      showAlpha
+                      showInputs
+                      showPreview
+                    />
+                  </div>
                 </CardContent>
               </Card>
               
               {!demoColor ? (
-                <Card className="opacity-50">
+                <Card className="opacity-50 backdrop-blur-sm bg-card/80">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg">Output Values</CardTitle>
                   </CardHeader>
@@ -348,7 +391,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
               ) : (
-                <Card>
+                <Card className="backdrop-blur-sm bg-card/80 border-border/50">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg">Output Values</CardTitle>
                   </CardHeader>
@@ -368,6 +411,170 @@ export default function Home() {
         {/* THEME PALETTES SECTION */}
         <section className="mb-32">
           <ThemePalettes />
+        </section>
+
+        {/* SIZE VARIANTS SECTION */}
+        <section className="mb-32">
+          <h3 className="text-4xl font-bold text-center mb-4">Modern Glassmorphic Design</h3>
+          <p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
+            Horizontal compact layout with frosted glass aesthetics, smooth animations, and editable preset swatches
+          </p>
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <Card className="backdrop-blur-sm bg-card/80 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-lg">Compact Size</CardTitle>
+                <CardDescription>
+                  Perfect for sidebars and toolbars • 200×200px color area
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex justify-center p-6">
+                <div style={{ 
+                  padding: '1.5rem',
+                  borderRadius: '1.5rem',
+                  background: 'linear-gradient(135deg, rgba(249, 250, 251, 0.8), rgba(243, 244, 246, 0.6))',
+                  backdropFilter: 'blur(10px)',
+                }}
+                className="dark:bg-gradient-to-br dark:from-slate-900/80 dark:to-slate-800/60"
+                >
+                  <ColorPicker
+                    defaultValue="#FF6B6B"
+                    size="compact"
+                    showAlpha
+                    showInputs
+                    showPreview
+                    showEyeDropper
+                    showCopyButton
+                    enableHistory
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-sm bg-card/80 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-lg">Default Size</CardTitle>
+                <CardDescription>
+                  Full-featured with generous space • 280×280px color area
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex justify-center p-6">
+                <div style={{ 
+                  padding: '1.5rem',
+                  borderRadius: '1.5rem',
+                  background: 'linear-gradient(135deg, rgba(249, 250, 251, 0.8), rgba(243, 244, 246, 0.6))',
+                  backdropFilter: 'blur(10px)',
+                }}
+                className="dark:bg-gradient-to-br dark:from-slate-900/80 dark:to-slate-800/60"
+                >
+                  <ColorPicker
+                    defaultValue="#4ECDC4"
+                    size="default"
+                    showAlpha
+                    showInputs
+                    showPreview
+                    showEyeDropper
+                    showCopyButton
+                    enableHistory
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* NEW FEATURES SECTION */}
+        <section className="mb-32">
+          <h3 className="text-4xl font-bold text-center mb-4">New Features</h3>
+          <p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
+            Built-in productivity features and customization options
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <Card className="backdrop-blur-sm bg-card/90 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <span className="text-2xl">✏️</span>
+                  Editable Presets
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Click "Edit" to customize presets: update colors by clicking swatches, delete unwanted ones, or add new favorites. Changes persist in your session.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-card/90 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <span className="text-2xl">🎨</span>
+                  Recent Colors
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Automatically saves your last 10 colors with localStorage persistence. Click any recent color to instantly select it.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-sm bg-card/90 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <span className="text-2xl">⌨️</span>
+                  Keyboard Shortcuts
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  <strong>⌘C / Ctrl+C:</strong> Copy color<br />
+                  <strong>⌘E / Ctrl+E:</strong> Eyedropper<br />
+                  <strong>Arrow keys:</strong> Fine adjustments
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-sm bg-card/90 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <span className="text-2xl">💧</span>
+                  Eyedropper Tool
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Native browser eyedropper (Chrome 95+, Edge 95+, Safari 17+). Firefox not supported due to browser API limitations.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-sm bg-card/90 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <span className="text-2xl">📋</span>
+                  Copy to Clipboard
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  One-click copy button with visual feedback. Supports all color formats with fallback for older browsers.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="backdrop-blur-sm bg-card/90 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <span className="text-2xl">📱</span>
+                  Mobile Optimized
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  44×44px touch targets, proper gesture support, and responsive layout. Works perfectly on phones and tablets.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </section>
 
         {/* Section Divider */}
@@ -401,6 +608,18 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <CodeBlock code={CODE_EXAMPLES.custom} />
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Size Variants</CardTitle>
+                <CardDescription>
+                  Choose compact, default, or large to fit your UI
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CodeBlock code={CODE_EXAMPLES.sizeVariants} />
               </CardContent>
             </Card>
             

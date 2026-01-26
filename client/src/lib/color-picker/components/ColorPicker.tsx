@@ -6,6 +6,11 @@ import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
 import { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './ColorInputs';
 import { ColorPreview, PresetColors } from './ColorPreview';
+import { CopyButton } from './CopyButton';
+import { EyeDropperButton } from './EyeDropperButton';
+import { RecentColors } from './RecentColors';
+import { getColorHistory, addToColorHistory, copyToClipboard, pickColorFromScreen } from '../utils';
+import { formatColor } from '../conversions';
 
 const DEFAULT_PRESETS = [
   '#FF0000', '#FF4500', '#FF8C00', '#FFD700', '#FFFF00',
@@ -42,9 +47,35 @@ export function ColorPicker({
   showPreview = true,
   presets = DEFAULT_PRESETS,
   className = '',
-  width = 280,
+  size = 'default',
+  width,
+  showEyeDropper = true,
+  showCopyButton = true,
+  showPresets = true,
+  enableHistory = true,
+  historySize = 10,
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
+  
+  // Track customizable presets
+  const [customPresets, setCustomPresets] = useState<string[]>(presets);
+  
+  // Load color history
+  const [history, setHistory] = useState<string[]>(() => 
+    enableHistory ? getColorHistory() : []
+  );
+  
+  // Compute dimensions based on size prop - horizontal compact layout
+  const dimensions = useMemo(() => {
+    switch (size) {
+      case 'compact':
+        return { areaWidth: 80, areaHeight: 70 };
+      default:
+        return { areaWidth: 100, areaHeight: 85 };
+    }
+  }, [size]);
+  
+  const sizeClass = size !== 'default' ? `ck-color-picker--${size}` : '';
   
   const {
     hsva,
@@ -96,114 +127,232 @@ export function ColorPicker({
     const newColorValue = setFromString(color);
     if (newColorValue) {
       onChangeComplete?.(newColorValue);
+      if (enableHistory) {
+        const updated = addToColorHistory(color);
+        setHistory(updated);
+      }
     }
-  }, [setFromString, onChangeComplete]);
+  }, [setFromString, onChangeComplete, enableHistory, colorValue.hex]);
+
+  const handleEyeDropperPick = useCallback((color: string) => {
+    const newColorValue = setFromString(color);
+    if (newColorValue) {
+      onChange?.(newColorValue);
+      onChangeComplete?.(newColorValue);
+      if (enableHistory) {
+        const updated = addToColorHistory(color);
+        setHistory(updated);
+      }
+    }
+  }, [setFromString, onChange, onChangeComplete, enableHistory, colorValue.hex]);
+
+  const handleCopy = useCallback((success: boolean) => {
+    if (success && enableHistory) {
+      const currentColor = colorValue.hex;
+      const updated = addToColorHistory(currentColor);
+      setHistory(updated);
+    }
+  }, [colorValue, enableHistory]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isInInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+
+      // Cmd/Ctrl + C to copy color
+      if ((e.metaKey || e.ctrlKey) && e.key === 'c' && !isInInput && showCopyButton) {
+        e.preventDefault();
+        const colorText = formatColor(colorValue, format);
+        copyToClipboard(colorText).then((success) => {
+          if (success && enableHistory) {
+            const updated = addToColorHistory(colorValue.hex);
+            setHistory(updated);
+          }
+        });
+      }
+
+      // Cmd/Ctrl + E to open eyedropper
+      if ((e.metaKey || e.ctrlKey) && e.key === 'e' && !isInInput && showEyeDropper) {
+        e.preventDefault();
+        pickColorFromScreen().then((color) => {
+          if (color) {
+            handleEyeDropperPick(color);
+          }
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [colorValue, format, showCopyButton, showEyeDropper, enableHistory, handleEyeDropperPick]);
+
+  // Use custom presets (allows user modification)
+  const allPresets = customPresets;
+  
+  // Handler to update a preset color (e.g., on long-press or right-click)
+  const handleUpdatePreset = useCallback((index: number, color: string) => {
+    const newPresets = [...customPresets];
+    newPresets[index] = color;
+    setCustomPresets(newPresets);
+  }, [customPresets]);
+
+  // Handler to delete a preset
+  const handleDeletePreset = useCallback((index: number) => {
+    const newPresets = customPresets.filter((_, i) => i !== index);
+    setCustomPresets(newPresets);
+  }, [customPresets]);
+
+  // Handler to add current color as a new preset
+  const handleAddPreset = useCallback(() => {
+    if (customPresets.length < 24) {
+      setCustomPresets([...customPresets, colorValue.hex]);
+    }
+  }, [customPresets, colorValue.hex]);
 
   return (
     <div
-      className={`ck-color-picker ${className}`}
-      style={{ width }}
+      className={`ck-color-picker ${sizeClass} ${className}`.trim()}
+      style={width ? { width } : undefined}
       data-testid="color-picker"
     >
-      <ColorArea
-        hsva={hsva}
-        onChange={updateColor}
-        onStart={startDrag}
-        onEnd={endDrag}
-        width={width - 32}
-        height={180}
-      />
+      <div className="ck-picker-main">
+        {/* Color Area on the left */}
+        <ColorArea
+          hsva={hsva}
+          onChange={updateColor}
+          onStart={startDrag}
+          onEnd={endDrag}
+          width={dimensions.areaWidth}
+          height={dimensions.areaHeight}
+        />
 
-      <div className="ck-slider-row">
-        {showPreview && (
-          <ColorPreview colorValue={colorValue} size="lg" />
-        )}
-        <div className="ck-slider-column">
-          <HueSlider
-            hsva={hsva}
-            onChange={updateColor}
-            onStart={startDrag}
-            onEnd={endDrag}
-          />
-          {showAlpha && (
-            <AlphaSlider
-              hsva={hsva}
-              onChange={updateColor}
-              onStart={startDrag}
-              onEnd={endDrag}
-            />
-          )}
-        </div>
-      </div>
+        {/* Controls on the right */}
+        <div className="ck-picker-controls">
+          {/* Sliders */}
+          <div className="ck-controls-row">
+            <div className="ck-sliders-group">
+              <HueSlider
+                hsva={hsva}
+                onChange={updateColor}
+                onStart={startDrag}
+                onEnd={endDrag}
+              />
+              {showAlpha && (
+                <AlphaSlider
+                  hsva={hsva}
+                  onChange={updateColor}
+                  onStart={startDrag}
+                  onEnd={endDrag}
+                />
+              )}
+            </div>
+          </div>
 
-      {showInputs && (
-        <div className="ck-inputs">
-          {availableModes.length > 1 && (
-            <div className="ck-input-modes">
-              {availableModes.map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setInputMode(mode)}
-                  className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
-                  data-testid={`input-mode-${mode}`}
-                >
-                  {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
-                </button>
-              ))}
+          {/* Preview + Action Buttons */}
+          {(showPreview || showEyeDropper || showCopyButton) && (
+            <div className="ck-action-buttons-row">
+              {showPreview && (
+                <ColorPreview colorValue={colorValue} size="lg" className="ck-preview-wide" />
+              )}
+              <div className="ck-action-buttons">
+                {showEyeDropper && (
+                  <EyeDropperButton onColorPick={handleEyeDropperPick} />
+                )}
+                {showCopyButton && (
+                  <CopyButton 
+                    text={formatColor(colorValue, format)} 
+                    onCopy={handleCopy}
+                  />
+                  )}
+              </div>
             </div>
           )}
 
-          {inputMode === 'single' && (
-            <ColorInputs
-              colorValue={colorValue}
-              onChange={setFromString}
-              format={format}
-              onFormatChange={setFormat}
-              showAlpha={showAlpha}
-              availableFormats={formats}
-            />
-          )}
-          {inputMode === 'rgb' && (
-            <RGBInputs
-              colorValue={colorValue}
-              onChange={setFromString}
-              showAlpha={showAlpha}
-            />
-          )}
-          {inputMode === 'hsl' && (
-            <HSLInputs
-              colorValue={colorValue}
-              onChange={setFromString}
-              showAlpha={showAlpha}
-            />
-          )}
-          {inputMode === 'hsv' && (
-            <HSVInputs
-              colorValue={colorValue}
-              onChange={setFromString}
-              showAlpha={showAlpha}
-            />
-          )}
-          {inputMode === 'oklch' && (
-            <OKLCHInputs
-              colorValue={colorValue}
-              onChange={setFromString}
-              showAlpha={showAlpha}
-            />
-          )}
-        </div>
-      )}
+          {/* Inputs */}
+          {showInputs && (
+            <div className="ck-inputs">
+              {availableModes.length > 1 && (
+                <div className="ck-input-modes">
+                  {availableModes.map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setInputMode(mode)}
+                      className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
+                      data-testid={`input-mode-${mode}`}
+                    >
+                      {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              )}
 
-      {presets && presets.length > 0 && (
-        <div className="ck-presets">
-          <PresetColors
-            colors={presets}
-            selectedColor={colorValue.hex}
-            onSelect={handlePresetSelect}
-          />
+              {inputMode === 'single' && (
+                <ColorInputs
+                  colorValue={colorValue}
+                  onChange={setFromString}
+                  format={format}
+                  onFormatChange={setFormat}
+                  showAlpha={showAlpha}
+                  availableFormats={formats}
+                />
+              )}
+              {inputMode === 'rgb' && (
+                <RGBInputs
+                  colorValue={colorValue}
+                  onChange={setFromString}
+                  showAlpha={showAlpha}
+                />
+              )}
+              {inputMode === 'hsl' && (
+                <HSLInputs
+                  colorValue={colorValue}
+                  onChange={setFromString}
+                  showAlpha={showAlpha}
+                />
+              )}
+              {inputMode === 'hsv' && (
+                <HSVInputs
+                  colorValue={colorValue}
+                  onChange={setFromString}
+                  showAlpha={showAlpha}
+                />
+              )}
+              {inputMode === 'oklch' && (
+                <OKLCHInputs
+                  colorValue={colorValue}
+                  onChange={setFromString}
+                  showAlpha={showAlpha}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Recent Colors */}
+          {enableHistory && history.length > 0 && (
+            <RecentColors
+              onColorSelect={handlePresetSelect}
+            />
+          )}
+
+          {/* Presets */}
+          {showPresets && allPresets && allPresets.length > 0 && (
+            <div className="ck-presets">
+              <PresetColors
+                colors={allPresets}
+                selectedColor={colorValue.hex}
+                onSelect={handlePresetSelect}
+                onUpdatePreset={(index) => handleUpdatePreset(index, colorValue.hex)}
+                onDeletePreset={handleDeletePreset}
+                onAddPreset={handleAddPreset}
+                currentColor={colorValue.hex}
+                editable={true}
+              />
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

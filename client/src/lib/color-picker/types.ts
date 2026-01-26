@@ -107,6 +107,19 @@ export interface ColorPickerProps {
   themes?: ColorTheme[];
   theme?: ColorPickerTheme;
   className?: string;
+  /** Size variant for the color picker */
+  size?: 'compact' | 'default';
+  /** Show preset color swatches */
+  showPresets?: boolean;
   width?: number;
   height?: number;
+  /** Show eyedropper button (requires browser support) */
+  showEyeDropper?: boolean;
+  /** Show copy button for quick color copying */
+  showCopyButton?: boolean;
+  /** Enable color history (stored in localStorage) */
+  enableHistory?: boolean;
+  /** Maximum number of colors to keep in history */
+  historySize?: number;
 }
+

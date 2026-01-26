@@ -1,4 +1,4 @@
-// Import CSS file for bundling
+// Import CSS for bundling (consumers can import this file or the CSS separately)
 import './chromakit.css';
 
 // Types
@@ -58,3 +58,24 @@ export { AlphaSlider } from './components/AlphaSlider';
 export { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './components/ColorInputs';
 export { ColorPreview, ColorSwatch, PresetColors } from './components/ColorPreview';
 export { ColorPicker } from './components/ColorPicker';
+export { CopyButton } from './components/CopyButton';
+export { EyeDropperButton } from './components/EyeDropperButton';
+export { RecentColors } from './components/RecentColors';
+
+// Utility functions
+export {
+  getRelativeLuminance,
+  getContrastRatio,
+  meetsContrastRatio,
+  getComplementaryColor,
+  getAnalogousColors,
+  getTriadicColors,
+  getSplitComplementaryColors,
+  getTetradicColors,
+  getColorHistory,
+  addToColorHistory,
+  clearColorHistory,
+  copyToClipboard,
+  isEyeDropperSupported,
+  pickColorFromScreen,
+} from './utils';

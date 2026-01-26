@@ -61,9 +61,15 @@ Written in TypeScript from the ground up with complete type definitions for all 
 - **Modern Color Spaces**: OKLCH, OKLAB support for perceptually uniform colors
 - **Traditional Formats**: RGB(A), HSL(A), HSV(A), HEX, HEX8
 - **Composable**: Build custom pickers with primitive components
+- **Eyedropper Tool**: Pick colors from anywhere on screen (modern browsers)
+- **Color History**: Automatically saves recent colors to localStorage
+- **Copy to Clipboard**: Quick color copying with keyboard shortcuts (Cmd/Ctrl+C)
+- **Color Harmony**: Utilities for complementary, analogous, triadic color schemes
+- **Contrast Checker**: WCAG AA/AAA contrast ratio calculator
+- **Size Variants**: Compact, default, and large sizes for any UI
 - **TypeScript First**: Complete type definitions
 - **Dark Mode**: Built-in dark mode support
-- **Lightweight**: Minimal dependencies
+- **Lightweight**: ~9KB gzipped with zero runtime dependencies
 - **Accessible**: WCAG compliant (keyboard navigation, ARIA labels)
 
 ## Installation
@@ -131,26 +137,44 @@ The main color picker component with all features included.
 
 ```tsx
 interface ColorPickerProps {
-  color: string;
-  onChange: (color: string) => void;
-  format?: ColorFormat;
-  showFormatToggle?: boolean;
+  value?: string;
+  defaultValue?: string;
+  onChange?: (color: ColorValue) => void;
+  onChangeComplete?: (color: ColorValue) => void;
+  formats?: ColorFormat[];
   showAlpha?: boolean;
-  showPresets?: boolean;
+  showInputs?: boolean;
+  showPreview?: boolean;
   presets?: string[];
+  size?: 'compact' | 'default' | 'large';
+  width?: number;
+  height?: number;
+  showEyeDropper?: boolean;
+  showCopyButton?: boolean;
+  enableHistory?: boolean;
+  historySize?: number;
   className?: string;
 }
 ```
 
 **Props:**
 
-- `color` - Current color value (any supported format)
-- `onChange` - Callback when color changes
-- `format` - Output format: `'hex' | 'rgb' | 'hsl' | 'hsv' | 'oklch' | 'oklab'`
-- `showFormatToggle` - Show format selector dropdown (default: `true`)
+- `value` - Controlled color value (any supported format)
+- `defaultValue` - Initial color value for uncontrolled mode (default: `'#6366F1'`)
+- `onChange` - Callback fired during color changes (real-time)
+- `onChangeComplete` - Callback fired when user completes a change (mouse up, blur)
+- `formats` - Available color formats for the picker (default: `['hex', 'rgb', 'hsl', 'oklch']`)
 - `showAlpha` - Enable alpha channel control (default: `true`)
-- `showPresets` - Display color presets (default: `true`)
+- `showInputs` - Show color input fields (default: `true`)
+- `showPreview` - Show color preview swatch (default: `true`)
 - `presets` - Custom preset colors array
+- `size` - Size variant: `'compact' | 'default' | 'large'` (default: `'default'`)
+- `width` - Custom width in pixels (overrides size)
+- `height` - Custom color area height in pixels
+- `showEyeDropper` - Show eyedropper button for screen color picking (default: `true`, requires browser support)
+- `showCopyButton` - Show copy button and enable Cmd/Ctrl+C shortcut (default: `true`)
+- `enableHistory` - Store recent colors in localStorage (default: `true`)
+- `historySize` - Maximum colors to keep in history (default: `10`)
 - `className` - Additional CSS classes
 
 ### Composable Components
@@ -245,6 +269,138 @@ ChromaKit supports the following color formats:
   onChange={setColor}
   showAlpha={false}
 />
+```
+
+### Size Variants
+
+Choose the perfect size for your UI:
+
+```tsx
+// Compact for toolbars and sidebars (240px × 120px area)
+<ColorPicker size="compact" color={color} onChange={setColor} />
+
+// Default size for modals and panels (280px × 180px area)
+<ColorPicker size="default" color={color} onChange={setColor} />
+
+// Large for feature-rich UIs (360px × 240px area)
+<ColorPicker size="large" color={color} onChange={setColor} />
+
+// Custom width overrides size
+<ColorPicker width={320} color={color} onChange={setColor} />
+```
+
+### Eyedropper & Copy
+
+Enable advanced features for power users:
+
+```tsx
+<ColorPicker
+  value={color}
+  onChange={setColor}
+  showEyeDropper={true}  // Show eyedropper button (requires browser support)
+  showCopyButton={true}  // Show copy button + Cmd/Ctrl+C shortcut
+/>
+```
+
+### Color History
+
+Automatically track recently used colors:
+
+```tsx
+<ColorPicker
+  value={color}
+  onChange={setColor}
+  enableHistory={true}    // Store colors in localStorage
+  historySize={10}        // Keep last 10 colors (default)
+/>
+```
+
+### Color Harmony Tools
+
+Generate harmonious color schemes:
+
+```tsx
+import {
+  getComplementaryColor,
+  getAnalogousColors,
+  getTriadicColors,
+  getSplitComplementaryColors,
+  getTetradicColors
+} from 'chromakit-react';
+
+const baseColor = { r: 255, g: 107, b: 107 };
+
+// Get complementary color (opposite on color wheel)
+const complementary = getComplementaryColor(baseColor);
+
+// Get analogous colors (adjacent on color wheel)
+const analogous = getAnalogousColors(baseColor, 30); // Returns array of 3 colors
+
+// Get triadic colors (evenly spaced on color wheel)
+const triadic = getTriadicColors(baseColor); // Returns array of 3 colors
+
+// Get split-complementary colors
+const splitComp = getSplitComplementaryColors(baseColor, 30); // Returns array of 3 colors
+
+// Get tetradic (rectangular) colors
+const tetradic = getTetradicColors(baseColor, 60); // Returns array of 4 colors
+```
+
+### Contrast Checker
+
+Check WCAG compliance for accessibility:
+
+```tsx
+import {
+  getContrastRatio,
+  meetsContrastRatio,
+  getRelativeLuminance
+} from 'chromakit-react';
+
+const textColor = { r: 0, g: 0, b: 0 };
+const bgColor = { r: 255, g: 255, b: 255 };
+
+// Calculate contrast ratio
+const ratio = getContrastRatio(textColor, bgColor); // Returns 21 (maximum)
+
+// Check WCAG compliance
+const meetsAA = meetsContrastRatio(ratio, 'AA', 'normal');  // true (needs 4.5:1)
+const meetsAAA = meetsContrastRatio(ratio, 'AAA', 'normal'); // true (needs 7:1)
+
+// Large text has lower requirements
+const meetsLargeAA = meetsContrastRatio(3.5, 'AA', 'large');  // true (needs 3:1)
+```
+
+### Clipboard Utilities
+
+Programmatically copy colors:
+
+```tsx
+import { copyToClipboard } from 'chromakit-react';
+
+const handleCopy = async () => {
+  const success = await copyToClipboard('#ff6b6b');
+  if (success) {
+    console.log('Color copied!');
+  }
+};
+```
+
+### Native Eyedropper
+
+Pick colors from screen (requires modern browser):
+
+```tsx
+import { isEyeDropperSupported, pickColorFromScreen } from 'chromakit-react';
+
+if (isEyeDropperSupported()) {
+  const handlePick = async () => {
+    const color = await pickColorFromScreen();
+    if (color) {
+      setColor(color); // Returns hex color like "#ff6b6b"
+    }
+  };
+}
 ```
 
 ## Why OKLCH?
