@@ -17,14 +17,14 @@ A modern React color picker library with first-class support for perceptually un
 ## Installation
 
 ```bash
-npm install chromakit
+npm install chromakit-react
 ```
 
 ## Quick Start
 
 ```tsx
-import { ColorPicker } from 'chromakit';
-import 'chromakit/styles.css';
+import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/styles.css';
 
 function App() {
   const [color, setColor] = useState('#ff0000');
@@ -74,7 +74,7 @@ interface ColorPickerProps {
 Build custom pickers using primitive components:
 
 ```tsx
-import { ColorArea, HueSlider, AlphaSlider, ColorPreview } from 'chromakit';
+import { ColorArea, HueSlider, AlphaSlider, ColorPreview } from 'chromakit-react';
 
 function CustomPicker() {
   const [color, setColor] = useState('#ff0000');
@@ -99,7 +99,7 @@ import {
   rgbToOklch,
   oklchToRgb,
   parseColor
-} from 'chromakit';
+} from 'chromakit-react';
 
 // Convert between formats
 const rgb = hexToRgb('#ff0000'); // { r: 255, g: 0, b: 0 }
@@ -213,7 +213,7 @@ import type {
   HSLColor,
   OKLCHColor,
   ColorValue
-} from 'chromakit';
+} from 'chromakit-react';
 ```
 
 ## Contributing

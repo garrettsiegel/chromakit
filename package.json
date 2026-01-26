@@ -1,5 +1,5 @@
 {
-  "name": "chromakit",
+  "name": "chromakit-react",
   "version": "0.1.0",
   "type": "module",
   "description": "A modern React color picker library with support for OKLCH, OKLAB, and traditional color spaces",
