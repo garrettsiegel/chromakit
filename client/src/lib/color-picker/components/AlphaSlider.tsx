@@ -102,7 +102,7 @@ export function AlphaSlider({
       aria-valuetext={`${alphaPercentage}%`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
-      className={`ck-alpha-slider ${className}`}
+      className={`ck-alpha-slider${vertical ? ' ck-alpha-slider--vertical' : ''} ${className}`}
       style={vertical ? { width: '16px', height: '100%' } : undefined}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
@@ -120,6 +120,7 @@ export function AlphaSlider({
             ? { top: `${100 - hsva.a * 100}%`, left: '50%' }
             : { left: thumbPosition }
         }
+        data-testid="alpha-slider-thumb"
       >
         <div className="ck-slider-thumb-inner" />
       </div>

@@ -123,6 +123,7 @@ export function ColorArea({
       <div
         className="ck-color-area-thumb"
         style={thumbStyle}
+        data-testid="color-area-thumb"
       >
         <div className="ck-color-area-thumb-inner" />
       </div>

@@ -88,7 +88,7 @@ export function HueSlider({
       aria-valuetext={`${hsva.h}°`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
-      className={`ck-hue-slider ${className}`}
+      className={`ck-hue-slider${vertical ? ' ck-hue-slider--vertical' : ''} ${className}`}
       style={vertical ? { width: '16px', height: '100%' } : undefined}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
@@ -103,6 +103,7 @@ export function HueSlider({
       <div
         className="ck-slider-thumb"
         style={vertical ? { top: thumbPosition, left: '50%' } : { left: thumbPosition }}
+        data-testid="hue-slider-thumb"
       >
         <div className="ck-slider-thumb-inner" />
       </div>

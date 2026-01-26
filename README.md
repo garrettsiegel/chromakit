@@ -1,8 +1,60 @@
 # ChromaKit
 
+[![npm version](https://img.shields.io/npm/v/chromakit-react.svg)](https://www.npmjs.com/package/chromakit-react)
+[![npm downloads](https://img.shields.io/npm/dm/chromakit-react.svg)](https://www.npmjs.com/package/chromakit-react)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/chromakit-react)](https://bundlephobia.com/package/chromakit-react)
+[![license](https://img.shields.io/npm/l/chromakit-react.svg)](https://github.com/garrettsiegel/chromakit/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
 > **[chromakit.site](https://www.chromakit.site)** - Live demo and documentation
 
 A modern React color picker library with first-class support for perceptually uniform color spaces (OKLCH, OKLAB) alongside traditional formats.
+
+## Why ChromaKit?
+
+ChromaKit offers a **modern alternative** to traditional color pickers with unique advantages:
+
+### 🎨 Modern Color Spaces
+Unlike react-colorful and react-color, ChromaKit includes **OKLCH and OKLAB** support—perceptually uniform color spaces that produce visually consistent gradients and better color transformations. Perfect for design systems and accessible color palettes.
+
+### 🧩 Fully Composable
+Build exactly the picker you need using primitive components (`ColorArea`, `HueSlider`, `AlphaSlider`). No bloated all-in-one components—just the pieces you want.
+
+### 🌗 Built-in Dark Mode  
+Automatic dark mode support without extra configuration. Components adapt seamlessly to your theme.
+
+### ⚡ Performance Focused
+- **Zero runtime dependencies** (only React peer dependency)
+- **Tree-shakeable** exports—only import what you use
+- **~8KB gzipped**—slightly larger than react-colorful (3KB) but includes OKLCH/OKLAB + composability
+- Built with modern React hooks for 60fps interactions
+
+### ♿ Accessibility First
+- WCAG AA compliant with full keyboard navigation
+- ARIA labels and roles throughout
+- Screen reader tested
+- Touch-friendly for mobile devices
+
+### 📘 TypeScript Native
+Written in TypeScript from the ground up with complete type definitions for all color formats and components.
+
+### Comparison
+
+| Feature | ChromaKit | react-colorful | react-color |
+|---------|-----------|----------------|-------------|
+| Bundle Size | ~8KB | ~3KB | ~28KB |
+| OKLCH/OKLAB | ✅ | ❌ | ❌ |
+| Tree-shakeable | ✅ | ✅ | ❌ |
+| TypeScript | ✅ Native | ✅ | ⚠️ @types |
+| Composable | ✅ | Limited | ❌ |
+| Dark Mode | ✅ Built-in | Manual | Manual |
+| Dependencies | 0 | 0 | Many |
+
+**When to use ChromaKit**: Modern design systems, OKLCH-based palettes, custom picker UIs, accessibility-critical apps
+
+**When to use react-colorful**: Minimal bundle size is paramount and traditional color spaces suffice
+
+**Migrating from react-colorful?** See our [Migration Guide](./MIGRATION.md) for step-by-step instructions and component mapping.
 
 ## Features
 
@@ -24,6 +76,7 @@ npm install chromakit-react
 
 ```tsx
 import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/chromakit.css'; // Import styles
 
 function App() {
   const [color, setColor] = useState('#ff0000');
@@ -35,6 +88,38 @@ function App() {
       format="hex"
     />
   );
+}
+```
+
+### CSS Import Options
+
+ChromaKit styles can be imported in two ways:
+
+**Option 1: Automatic Import** (default)
+```tsx
+import { ColorPicker } from 'chromakit-react';
+// CSS is automatically included (9KB total)
+```
+
+**Option 2: Manual Import** (recommended for tree-shaking)
+```tsx
+import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/chromakit.css'; // Explicit CSS import
+```
+
+For optimal bundle size with tree-shaking, configure your bundler to treat CSS as a side effect:
+```js
+// vite.config.js
+export default {
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'chromakit': ['chromakit-react']
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -226,6 +311,12 @@ If ChromaKit has helped you build something awesome, consider supporting its dev
 [![Sponsor](https://img.shields.io/badge/sponsor-GitHub-pink?style=for-the-badge&logo=github)](https://github.com/sponsors/garrettsiegel)
 
 Your support helps maintain the project and develop new features.
+
+## Documentation
+
+- 📖 [Migration Guide](./MIGRATION.md) - Migrating from react-colorful
+- ⚡ [Performance Benchmarks](./PERFORMANCE.md) - Bundle size, speed, and memory comparisons
+- 🤝 [Contributing Guide](./CONTRIBUTING.md) - How to contribute to ChromaKit
 
 ## License
 
