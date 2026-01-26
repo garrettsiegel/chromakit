@@ -1076,17 +1076,21 @@ MIT © [Garrett Siegel](https://github.com/garrettsiegel)
 ## Credits
 
 **Built with:**
+
 - [React](https://react.dev/) - UI framework
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [Vite](https://vitejs.dev/) - Build tool
+
 ### [chromakit.site](https://www.chromakit.site)
 
 **[Star on GitHub](https://github.com/garrettsiegel/chromakit)** • **[Try Live Demo](https://www.chromakit.site)** • **[Report Bug](https://github.com/garrettsiegel/chromakit/issues)**
 **Color science based on:**
+
 - [OKLCH specification](https://www.w3.org/TR/css-color-4/#ok-lab) - W3C standard
 - [Oklab color space](https://bottosson.github.io/posts/oklab/) - Björn Ottosson's research
 
 **Design inspired by:**
+
 - [Radix UI](https://www.radix-ui.com/) - Component patterns
 - [Tailwind CSS](https://tailwindcss.com/) - Color palettes
 
