@@ -1041,13 +1041,6 @@ clearColorHistory();
 - **Updates?** Star the repo to get notified of new releases
 - **Share?** Tweet [@garrettsiegel](https://twitter.com/garrettsiegel) with your projects!
 
-## Contributing
-
-// Or use composable components (smaller bundle)
-import { ColorArea, HueSlider } from 'chromakit-react';
-
-```
-
 ## Documentation
 
 - [Migration Guide](./MIGRATION.md) - Migrating from react-colorful or react-color
