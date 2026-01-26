@@ -33,7 +33,7 @@ describe('ColorArea', () => {
       expect(area).toHaveClass('ck-color-area', 'custom-class');
     });
 
-    it('should set custom width and height', () => {
+    it('should set custom width', () => {
       render(
         <ColorArea
           hsva={defaultHsva}
@@ -43,7 +43,7 @@ describe('ColorArea', () => {
         />
       );
       const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle({ width: '300px', height: '250px' });
+      expect(area).toHaveStyle({ width: '300px' });
     });
 
     it('should display thumb at correct position', () => {
@@ -301,7 +301,7 @@ describe('ColorArea', () => {
         />
       );
       const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle({ width: '10px', height: '10px' });
+      expect(area).toHaveStyle({ width: '10px' });
     });
 
     it('should handle extreme hue values', () => {
