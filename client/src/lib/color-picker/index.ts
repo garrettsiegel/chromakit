@@ -1,5 +1,6 @@
-// Import styles
-import './chromakit.css';
+// Auto-inject styles
+import { injectStyles } from './injectStyles';
+injectStyles();
 
 // Types
 export type {

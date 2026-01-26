@@ -1,11 +1,15 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { ColorPickerProps, ColorFormat, ColorValue } from '../types';
 import { useColorState } from '../hooks';
+import { injectStyles } from '../injectStyles';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
 import { ColorInputs, RGBInputs, HSLInputs, HSVInputs, OKLCHInputs } from './ColorInputs';
 import { ColorPreview, PresetColors } from './ColorPreview';
+
+// Inject styles on module load
+injectStyles();
 
 const DEFAULT_PRESETS = [
   '#FF0000', '#FF4500', '#FF8C00', '#FFD700', '#FFFF00',

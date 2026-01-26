@@ -1,6 +1,6 @@
 {
   "name": "chromakit-react",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "A modern React color picker library with support for OKLCH, OKLAB, and traditional color spaces",
   "license": "MIT",
@@ -12,19 +12,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/chromakit.es.js",
       "require": "./dist/chromakit.umd.js"
-    },
-    "./dist/chromakit-react.css": "./dist/chromakit-react.css"
+    }
   },
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
-  "sideEffects": [
-    "**/*.css",
-    "./dist/chromakit.es.js",
-    "./dist/chromakit.umd.js"
-  ],
+  "sideEffects": true,
   "keywords": [
     "react",
     "color-picker",
