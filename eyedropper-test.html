@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eyedropper Test</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module">
+        import { createRoot } from 'https://unpkg.com/react@18/client';
+        import React from 'https://unpkg.com/react@18';
+        
+        function TestComponent() {
+            const [color, setColor] = React.useState('#ff0000');
+            
+            const handleEyeDropperClick = async () => {
+                try {
+                    if ('EyeDropper' in window) {
+                        const eyeDropper = new window.EyeDropper();
+                        const result = await eyeDropper.open();
+                        console.log('Picked color:', result.sRGBHex);
+                        setColor(result.sRGBHex);
+                    } else {
+                        alert('EyeDropper not supported in this browser');
+                    }
+                } catch (error) {
+                    console.error('Error with eyedropper:', error);
+                }
+            };
+            
+            return React.createElement('div', {}, 
+                React.createElement('div', { 
+                    style: { 
+                        width: '100px', 
+                        height: '100px', 
+                        backgroundColor: color,
+                        border: '1px solid black'
+                    } 
+                }),
+                React.createElement('button', { onClick: handleEyeDropperClick }, 'Pick Color'),
+                React.createElement('p', {}, `Current color: ${color}`)
+            );
+        }
+        
+        const root = createRoot(document.getElementById('root'));
+        root.render(React.createElement(TestComponent));
+    </script>
+</body>
+</html>
