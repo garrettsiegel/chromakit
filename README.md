@@ -24,7 +24,6 @@ npm install chromakit-react
 
 ```tsx
 import { ColorPicker } from 'chromakit-react';
-import 'chromakit-react/styles.css';
 
 function App() {
   const [color, setColor] = useState('#ff0000');

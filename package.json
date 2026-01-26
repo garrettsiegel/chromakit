@@ -13,7 +13,7 @@
       "import": "./dist/chromakit.es.js",
       "require": "./dist/chromakit.umd.js"
     },
-    "./styles.css": "./dist/chromakit.css"
+    "./dist/chromakit-react.css": "./dist/chromakit-react.css"
   },
   "files": [
     "dist",
@@ -21,7 +21,9 @@
     "LICENSE"
   ],
   "sideEffects": [
-    "*.css"
+    "**/*.css",
+    "./dist/chromakit.es.js",
+    "./dist/chromakit.umd.js"
   ],
   "keywords": [
     "react",
