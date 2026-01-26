@@ -26,10 +26,10 @@ export default defineConfig(({ mode }) => {
               'react/jsx-runtime': 'jsxRuntime',
             },
             assetFileNames: (assetInfo) => {
-              if (assetInfo.name === 'style.css') {
+              if (assetInfo.name && assetInfo.name.endsWith('.css')) {
                 return 'chromakit.css';
               }
-              return assetInfo.name;
+              return assetInfo.name || 'asset';
             },
           },
         },

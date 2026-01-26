@@ -12,7 +12,9 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/chromakit.es.js",
       "require": "./dist/chromakit.umd.js"
-    }
+    },
+    "./chromakit.css": "./dist/chromakit.css",
+    "./dist/chromakit.css": "./dist/chromakit.css"
   },
   "files": [
     "dist",
