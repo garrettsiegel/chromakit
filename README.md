@@ -771,6 +771,7 @@ ChromaKit works in all modern browsers:
 - **Chrome/Edge**: 88+
 - **Firefox**: 87+
 - **Safari**: 15+
+- **Node.js**: 20+ (for SSR/build tools)
 
 ### Feature Support
 
