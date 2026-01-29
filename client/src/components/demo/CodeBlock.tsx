@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { CopyButton } from './CopyButton';
 
 interface CodeBlockProps {
@@ -5,7 +6,7 @@ interface CodeBlockProps {
   language?: string;
 }
 
-export function CodeBlock({
+export const CodeBlock = memo(function CodeBlock({
   code,
   language: _language = 'tsx',
 }: CodeBlockProps) {
@@ -25,4 +26,4 @@ export function CodeBlock({
       </div>
     </div>
   );
-}
+});

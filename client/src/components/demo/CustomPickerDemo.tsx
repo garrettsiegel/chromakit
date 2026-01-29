@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   Card,
   CardHeader,
@@ -24,7 +25,7 @@ const COLOR_AREA_CONFIG = {
   height: 160,
 } as const;
 
-export function CustomPickerDemo() {
+export const CustomPickerDemo = memo(function CustomPickerDemo() {
   const { hsva, colorValue, updateColor, setFromString, startDrag, endDrag } =
     useColorState('#6366F1');
 
@@ -97,4 +98,4 @@ export function CustomPickerDemo() {
       </CardContent>
     </Card>
   );
-}
+});

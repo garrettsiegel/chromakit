@@ -1,10 +1,6 @@
 import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, ArrowRight, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-// ============================================================
-// FINAL CTA COMPONENT
-// ============================================================
 
 export function FinalCTA() {
   const [copied, setCopied] = useState(false);
@@ -20,24 +16,24 @@ export function FinalCTA() {
     <section className="relative py-20 md:py-32">
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          {/* HEADING */}
+          {/* Heading */}
           <div className="space-y-4">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Ready to Build Beautiful Color Pickers?
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+              Start Building Today
             </h2>
             <p className="text-lg text-muted-foreground">
               Join developers building modern design systems with OKLCH
             </p>
           </div>
 
-          {/* INSTALL COMMAND */}
-          <div className="flex items-center justify-center gap-3 p-4 rounded-xl bg-muted/50 border border-border max-w-lg mx-auto">
+          {/* Install Command */}
+          <div className="inline-flex items-center gap-2 px-5 py-4 rounded-xl border border-border bg-card">
             <code className="font-mono text-sm flex-1 text-left">
               {installCommand}
             </code>
             <button
               onClick={handleCopy}
-              className="p-2 rounded-lg hover:bg-background/80 transition-colors"
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label="Copy install command"
             >
               {copied ? (
@@ -48,22 +44,36 @@ export function FinalCTA() {
             </button>
           </div>
 
-          {/* BUTTONS */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <Button size="lg" asChild className="text-base px-8">
-              <a href="#demo">Try Interactive Demo</a>
+          {/* Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button size="lg" className="text-base px-8 h-12" asChild>
+              <a
+                href="https://www.npmjs.com/package/chromakit-react"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read Full Documentation
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </a>
+            </Button>
+            <Button size="lg" variant="outline" className="text-base px-8 h-12 group" asChild>
+              <a href="#demo">
+                Try Interactive Demo
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </a>
             </Button>
             <Button
               size="lg"
               variant="outline"
+              className="text-base px-8 h-12"
               asChild
-              className="text-base px-8"
             >
               <a
                 href="https://github.com/garrettsiegel/chromakit"
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                <Github className="w-4 h-4 mr-2" />
                 View on GitHub
               </a>
             </Button>

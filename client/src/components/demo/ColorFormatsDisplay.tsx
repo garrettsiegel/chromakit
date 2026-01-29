@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { ColorFormat, ColorValue } from '@/lib/color-picker';
 import { formatColor } from '@/lib/color-picker';
 import { CopyButton } from './CopyButton';
@@ -16,7 +17,7 @@ interface ColorFormatsDisplayProps {
   colorValue: ColorValue;
 }
 
-export function ColorFormatsDisplay({ colorValue }: ColorFormatsDisplayProps) {
+export const ColorFormatsDisplay = memo(function ColorFormatsDisplay({ colorValue }: ColorFormatsDisplayProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {COLOR_FORMATS.map((format) => {
@@ -38,4 +39,4 @@ export function ColorFormatsDisplay({ colorValue }: ColorFormatsDisplayProps) {
       })}
     </div>
   );
-}
+});
