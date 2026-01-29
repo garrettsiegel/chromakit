@@ -32,6 +32,23 @@ npm install chromakit-react
 
 <br />
 
+## Table of Contents
+
+- [Why ChromaKit](#why-developers-choose-chromakit)
+- [Quick Start](#quick-start)
+- [Why OKLCH?](#why-oklch)
+- [Features](#features)
+- [Framework Setup](#framework-setup)
+- [API Reference](#api-reference)
+- [Examples](#examples)
+- [Color Utilities](#color-utilities)
+- [Theming](#theming--customization)
+- [Browser Support](#browser-support)
+- [TypeScript](#typescript)
+- [Troubleshooting](#troubleshooting)
+
+---
+
 ## Why Developers Choose ChromaKit
 
 **The only React color picker built for modern design systems.** While other pickers struggle with consistent color scales and muddy gradients, ChromaKit uses perceptually uniform color spaces (OKLCH, OKLAB) to deliver what designers expect and users see.
@@ -126,46 +143,17 @@ const handleChange = (value: ColorValue) => {
 | -------------- | ----------- | -------------- | ----------- |
 | Bundle Size    | ~10KB       | ~3KB           | ~28KB       |
 | OKLCH/OKLAB    | ✅          | ❌             | ❌          |
-| Tree-shakeable | ✅          | ✅             | ❌          |
-| TypeScript     | ✅ Native   | ✅             | ⚠️ @types   |
 | Composable     | ✅          | Limited        | ❌          |
+| TypeScript     | ✅ Native   | ✅             | ⚠️ @types   |
 | Dark Mode      | ✅ Built-in | Manual         | Manual      |
 | Dependencies   | 0           | 0              | Many        |
 
-### When to Choose ChromaKit
+**Choose ChromaKit for:** Design systems, OKLCH support, accessibility features, composability  
+**Choose react-colorful for:** Minimal bundle size (<5KB), traditional RGB/HSL only
 
-**Use ChromaKit if you:**
-
-- Need consistent color scales for design systems
-- Want OKLCH/OKLAB support for wide-gamut displays
-- Require accessibility features (WCAG checking)
-- Prefer composable components over all-in-one solutions
-- Value TypeScript-first development
-
-**⚠️ Use react-colorful if:**
-
-- Bundle size is your #1 priority (need <5KB)
-- Traditional RGB/HSL is sufficient
-- Don't need advanced color space features
-
-**🔄 Migrating?** See our [Migration Guide](./MIGRATION.md) for step-by-step instructions from react-colorful or react-color.
+[Migration Guide](./MIGRATION.md) available for switching from react-colorful or react-color.
 
 ---
-
-## Features
-
-- **Modern Color Spaces**: OKLCH, OKLAB support for perceptually uniform colors
-- **Traditional Formats**: RGB(A), HSL(A), HSV(A), HEX, HEX8
-- **Composable**: Build custom pickers with primitive components
-- **Eyedropper Tool**: Pick colors from anywhere on screen (modern browsers)
-- **Color History**: Automatically saves recent colors to localStorage
-- **Copy to Clipboard**: Quick color copying with keyboard shortcuts (Cmd/Ctrl+C)
-- **Color Harmony**: Utilities for complementary, analogous, triadic color schemes
-- **Contrast Checker**: WCAG AA/AAA contrast ratio calculator
-- **TypeScript First**: Complete type definitions
-- **Dark Mode**: Built-in dark mode support
-- **Lightweight**: ~10KB gzipped with zero runtime dependencies
-- **Accessible**: WCAG compliant (keyboard navigation, ARIA labels)
 
 ## Quick Start
 
@@ -190,123 +178,85 @@ function App() {
 
 That's it! You now have a fully-featured color picker with OKLCH support, eyedropper, color history, and more.
 
-> **💡 Pro Tip:** Use `presetGroups` to give users quick access to your brand colors or popular design system palettes (Material, Tailwind, Bootstrap).
+---
+
+## Why OKLCH?
+
+OKLCH is a perceptually uniform color space - equal numerical changes produce equal visual differences.
+
+**Key Benefits:**
+- **Predictable Lightness**: `oklch(0.5 ...)` appears equally bright regardless of hue, unlike HSL
+- **Better Gradients**: Smooth transitions without muddy middle tones
+- **Design Systems**: Generate consistent tonal scales with uniform visual weight
+- **Wide Gamut**: Access more vibrant colors on modern displays
+
+**Parameters:**
+- **L (Lightness)**: 0 (black) to 1 (white)
+- **C (Chroma)**: 0 (grayscale) to ~0.4 (vibrant)
+- **H (Hue)**: 0-360° around the color wheel
+
+```tsx
+// HSL: Same lightness value, different perceived brightness
+hsl(240, 100%, 50%) // Blue - looks dark
+hsl(60, 100%, 50%)  // Yellow - looks bright
+
+// OKLCH: Same lightness = same perceived brightness
+oklch(0.5 0.2 240)  // Blue at 50% brightness
+oklch(0.5 0.2 60)   // Yellow at 50% brightness
+```
+
+[Learn more about OKLCH →](https://oklch.com/)
+
+---
 
 ## Framework Setup
 
-### Next.js
-
-**App Router (Next.js 13+)**
+### Next.js App Router
 
 ```tsx
-// app/components/ColorPicker.tsx
 'use client';
-
-import { useState } from 'react';
 import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
 
 export function MyColorPicker() {
   const [color, setColor] = useState('#6366F1');
-
-  return (
-    <ColorPicker
-      value={color}
-      onChange={(colorValue) => setColor(colorValue.hex)}
-    />
-  );
+  return <ColorPicker value={color} onChange={(c) => setColor(c.hex)} />;
 }
 ```
 
-**Pages Router (Next.js 12)**
+### Next.js Pages Router (SSR)
 
 ```tsx
-// pages/index.tsx
 import dynamic from 'next/dynamic';
 
 const ColorPicker = dynamic(
   () => import('chromakit-react').then((mod) => mod.ColorPicker),
   { ssr: false }
 );
-
-export default function Page() {
-  return <ColorPicker defaultValue="#6366F1" />;
-}
 ```
 
-Import CSS in `_app.tsx`:
-
-```tsx
-import 'chromakit-react/chromakit.css';
-```
-
-### Vite
+### Vite / CRA
 
 ```tsx
 import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
-
-// Works out of the box - no configuration needed
-```
-
-### Create React App
-
-```tsx
-import { ColorPicker } from 'chromakit-react';
-import 'chromakit-react/chromakit.css';
-
 // Works out of the box
 ```
 
-### CSS Import Options
-
-ChromaKit styles can be imported in two ways:
-
-**Option 1: Manual Import** (recommended)
-
-```tsx
-import 'chromakit-react/chromakit.css';
-```
-
-**Option 2: Automatic Import**
-
-```tsx
-import { ColorPicker } from 'chromakit-react';
-// CSS is automatically included via side effects
-```
-
-For optimal bundle size with tree-shaking, configure your bundler:
-
-```js
-// vite.config.js
-export default {
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          chromakit: ['chromakit-react'],
-        },
-      },
-    },
-  },
-};
-```
+---
 
 ## API Reference
 
 ### ColorPicker
 
-The main color picker component with all features included.
+Full-featured color picker component.
 
 ```tsx
 interface ColorPickerProps {
-  // Value control
   value?: string;
   defaultValue?: string;
   onChange?: (color: ColorValue) => void;
   onChangeComplete?: (color: ColorValue) => void;
-
-  // UI configuration
   formats?: ColorFormat[];
   showAlpha?: boolean;
   showInputs?: boolean;
@@ -314,19 +264,11 @@ interface ColorPickerProps {
   showCopyButton?: boolean;
   showEyeDropper?: boolean;
   showPresets?: boolean;
-
-  // Presets
   presets?: string[];
   presetGroups?: PresetGroup[] | Record<string, string[]>;
-
-  // History
   enableHistory?: boolean;
-
-  // Dimensions
   width?: number;
   height?: number;
-
-  // Styling
   className?: string;
 }
 ```
@@ -544,23 +486,7 @@ function useDrag(
 ): void;
 ```
 
-### Color Formats
-
-ChromaKit supports the following color formats:
-
-| Format | Example                   | Description                      |
-| ------ | ------------------------- | -------------------------------- |
-| HEX    | `#ff0000`                 | Hexadecimal RGB                  |
-| HEX8   | `#ff0000ff`               | Hex with alpha                   |
-| RGB    | `rgb(255, 0, 0)`          | Red, Green, Blue                 |
-| RGBA   | `rgba(255, 0, 0, 1)`      | RGB with alpha                   |
-| HSL    | `hsl(0, 100%, 50%)`       | Hue, Saturation, Lightness       |
-| HSLA   | `hsla(0, 100%, 50%, 1)`   | HSL with alpha                   |
-| HSV    | `hsv(0, 100%, 100%)`      | Hue, Saturation, Value           |
-| HSVA   | `hsva(0, 100%, 100%, 1)`  | HSV with alpha                   |
-| OKLCH  | `oklch(0.63 0.26 29)`     | Perceptually uniform cylindrical |
-| OKLCHA | `oklch(0.63 0.26 29 / 1)` | OKLCH with alpha                 |
-| OKLAB  | `oklab(0.63 0.22 0.13)`   | Perceptually uniform Cartesian   |
+---
 
 ## Examples
 
@@ -695,6 +621,59 @@ const presetGroups = {
 
 Note: The EyeDropper API requires a secure context (HTTPS) and is currently supported in Chrome/Edge 95+, not yet in Firefox or Safari.
 
+### Form Integration
+
+**React Hook Form**
+
+```tsx
+import { Controller, useForm } from 'react-hook-form';
+import { ColorPicker } from 'chromakit-react';
+
+function MyForm() {
+  const { control, handleSubmit } = useForm({
+    defaultValues: { brandColor: '#6366F1' }
+  });
+
+  return (
+    <form onSubmit={handleSubmit(data => console.log(data))}>
+      <Controller
+        name="brandColor"
+        control={control}
+        render={({ field }) => (
+          <ColorPicker
+            value={field.value}
+            onChange={(c) => field.onChange(c.hex)}
+          />
+        )}
+      />
+    </form>
+  );
+}
+```
+
+**Formik**
+
+```tsx
+import { useFormik } from 'formik';
+import { ColorPicker } from 'chromakit-react';
+
+function MyForm() {
+  const formik = useFormik({
+    initialValues: { brandColor: '#6366F1' },
+    onSubmit: values => console.log(values)
+  });
+
+  return (
+    <form onSubmit={formik.handleSubmit}>
+      <ColorPicker
+        value={formik.values.brandColor}
+        onChange={(c) => formik.setFieldValue('brandColor', c.hex)}
+      />
+    </form>
+  );
+}
+```
+
 ## Color Utilities
 
 ### Conversion Functions
@@ -768,53 +747,14 @@ ChromaKit supports the following color formats:
 
 ## Theming & Customization
 
-### CSS Custom Properties
-
-ChromaKit uses CSS custom properties for easy theming. Override these variables to customize the appearance:
+Override CSS variables for custom themes:
 
 ```css
-:root {
-  /* Glass morphism effects */
-  --ck-glass-bg: rgba(255, 255, 255, 0.7);
-  --ck-glass-bg-strong: rgba(255, 255, 255, 0.9);
-  --ck-glass-border: rgba(255, 255, 255, 0.3);
-  --ck-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  
-  /* Colors */
-  --ck-bg: #f8f9fa;
-  --ck-text: #1a1a1a;
-  --ck-text-muted: #64748b;
-  --ck-primary: #6366f1;
-  --ck-primary-glow: rgba(99, 102, 241, 0.4);
-  --ck-accent: #8b5cf6;
-  
-  /* Border radius */
-  --ck-radius: 12px;
-  --ck-radius-md: 8px;
-  --ck-radius-sm: 6px;
-  
-  /* Blur effects */
-  --ck-blur: blur(20px);
-  --ck-blur-strong: blur(40px);
-}
-
-/* Dark mode automatically applies via .dark class or [data-theme="dark"] */
-.dark {
-  --ck-glass-bg: rgba(26, 26, 30, 0.7);
-  --ck-bg: #0a0a0b;
-  --ck-text: #ffffff;
-  --ck-primary: #818cf8;
-}
-```
-
-### Custom Theme Example
-
-```css
-/* Custom purple theme */
 .my-custom-picker {
   --ck-primary: #9333ea;
-  --ck-accent: #c026d3;
-  --ck-radius: 4px;
+  --ck-bg: #0a0a0b;
+  --ck-text: #ffffff;
+  --ck-radius: 8px;
 }
 ```
 
@@ -822,46 +762,7 @@ ChromaKit uses CSS custom properties for easy theming. Override these variables 
 <ColorPicker className="my-custom-picker" />
 ```
 
-## Why OKLCH?
-
-OKLCH (Oklab Lightness Chroma Hue) is a modern, perceptually uniform color space that provides significant advantages over traditional RGB and HSL:
-
-### Benefits
-
-- **Perceptually Uniform**: Equal numerical changes produce equal visual differences. A lightness change from 40% to 50% looks the same as 70% to 80%.
-
-- **Predictable Lightness**: Unlike HSL where `hsl(240, 100%, 50%)` (blue) appears much darker than `hsl(60, 100%, 50%)` (yellow) despite having the same lightness value, OKLCH's lightness truly represents perceived brightness.
-
-- **Better Gradients**: Transitions between colors avoid muddy middle tones. Compare an RGB gradient from blue to yellow (goes through gray) vs OKLCH (stays vibrant).
-
-- **Wide Gamut**: Access to more vibrant colors on modern displays beyond sRGB limitations.
-
-- **Human-Friendly Parameters**:
-  - **L (Lightness)**: 0 (black) to 1 (white)
-  - **C (Chroma)**: 0 (grayscale) to ~0.4 (vibrant)
-  - **H (Hue)**: 0-360° around the color wheel
-
-### Practical Applications
-
-**Design Systems**: Generate consistent tonal scales where each step has uniform visual weight.
-
-**Accessible Palettes**: Predictable lightness makes it easier to ensure WCAG contrast ratios.
-
-**Color Manipulation**: Lighten/darken colors by adjusting L while maintaining hue perception.
-
-### Example Comparison
-
-```tsx
-// HSL: Same lightness, different perceived brightness
-hsl(240, 100%, 50%)  // Blue - looks dark
-hsl(60, 100%, 50%)   // Yellow - looks bright
-
-// OKLCH: Same lightness, same perceived brightness
-oklch(0.5 0.2 240)   // Blue at 50% brightness
-oklch(0.5 0.2 60)    // Yellow at 50% brightness - adjusted automatically
-```
-
-[Learn more about OKLCH →](https://oklch.com/)
+See [source CSS](./client/src/lib/color-picker/chromakit.css) for all available variables.
 
 ## Browser Support
 
@@ -883,67 +784,7 @@ ChromaKit works in all modern browsers:
 
 For CSS OKLCH color space support, see [Can I Use: OKLCH](https://caniuse.com/mdn-css_types_color_oklch).
 
-## Styling & Theming
 
-ChromaKit uses CSS variables for theming, making it easy to customize colors for light and dark modes.
-
-### CSS Variables
-
-Override these variables in your CSS:
-
-```css
-:root {
-  /* Background colors */
-  --ck-bg-primary: #ffffff;
-  --ck-bg-secondary: #f9fafb;
-
-  /* Border colors */
-  --ck-border: #e5e7eb;
-  --ck-border-hover: #d1d5db;
-
-  /* Text colors */
-  --ck-text-primary: #111827;
-  --ck-text-secondary: #6b7280;
-
-  /* Interactive elements */
-  --ck-accent: #6366f1;
-  --ck-accent-hover: #4f46e5;
-}
-
-.dark {
-  --ck-bg-primary: #1f2937;
-  --ck-bg-secondary: #111827;
-  --ck-border: #374151;
-  --ck-border-hover: #4b5563;
-  --ck-text-primary: #f9fafb;
-  --ck-text-secondary: #9ca3af;
-  --ck-accent: #818cf8;
-  --ck-accent-hover: #6366f1;
-}
-```
-
-### Custom Styling
-
-Add custom classes to override specific styles:
-
-```tsx
-<ColorPicker
-  className="my-custom-picker"
-  value={color}
-  onChange={(colorValue) => setColor(colorValue.hex)}
-/>
-```
-
-```css
-.my-custom-picker {
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-}
-
-.my-custom-picker .ck-preview {
-  border-radius: 8px;
-}
-```
 
 ## TypeScript
 
@@ -1082,48 +923,18 @@ clearColorHistory();
 
 ---
 
-\*\*I📚 Documentation & Resources
+\*\*I## Resources
 
-- [Migration Guide](./MIGRATION.md) - Switch from react-colorful or react-color
-- [Performance Benchmarks](./PERFORMANCE.md) - Bundle size and speed comparisons
+- [Migration Guide](./MIGRATION.md) - Switch from react-colorful/react-color
+- [Performance Benchmarks](./PERFORMANCE.md) - Bundle size & speed comparisons  
 - [Contributing Guide](./CONTRIBUTING.md) - Help improve ChromaKit
-- [Changelog](./CHANGELOG.md) - Version history and release notes
-- [OKLCH Explained](https://oklch.com/) - Learn about perceptually uniform colors
+- [Changelog](./CHANGELOG.md) - Release notes
 
-## Community & Support
+## Support
 
-- **Issues?** [Open an issue](https://github.com/garrettsiegel/chromakit/issues) on GitHub
-- **Questions?** Check existing [discussions](https://github.com/garrettsiegel/chromakit/discussions)
-- **Updates?** Star the repo to get notified of new releases
-- **Share?** Tweet [@garrettsiegel](https://twitter.com/garrettsiegel) with your projects!
-
-## Documentation
-
-- [Migration Guide](./MIGRATION.md) - Migrating from react-colorful or react-color
-- [Performance Benchmarks](./PERFORMANCE.md) - Bundle size and speed comparisons
-- [Contributing Guide](./CONTRIBUTING.md) - How to contribute to ChromaKit
-- [Changelog](./CHANGELOG.md) - Version history and release notes
-
-## Contributing
-
-If ChromaKit saves you time or helps build better products, consider:
-
-- **Star the repo** - Helps others discover ChromaKit
-- **Share your project** - Tweet it, blog it, showcase it
-- **Report bugs** - Help improve quality for everyone
-- **Sponsor development** - Keep it maintained and growing
-
-[![Sponsor on GitHub](https://img.shields.io/badge/sponsor-GitHub-pink?style=for-the-badge&logo=github)](https://github.com/sponsors/garrettsiegel)
-
-**Used by:** If you're using ChromaKit in production, [let us know](https://github.com/garrettsiegel/chromakit/discussions)! We'd love to feature your project
-
-## Support the Project
-
-If ChromaKit has helped you build something awesome, consider supporting its development:
-
-[![Sponsor on GitHub](https://img.shields.io/badge/sponsor-GitHub-pink?style=for-the-badge&logo=github)](https://github.com/sponsors/garrettsiegel)
-
-Your support helps maintain the project, add new features, and keep documentation up-to-date.
+- [Issues](https://github.com/garrettsiegel/chromakit/issues) - Report bugs
+- [Discussions](https://github.com/garrettsiegel/chromakit/discussions) - Ask questions
+- [Sponsor](https://github.com/sponsors/garrettsiegel) - Support development
 
 ## License
 
