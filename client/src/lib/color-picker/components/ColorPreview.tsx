@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import type { ColorValue, PresetGroup } from '../types';
 
 interface ColorPreviewProps {
@@ -81,27 +81,27 @@ export function ColorSwatch({
   size: _size = 'sm',
   className = '',
 }: ColorSwatchProps) {
-  let pressTimer: NodeJS.Timeout | null = null;
+  const pressTimer = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseDown = () => {
     if (onLongPress) {
-      pressTimer = setTimeout(() => {
+      pressTimer.current = setTimeout(() => {
         onLongPress();
       }, 500);
     }
   };
 
   const handleMouseUp = () => {
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-      pressTimer = null;
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
     }
   };
 
   const handleClick = (_e: React.MouseEvent) => {
-    if (pressTimer) {
-      clearTimeout(pressTimer);
-      pressTimer = null;
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
     }
     onClick?.();
   };

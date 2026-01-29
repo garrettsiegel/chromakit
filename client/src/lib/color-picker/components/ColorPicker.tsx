@@ -2,14 +2,12 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import type {
   ColorPickerProps,
   ColorFormat,
-  ColorValue as _ColorValue,
 } from '../types';
 import { useColorState } from '../hooks';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
 import {
-  ColorInputs,
   RGBInputs,
   HSLInputs,
   HSVInputs,
@@ -235,18 +233,16 @@ export function ColorPicker({
 
   const [inputMode, setInputMode] = useState<InputMode>('single');
 
-  // Sync inputMode when availableModes changes
-  useEffect(() => {
-    if (!availableModes.includes(inputMode)) {
-      setInputMode(availableModes[0] || 'single');
-    }
+  // Derive valid inputMode from availableModes to prevent cascading renders
+  const validInputMode = useMemo(() => {
+    return availableModes.includes(inputMode)
+      ? inputMode
+      : availableModes[0] || 'single';
   }, [availableModes, inputMode]);
 
-  // Sync format when formats prop changes
-  useEffect(() => {
-    if (!formats.includes(format)) {
-      setFormat(formats[0] || 'hex');
-    }
+  // Derive valid format from formats prop to prevent cascading renders
+  const validFormat = useMemo(() => {
+    return formats.includes(format) ? format : formats[0] || 'hex';
   }, [formats, format]);
 
   useEffect(() => {
@@ -295,7 +291,7 @@ export function ColorPicker({
         showCopyButton
       ) {
         e.preventDefault();
-        const colorText = formatColor(colorValue, format);
+        const colorText = formatColor(colorValue, validFormat);
         copyToClipboard(colorText).then((success) => {
           if (success && enableHistory) {
             const updated = addToColorHistory(colorValue.hex);
@@ -307,13 +303,13 @@ export function ColorPicker({
       // Cmd/Ctrl + C to copy color
       if ((e.metaKey || e.ctrlKey) && e.key === 'c' && showCopyButton) {
         e.preventDefault();
-        copyToClipboard(formatColor(colorValue, format));
+        copyToClipboard(formatColor(colorValue, validFormat));
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [colorValue, format, showCopyButton, enableHistory]);
+  }, [colorValue, validFormat, showCopyButton, enableHistory]);
 
   // Use custom presets (allows user modification)
   const allPresets = customPresets;
@@ -405,7 +401,7 @@ export function ColorPicker({
                       key={mode}
                       type="button"
                       onClick={() => setInputMode(mode)}
-                      className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
+                      className={`ck-input-mode-btn ${validInputMode === mode ? 'active' : ''}`}
                       data-testid={`input-mode-${mode}`}
                     >
                       {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
@@ -425,9 +421,9 @@ export function ColorPicker({
                 className="ck-preview-wide"
               />
               <div className="ck-action-buttons">
-                {inputMode === 'single' && (
+                {validInputMode === 'single' && (
                   <select
-                    value={format}
+                    value={validFormat}
                     onChange={(e) => setFormat(e.target.value as ColorFormat)}
                     className="ck-select"
                     data-testid="color-format-select"
@@ -446,45 +442,45 @@ export function ColorPicker({
           {/* Color Value Inputs */}
           {showInputs && (
             <div className="ck-inputs-values">
-              {inputMode === 'single' && (
+              {validInputMode === 'single' && (
                 <div className="ck-input-row">
                   <input
                     type="text"
-                    value={formatColor(colorValue, format)}
+                    value={formatColor(colorValue, validFormat)}
                     onChange={(e) => setFromString(e.target.value)}
                     className="ck-input"
                     data-testid="color-input-text"
                   />
                   {showCopyButton && (
                     <CopyButton
-                      text={formatColor(colorValue, format)}
+                      text={formatColor(colorValue, validFormat)}
                       onCopy={handleCopy}
                     />
                   )}
                 </div>
               )}
-              {inputMode === 'rgb' && (
+              {validInputMode === 'rgb' && (
                 <RGBInputs
                   colorValue={colorValue}
                   onChange={setFromString}
                   showAlpha={showAlpha}
                 />
               )}
-              {inputMode === 'hsl' && (
+              {validInputMode === 'hsl' && (
                 <HSLInputs
                   colorValue={colorValue}
                   onChange={setFromString}
                   showAlpha={showAlpha}
                 />
               )}
-              {inputMode === 'hsv' && (
+              {validInputMode === 'hsv' && (
                 <HSVInputs
                   colorValue={colorValue}
                   onChange={setFromString}
                   showAlpha={showAlpha}
                 />
               )}
-              {inputMode === 'oklch' && (
+              {validInputMode === 'oklch' && (
                 <OKLCHInputs
                   colorValue={colorValue}
                   onChange={setFromString}

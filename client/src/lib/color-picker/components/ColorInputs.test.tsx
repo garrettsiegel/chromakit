@@ -1,13 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import { screen, waitFor as _waitFor } from '@testing-library/dom';
+import { screen } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import {
   ColorInputs,
   RGBInputs,
   HSLInputs,
   HSVInputs,
-  OKLCHInputs as _OKLCHInputs,
 } from './ColorInputs';
 import type { ColorValue } from '../types';
 

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -9,7 +10,7 @@ export default defineConfig(({ mode }) => {
   // Library build mode
   if (mode === 'lib' || process.env.BUILD_MODE === 'lib') {
     return {
-      plugins: [react()],
+      plugins: [react(), tailwindcss()],
       build: {
         lib: {
           entry: path.resolve(
@@ -51,7 +52,7 @@ export default defineConfig(({ mode }) => {
 
   // Development/demo mode
   return {
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'client', 'src'),

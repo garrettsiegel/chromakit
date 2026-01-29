@@ -21,17 +21,6 @@ export function ThemeToggle() {
     }
   }, [isDark]);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      setIsDark(true);
-    } else if (savedTheme === 'light') {
-      setIsDark(false);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true);
-    }
-  }, []);
-
   return (
     <Button
       variant="ghost"

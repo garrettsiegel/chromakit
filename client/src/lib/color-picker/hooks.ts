@@ -77,9 +77,9 @@ export function usePointerDrag(
   onMove: (position: { x: number; y: number }) => void,
   onStart?: () => void,
   onEnd?: () => void,
-  externalRef?: React.RefObject<HTMLDivElement>
+  externalRef?: React.RefObject<HTMLDivElement | null>
 ) {
-  const internalRef = useRef<HTMLDivElement>(null);
+  const internalRef = useRef<HTMLDivElement | null>(null);
   const containerRef = externalRef || internalRef;
   const isDragging = useRef(false);
 

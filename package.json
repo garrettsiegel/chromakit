@@ -61,6 +61,14 @@
   "bugs": {
     "url": "https://github.com/garrettsiegel/chromakit/issues"
   },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/garrettsiegel"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
@@ -75,20 +83,26 @@
     "preview": "vite preview",
     "check": "tsc",
     "type-check": "tsc --noEmit",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 20",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:ci": "vitest run --coverage",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "audit": "npm audit --audit-level=moderate",
+    "audit:fix": "npm audit fix",
+    "size": "size-limit",
+    "size:why": "size-limit --why",
+    "ci": "npm run type-check && npm run lint && npm run test:ci && npm run build && npm run size"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@axe-core/react": "^4.11.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -116,6 +130,7 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@size-limit/preset-small-lib": "^12.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
@@ -123,14 +138,14 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "20.19.27",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.1",
+    "@types/node": "^25.1.0",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
-    "@vitejs/plugin-react": "^4.7.0",
-    "@vitest/coverage-v8": "^2.1.0",
-    "@vitest/ui": "^2.1.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/ui": "^4.0.18",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -142,24 +157,46 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "input-otp": "^1.4.2",
-    "jsdom": "^25.0.1",
-    "lucide-react": "^0.453.0",
+    "jest-axe": "^10.0.0",
+    "jsdom": "^27.4.0",
+    "lucide-react": "^0.563.0",
     "next-themes": "^0.4.6",
     "postcss": "^8.4.47",
     "prettier": "^3.8.1",
-    "react": "^18.3.1",
+    "react": "^19.2.4",
     "react-day-picker": "^9.13.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.4",
     "react-hook-form": "^7.71.1",
-    "react-resizable-panels": "^4.5.2",
+    "react-resizable-panels": "^4.5.4",
     "recharts": "^3.7.0",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss": "^3.4.17",
+    "size-limit": "^12.0.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.6.3",
+    "typescript": "^5.9.3",
     "vaul": "^1.1.2",
-    "vite": "^6.0.0",
-    "vitest": "^2.1.0",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18",
     "wouter": "^3.9.0"
-  }
+  },
+  "size-limit": [
+    {
+      "name": "ES Module (gzip)",
+      "path": "dist/chromakit.es.js",
+      "limit": "12 KB",
+      "gzip": true
+    },
+    {
+      "name": "UMD Module (gzip)",
+      "path": "dist/chromakit.umd.js",
+      "limit": "10 KB",
+      "gzip": true
+    },
+    {
+      "name": "CSS (gzip)",
+      "path": "dist/chromakit.css",
+      "limit": "3 KB",
+      "gzip": true
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { ColorValue, ColorFormat } from '../types';
 import {
   parseColor,
@@ -45,14 +45,22 @@ export function ColorInputs({
   availableFormats,
   className = '',
 }: ColorInputsProps) {
-  const [inputValue, setInputValue] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  
+  const derivedValue = useMemo(
+    () => formatColor(colorValue, format),
+    [colorValue, format]
+  );
+  
+  const [inputValue, setInputValue] = useState(derivedValue);
 
+  // Sync external color changes to input field when not editing (controlled input pattern)
   useEffect(() => {
     if (!isEditing) {
-      setInputValue(formatColor(colorValue, format));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInputValue(derivedValue);
     }
-  }, [colorValue, format, isEditing]);
+  }, [derivedValue, isEditing]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,21 +150,21 @@ export function RGBInputs({
   showAlpha = true,
   className = '',
 }: RGBInputsProps) {
-  const [values, setValues] = useState({
-    r: colorValue.rgba.r,
-    g: colorValue.rgba.g,
-    b: colorValue.rgba.b,
-    a: colorValue.rgba.a,
-  });
-
-  useEffect(() => {
-    setValues({
+  const derivedValues = useMemo(
+    () => ({
       r: colorValue.rgba.r,
       g: colorValue.rgba.g,
       b: colorValue.rgba.b,
       a: colorValue.rgba.a,
-    });
-  }, [colorValue]);
+    }),
+    [colorValue.rgba.r, colorValue.rgba.g, colorValue.rgba.b, colorValue.rgba.a]
+  );
+  
+  const [values, setValues] = useState(derivedValues);
+
+  useEffect(() => {
+    setValues(derivedValues);
+  }, [derivedValues]);
 
   const handleChange = useCallback(
     (key: 'r' | 'g' | 'b' | 'a', value: string) => {
@@ -226,21 +234,21 @@ export function HSLInputs({
   showAlpha = true,
   className = '',
 }: HSLInputsProps) {
-  const [values, setValues] = useState({
-    h: colorValue.hsla.h,
-    s: colorValue.hsla.s,
-    l: colorValue.hsla.l,
-    a: colorValue.hsla.a,
-  });
-
-  useEffect(() => {
-    setValues({
+  const derivedValues = useMemo(
+    () => ({
       h: colorValue.hsla.h,
       s: colorValue.hsla.s,
       l: colorValue.hsla.l,
       a: colorValue.hsla.a,
-    });
-  }, [colorValue]);
+    }),
+    [colorValue.hsla.h, colorValue.hsla.s, colorValue.hsla.l, colorValue.hsla.a]
+  );
+  
+  const [values, setValues] = useState(derivedValues);
+
+  useEffect(() => {
+    setValues(derivedValues);
+  }, [derivedValues]);
 
   const handleChange = useCallback(
     (key: 'h' | 's' | 'l' | 'a', value: string) => {
@@ -331,21 +339,21 @@ export function HSVInputs({
   showAlpha = true,
   className = '',
 }: HSVInputsProps) {
-  const [values, setValues] = useState({
-    h: colorValue.hsva.h,
-    s: colorValue.hsva.s,
-    v: colorValue.hsva.v,
-    a: colorValue.hsva.a,
-  });
-
-  useEffect(() => {
-    setValues({
+  const derivedValues = useMemo(
+    () => ({
       h: colorValue.hsva.h,
       s: colorValue.hsva.s,
       v: colorValue.hsva.v,
       a: colorValue.hsva.a,
-    });
-  }, [colorValue]);
+    }),
+    [colorValue.hsva.h, colorValue.hsva.s, colorValue.hsva.v, colorValue.hsva.a]
+  );
+  
+  const [values, setValues] = useState(derivedValues);
+
+  useEffect(() => {
+    setValues(derivedValues);
+  }, [derivedValues]);
 
   const handleChange = useCallback(
     (key: 'h' | 's' | 'v' | 'a', value: string) => {
@@ -442,21 +450,21 @@ export function OKLCHInputs({
   showAlpha = true,
   className = '',
 }: OKLCHInputsProps) {
-  const [values, setValues] = useState({
-    L: colorValue.oklcha.L,
-    C: colorValue.oklcha.C,
-    h: colorValue.oklcha.h,
-    a: colorValue.oklcha.a,
-  });
-
-  useEffect(() => {
-    setValues({
+  const derivedValues = useMemo(
+    () => ({
       L: colorValue.oklcha.L,
       C: colorValue.oklcha.C,
       h: colorValue.oklcha.h,
       a: colorValue.oklcha.a,
-    });
-  }, [colorValue]);
+    }),
+    [colorValue.oklcha.L, colorValue.oklcha.C, colorValue.oklcha.h, colorValue.oklcha.a]
+  );
+  
+  const [values, setValues] = useState(derivedValues);
+
+  useEffect(() => {
+    setValues(derivedValues);
+  }, [derivedValues]);
 
   const handleChange = useCallback(
     (key: 'L' | 'C' | 'h' | 'a', value: string) => {
