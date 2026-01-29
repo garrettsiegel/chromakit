@@ -17,7 +17,14 @@ export default defineConfig({
         'client/src/components/ui/**',
         '**/*.config.{js,ts}',
         '**/types.ts',
+        '**/*.test.{ts,tsx}',
       ],
+      thresholds: {
+        lines: 80,
+        functions: 72,
+        branches: 73,
+        statements: 79,
+      },
     },
   },
   resolve: {

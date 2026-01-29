@@ -195,11 +195,15 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border) / 1);
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: hsl(var(--background) / 1);
+    color: hsl(var(--foreground) / 1);
   }
 }
 
@@ -210,7 +214,7 @@
 @layer utilities {
   /* Hide ugly search cancel button in Chrome until we can style it properly */
   input[type='search']::-webkit-search-cancel-button {
-    @apply hidden;
+    display: none;
   }
 
   /* Placeholder styling for contentEditable div */

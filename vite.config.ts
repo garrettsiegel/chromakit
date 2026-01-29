@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -10,7 +11,16 @@ export default defineConfig(({ mode }) => {
   // Library build mode
   if (mode === 'lib' || process.env.BUILD_MODE === 'lib') {
     return {
-      plugins: [react(), tailwindcss()],
+      plugins: [
+        react(),
+        tailwindcss(),
+        visualizer({
+          open: false,
+          gzipSize: true,
+          brotliSize: true,
+          filename: 'dist/stats.html',
+        }),
+      ],
       build: {
         lib: {
           entry: path.resolve(

@@ -766,6 +766,62 @@ ChromaKit supports the following color formats:
 | OKLCHA | `oklch(0.63 0.26 29 / 1)` | OKLCH with alpha                 |
 | OKLAB  | `oklab(0.63 0.22 0.13)`   | Perceptually uniform Cartesian   |
 
+## Theming & Customization
+
+### CSS Custom Properties
+
+ChromaKit uses CSS custom properties for easy theming. Override these variables to customize the appearance:
+
+```css
+:root {
+  /* Glass morphism effects */
+  --ck-glass-bg: rgba(255, 255, 255, 0.7);
+  --ck-glass-bg-strong: rgba(255, 255, 255, 0.9);
+  --ck-glass-border: rgba(255, 255, 255, 0.3);
+  --ck-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  
+  /* Colors */
+  --ck-bg: #f8f9fa;
+  --ck-text: #1a1a1a;
+  --ck-text-muted: #64748b;
+  --ck-primary: #6366f1;
+  --ck-primary-glow: rgba(99, 102, 241, 0.4);
+  --ck-accent: #8b5cf6;
+  
+  /* Border radius */
+  --ck-radius: 12px;
+  --ck-radius-md: 8px;
+  --ck-radius-sm: 6px;
+  
+  /* Blur effects */
+  --ck-blur: blur(20px);
+  --ck-blur-strong: blur(40px);
+}
+
+/* Dark mode automatically applies via .dark class or [data-theme="dark"] */
+.dark {
+  --ck-glass-bg: rgba(26, 26, 30, 0.7);
+  --ck-bg: #0a0a0b;
+  --ck-text: #ffffff;
+  --ck-primary: #818cf8;
+}
+```
+
+### Custom Theme Example
+
+```css
+/* Custom purple theme */
+.my-custom-picker {
+  --ck-primary: #9333ea;
+  --ck-accent: #c026d3;
+  --ck-radius: 4px;
+}
+```
+
+```tsx
+<ColorPicker className="my-custom-picker" />
+```
+
 ## Why OKLCH?
 
 OKLCH (Oklab Lightness Chroma Hue) is a modern, perceptually uniform color space that provides significant advantages over traditional RGB and HSL:

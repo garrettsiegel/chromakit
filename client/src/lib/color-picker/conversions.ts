@@ -24,6 +24,12 @@ const round = (value: number, precision: number = 2): number =>
 export function parseHex(hex: string): RGBA | null {
   const cleaned = hex.replace('#', '');
 
+  // Validate hex string length before parsing
+  if (cleaned.length !== 3 && cleaned.length !== 4 && 
+      cleaned.length !== 6 && cleaned.length !== 8) {
+    return null;
+  }
+
   // Validate hex string contains only valid hex characters
   if (!/^[0-9A-Fa-f]+$/.test(cleaned)) {
     return null;
