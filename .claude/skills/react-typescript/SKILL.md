@@ -1,6 +1,6 @@
 ---
 name: react-typescript
-description: Use when creating or editing React/TypeScript code in this project (.ts/.tsx files). Enforces lean React + TypeScript standards backed by ESLint hard rules and hooks — no `any`, no React default/namespace imports, no static inline styles, files ≤300 lines — plus the verify-before-finish contract.
+description: Use when creating or editing React/TypeScript code in this project (.ts/.tsx files) or the demo site's Astro pages/components (.astro files). Enforces lean React + TypeScript standards backed by ESLint hard rules and hooks — no `any`, no React default/namespace imports, no static inline styles, files ≤300 lines — plus the verify-before-finish contract.
 ---
 
 # React + TypeScript Standards
@@ -51,3 +51,11 @@ export const NewComponent = () => {
 
 - Keep comments minimal.
 - If needed for complex logic, write concise ALL CAPS comments.
+
+## Astro Files (Demo Site Only)
+
+The demo site (`client/src/pages/`, `layouts/`, and static `components/`) is built with **Astro** — static output with React islands for interactive pieces. `.astro` files follow the same contract above (no `eslint-disable`, ≤300 lines, `@/` alias) via `eslint-plugin-astro`. Two Astro-specific rules:
+
+- **A live/interactive demo needs a React wrapper component, mounted with a `client:*` directive** (see `components/demos/*.tsx`) — Astro renders framework-component *children* passed into a template as static HTML, so a demo nested inside another component's slot will not hydrate. Compose the demo and its interactivity inside one `.tsx` component, then mount that single component as the island.
+- **Prefer real `lucide-react` icons over hand-drawn SVGs**, even in static (non-interactive) `.astro` markup — importing a framework component without a `client:*` directive renders it to static HTML at build time and ships zero JS, so there's no cost to using the real icon.
+- `npm run verify` includes `astro check`; fix any errors it reports the same as ESLint/tsc.

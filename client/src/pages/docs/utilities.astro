@@ -1,0 +1,60 @@
+---
+import DocsLayout from '@/layouts/DocsLayout.astro';
+import DocSection from '@/components/docs/DocSection.astro';
+import StaticCode from '@/components/docs/StaticCode.astro';
+import PropsTable from '@/components/docs/PropsTable.astro';
+import { ConverterDemoCard } from '@/components/demos/ConverterDemoCard';
+import { DOCS_NAV } from './_nav';
+import { conversionGroups, helperRows } from '@/site-data/utilities-data';
+
+const meta = DOCS_NAV.find((d) => d.slug === 'utilities');
+const description = meta?.description ?? '';
+
+const labels = { name: 'Function', type: 'Signature' };
+
+const helpersCode = `import { parseColor, getContrastRatio, meetsContrastRatio } from 'chromakit-react';
+
+const fg = parseColor('#1a1a1a');
+const bg = parseColor('#ffffff');
+const ratio = getContrastRatio(fg, bg);          // 18.1
+const passes = meetsContrastRatio(ratio, 'AA');  // true`;
+---
+
+<DocsLayout
+  slug="utilities"
+  title="Color Utilities · ChromaKit Docs"
+  description={description}
+>
+  <div class="space-y-3">
+    <h1 class="text-4xl font-bold tracking-tight">Color Utilities</h1>
+    <p class="text-lg text-muted-foreground">
+      Every conversion and helper the picker uses internally is exported, so
+      you can parse, convert, and analyze colors without rendering any UI.
+    </p>
+  </div>
+
+  <DocSection
+    id="live-converter"
+    title="Live converter"
+    description="parseColor accepts any format; rgbaToColorValue expands it into all of them. The demo below parses your input and shows formatColor output for each space."
+  >
+    <ConverterDemoCard client:visible />
+  </DocSection>
+
+  {
+    conversionGroups.map((group) => (
+      <DocSection id={group.id} title={group.title} description={group.description}>
+        <PropsTable rows={group.rows} labels={labels} showDefault={false} />
+      </DocSection>
+    ))
+  }
+
+  <DocSection
+    id="helpers"
+    title="Color helpers"
+    description="Accessibility checks and harmony generators built on the conversions above."
+  >
+    <PropsTable rows={helperRows} labels={labels} showDefault={false} />
+    <StaticCode code={helpersCode} lang="typescript" />
+  </DocSection>
+</DocsLayout>

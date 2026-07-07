@@ -1,0 +1,122 @@
+---
+import '@/index.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  /** Emit the SoftwareApplication JSON-LD (home page only). */
+  jsonLd?: boolean;
+  /** Keep the page out of search indexes (e.g. the 404). */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = 'https://www.chromakit.site/og-image.png',
+  jsonLd = false,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-8KHB47TJSP"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-8KHB47TJSP');
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+
+    <!-- Apply the saved theme before first paint to avoid a flash of the wrong theme -->
+    <script is:inline>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)'
+          ).matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch {
+          /* ignore storage access errors (private mode) */
+        }
+      })();
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta
+      name="keywords"
+      content="react color picker, oklch color picker, oklab, react color picker component, typescript color picker, modern color picker react, customizable color picker, react color picker library, accessible color picker, react component, npm package, color converter, color palette"
+    />
+    <meta name="author" content="Garrett Siegel" />
+    <meta name="theme-color" content="#1a8cff" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1731" />
+    <meta property="og:image:height" content="909" />
+    <meta property="og:site_name" content="ChromaKit" />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    {
+      jsonLd && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'ChromaKit',
+            applicationCategory: 'DeveloperApplication',
+            description:
+              'Modern React color picker library with OKLCH, OKLAB, HSL, RGB, and HEX support. TypeScript-first, accessible, and built for design systems.',
+            operatingSystem: 'Web Browser',
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+            author: { '@type': 'Person', name: 'Garrett Siegel' },
+            license: 'https://opensource.org/licenses/MIT',
+            programmingLanguage: 'TypeScript',
+            url: 'https://www.chromakit.site/',
+            downloadUrl: 'https://www.npmjs.com/package/chromakit-react',
+            codeRepository: 'https://github.com/garrettsiegel/chromakit',
+          })}
+        />
+      )
+    }
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

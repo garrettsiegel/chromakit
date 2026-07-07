@@ -1,0 +1,83 @@
+---
+import DocsLayout from '@/layouts/DocsLayout.astro';
+import DocSection from '@/components/docs/DocSection.astro';
+import StaticCode from '@/components/docs/StaticCode.astro';
+import PropsTable from '@/components/docs/PropsTable.astro';
+import { ControlledDemoCard } from '@/components/demos/ControlledDemoCard';
+import { PresetDemoCard } from '@/components/demos/PresetDemoCard';
+import { FormatDemoCard } from '@/components/demos/FormatDemoCard';
+import { DOCS_NAV } from './_nav';
+import { colorPickerProps } from '@/site-data/color-picker-props';
+
+const meta = DOCS_NAV.find((d) => d.slug === 'color-picker');
+const description = meta?.description ?? '';
+
+const colorValueCode = `interface ColorValue {
+  hex: string;    // "#ff6b6b"
+  hex8: string;   // "#ff6b6bff"
+  rgb: RGB;       // { r, g, b }
+  rgba: RGBA;     // { r, g, b, a }
+  hsl: HSL;       // { h, s, l }
+  hsla: HSLA;     // { h, s, l, a }
+  hsv: HSV;       // { h, s, v }
+  hsva: HSVA;     // { h, s, v, a }
+  oklab: OKLAB;   // { L, a, b }
+  oklch: OKLCH;   // { L, C, h }
+  oklcha: OKLCHA; // { L, C, h, a }
+}`;
+---
+
+<DocsLayout
+  slug="color-picker"
+  title="ColorPicker · ChromaKit Docs"
+  description={description}
+>
+  <div class="space-y-3">
+    <h1 class="text-4xl font-bold tracking-tight">ColorPicker</h1>
+    <p class="text-lg text-muted-foreground">
+      The batteries-included component: color area, hue and alpha sliders,
+      format-switchable inputs, presets, history, and copy — all configurable
+      through props.
+    </p>
+  </div>
+
+  <DocSection
+    id="controlled"
+    title="Controlled vs. uncontrolled"
+    description="Pass value + onChange for a controlled picker, or defaultValue alone to let ChromaKit manage state. onChange fires continuously; onChangeComplete fires when the interaction settles."
+  >
+    <ControlledDemoCard client:visible />
+  </DocSection>
+
+  <DocSection
+    id="props"
+    title="Props"
+    description="Every ColorValue passed to onChange contains all formats pre-converted, so you never convert manually."
+  >
+    <PropsTable rows={colorPickerProps} />
+  </DocSection>
+
+  <DocSection
+    id="color-value"
+    title="The ColorValue object"
+    description="onChange and onChangeComplete both receive this fully-converted object."
+  >
+    <StaticCode code={colorValueCode} lang="typescript" />
+  </DocSection>
+
+  <DocSection
+    id="presets"
+    title="Custom presets"
+    description="Supply your own swatches with the presets array, or named groups via presetGroups."
+  >
+    <PresetDemoCard client:visible />
+  </DocSection>
+
+  <DocSection
+    id="format-control"
+    title="Format control"
+    description="Restrict the input tabs to the formats your app cares about."
+  >
+    <FormatDemoCard client:visible />
+  </DocSection>
+</DocsLayout>

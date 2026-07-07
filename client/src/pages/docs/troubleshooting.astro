@@ -1,0 +1,102 @@
+---
+import DocsLayout from '@/layouts/DocsLayout.astro';
+import DocSection from '@/components/docs/DocSection.astro';
+import StaticCode from '@/components/docs/StaticCode.astro';
+import { DOCS_NAV } from './_nav';
+
+const meta = DOCS_NAV.find((d) => d.slug === 'troubleshooting');
+const description = meta?.description ?? '';
+
+const stylesCode = `import 'chromakit-react/chromakit.css';`;
+
+const ssrCode = `import dynamic from 'next/dynamic';
+
+const ColorPicker = dynamic(
+  () => import('chromakit-react').then((m) => m.ColorPicker),
+  { ssr: false }
+);`;
+
+const historyCode = `import { clearColorHistory } from 'chromakit-react';
+clearColorHistory();`;
+
+const typesCode = `import type { ColorValue } from 'chromakit-react';
+
+const handleChange = (color: ColorValue) => {
+  console.log(color.hex, color.oklch);
+};`;
+
+const typeExportsCode = `import type {
+  // Color format types
+  RGB, RGBA,
+  HSL, HSLA,
+  HSV, HSVA,
+  OKLAB, OKLABA,
+  OKLCH, OKLCHA,
+
+  // Core types
+  ColorFormat,
+  ColorValue,
+
+  // Component & preset types
+  ColorPickerProps,
+  PresetGroup,
+  PresetGroupsInput,
+} from 'chromakit-react';`;
+---
+
+<DocsLayout
+  slug="troubleshooting"
+  title="Troubleshooting · ChromaKit Docs"
+  description={description}
+>
+  <div class="space-y-3">
+    <h1 class="text-4xl font-bold tracking-tight">Troubleshooting</h1>
+    <p class="text-lg text-muted-foreground">
+      The handful of gotchas people hit most often, and the exported types
+      for when you want full type safety.
+    </p>
+  </div>
+
+  <DocSection id="styles" title="The picker renders unstyled">
+    <p class="text-muted-foreground leading-relaxed">
+      The stylesheet is a separate import. Add it once, anywhere in your app:
+    </p>
+    <StaticCode code={stylesCode} lang="tsx" />
+  </DocSection>
+
+  <DocSection id="ssr" title='Next.js: "window is not defined"'>
+    <p class="text-muted-foreground leading-relaxed">
+      The picker is a client component. In the App Router add the "use
+      client" directive; in the Pages Router load it dynamically with SSR
+      disabled:
+    </p>
+    <StaticCode code={ssrCode} lang="tsx" />
+  </DocSection>
+
+  <DocSection id="history" title="Recent colors are not persisting">
+    <p class="text-muted-foreground leading-relaxed">
+      History is stored in <code>localStorage</code> under the key <code
+        >chromakit-color-history</code
+      >. It will not persist in private / incognito windows, and requires
+      <code>enableHistory</code> (on by default). Clear it manually with:
+    </p>
+    <StaticCode code={historyCode} lang="tsx" />
+  </DocSection>
+
+  <DocSection id="types" title="TypeScript errors on the onChange color">
+    <p class="text-muted-foreground leading-relaxed">
+      <code>onChange</code> and <code>onChangeComplete</code> receive a <code
+        >ColorValue</code
+      >, which carries every format at once — read the one you need:
+    </p>
+    <StaticCode code={typesCode} lang="typescript" />
+  </DocSection>
+
+  <DocSection
+    id="type-exports"
+    title="Type exports"
+    description="ChromaKit is written in TypeScript and ships its declarations. Every public type is importable:"
+  >
+    <StaticCode code={typeExportsCode} lang="typescript" />
+  </DocSection>
+</DocsLayout>
