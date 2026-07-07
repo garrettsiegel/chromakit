@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import ThemeToggle from '@/components/ThemeToggle.astro';
+import logo from '@/assets/logo.png';
 
 const version = __PKG_VERSION__;
 const navLinkClass =
@@ -15,7 +17,15 @@ const badgeClass =
     class="container mx-auto px-6 py-4 flex items-center justify-between gap-4"
   >
     <a href="/" class="flex items-center gap-3">
-      <img src="/favicon.png" alt="ChromaKit logo" class="w-8 h-8 rounded-lg" />
+      <Image
+        src={logo}
+        alt="ChromaKit logo"
+        width={32}
+        height={32}
+        densities={[2]}
+        loading="eager"
+        class="w-8 h-8 rounded-lg"
+      />
       <h1 class="text-xl font-bold">ChromaKit</h1>
       <span class={badgeClass}>v{version}</span>
     </a>
