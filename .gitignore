@@ -39,6 +39,9 @@ lerna-debug.log*
 # Vite
 .vite/
 
+# Bundle analysis (rollup-plugin-visualizer)
+.stats/
+
 # Legacy
 server/public
 vite.config.ts.*

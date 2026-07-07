@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Excluded the bundle-analysis report (`stats.html`) from the published tarball; the visualizer now writes to `.stats/` instead of `dist/`. Cuts the package unpacked size roughly in half (0.2.0 shipped it inadvertently).
+
 ## [0.2.0] - 2026-07-06
 
 ### Fixed

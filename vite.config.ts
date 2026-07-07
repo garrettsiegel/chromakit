@@ -23,7 +23,8 @@ export default defineConfig(({ mode }) => {
           open: false,
           gzipSize: true,
           brotliSize: true,
-          filename: 'dist/stats.html',
+          // KEEP OUT OF dist/ SO THE BUNDLE-ANALYSIS REPORT IS NEVER PUBLISHED
+          filename: '.stats/bundle.html',
         }),
       ],
       build: {
