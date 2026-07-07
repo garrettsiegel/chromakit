@@ -1,0 +1,68 @@
+---
+import DocsLayout from '@/layouts/DocsLayout.astro';
+import DocSection from '@/components/docs/DocSection.astro';
+import StaticCode from '@/components/docs/StaticCode.astro';
+import PropsTable from '@/components/docs/PropsTable.astro';
+import { ThemedDemoCard } from '@/components/demos/ThemedDemoCard';
+import { DOCS_NAV } from './_nav';
+import { themingVars } from '@/site-data/theming-vars';
+
+const meta = DOCS_NAV.find((d) => d.slug === 'theming');
+const description = meta?.description ?? '';
+
+const overrideCode = `/* your stylesheet */
+.brand-picker {
+  --ck-primary: #ec4899;
+  --ck-accent: #f43f5e;
+  --ck-primary-glow: rgba(236, 72, 153, 0.4);
+  --ck-radius: 4px;
+  --ck-radius-md: 3px;
+  --ck-radius-sm: 2px;
+}`;
+
+const applyCode = `<ColorPicker className="brand-picker" />`;
+---
+
+<DocsLayout
+  slug="theming"
+  title="Theming · ChromaKit Docs"
+  description={description}
+>
+  <div class="space-y-3">
+    <h1 class="text-4xl font-bold tracking-tight">Theming</h1>
+    <p class="text-lg text-muted-foreground">
+      ChromaKit is styled entirely with CSS custom properties. Override them
+      on a wrapping class (passed via <code>className</code>) to reskin the
+      picker — no build config, no props drilling.
+    </p>
+  </div>
+
+  <DocSection
+    id="how-it-works"
+    title="Override variables on a class"
+    description="Define the --ck-* variables you want to change on a class, then pass that class to the picker. Light and dark themes are handled automatically; you only override what differs."
+  >
+    <StaticCode code={overrideCode} lang="css" />
+    <StaticCode code={applyCode} lang="tsx" />
+  </DocSection>
+
+  <DocSection
+    id="live"
+    title="Live comparison"
+    description="The right-hand picker uses the exact override shown above — sharper corners and a pink accent — while the left stays default."
+  >
+    <ThemedDemoCard client:visible />
+  </DocSection>
+
+  <DocSection
+    id="variables"
+    title="Available variables"
+    description="Defaults shown are the light-theme values; each has a dark-theme counterpart applied under .dark."
+  >
+    <PropsTable
+      rows={themingVars}
+      showType={false}
+      labels={{ name: 'Variable', default: 'Default (light)' }}
+    />
+  </DocSection>
+</DocsLayout>

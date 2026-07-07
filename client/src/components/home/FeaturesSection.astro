@@ -1,0 +1,50 @@
+---
+import { Palette, Code2, Zap } from 'lucide-react';
+
+// No client:* directive on the icons below: Astro renders framework
+// components to static HTML at build time and ships zero JS for them.
+const FEATURES = [
+  {
+    Icon: Palette,
+    title: 'OKLCH Color Space',
+    description:
+      'Perceptually uniform colors that match human vision. Create smooth gradients without muddy middle tones.',
+  },
+  {
+    Icon: Code2,
+    title: 'Composable Components',
+    description:
+      'Build custom pickers with ColorArea, HueSlider, and more. Complete control over your design.',
+  },
+  {
+    Icon: Zap,
+    title: 'Performance First',
+    description:
+      '60 FPS interactions with optimized React 19 hooks. Zero dependencies. Built for production.',
+  },
+];
+---
+
+<section class="relative py-16 md:py-24">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-8">
+        {
+          FEATURES.map(({ Icon, title, description }) => (
+            <div class="space-y-4 text-center">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary">
+                <Icon className="w-6 h-6" />
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-lg font-semibold">{title}</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed">
+                  {description}
+                </p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

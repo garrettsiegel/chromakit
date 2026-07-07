@@ -1,0 +1,74 @@
+---
+import StaticCode from '@/components/docs/StaticCode.astro';
+
+const basicUsageCode = `import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/chromakit.css';
+import { useState } from 'react';
+
+function App() {
+  const [color, setColor] = useState('#7c3aed');
+
+  return (
+    <ColorPicker
+      value={color}
+      onChange={(colorValue) => setColor(colorValue.hex)}
+    />
+  );
+}`;
+
+const customComponentsCode = `import {
+  ColorArea,
+  HueSlider,
+  AlphaSlider,
+  useColorState
+} from 'chromakit-react';
+
+function CustomPicker() {
+  const { hsva, colorValue, updateColor } = useColorState('#7c3aed');
+
+  return (
+    <div className="space-y-4">
+      <ColorArea hsva={hsva} onChange={updateColor} />
+      <HueSlider hsva={hsva} onChange={updateColor} />
+      <AlphaSlider hsva={hsva} onChange={updateColor} />
+    </div>
+  );
+}`;
+---
+
+<section id="usage" class="relative py-16 md:py-24">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="max-w-4xl mx-auto space-y-12">
+      <div class="text-center space-y-4">
+        <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+          Quick Start
+        </h2>
+        <p class="text-lg text-muted-foreground">
+          Get started in seconds with zero configuration
+        </p>
+        <p class="text-sm text-muted-foreground">
+          For complete API documentation and advanced usage, read the
+          <a href="/docs" class="text-primary hover:underline font-medium">
+            full documentation →
+          </a>
+        </p>
+      </div>
+
+      <div class="grid gap-8">
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold">Basic Usage</h3>
+          <StaticCode code={basicUsageCode} lang="tsx" />
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold">Build Your Own</h3>
+          <p class="text-muted-foreground">
+            Compose custom pickers with individual components for complete
+            control
+          </p>
+          <StaticCode code={customComponentsCode} lang="tsx" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

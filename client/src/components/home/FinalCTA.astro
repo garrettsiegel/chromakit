@@ -1,0 +1,47 @@
+---
+import { ArrowRight, Github } from 'lucide-react';
+import { InstallCommandBox } from '@/components/demos/InstallCommandBox';
+---
+
+<section class="relative py-20 md:py-32">
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="max-w-3xl mx-auto text-center space-y-8">
+      <div class="space-y-4">
+        <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+          Start Building Today
+        </h2>
+        <p class="text-lg text-muted-foreground">
+          Join developers building modern design systems with OKLCH
+        </p>
+      </div>
+
+      <InstallCommandBox variant="cta" client:visible />
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/docs"
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium min-h-10 text-base px-8 h-12 bg-primary text-primary-foreground border border-primary-border"
+        >
+          Read Full Documentation
+          <ArrowRight className="w-4 h-4" />
+        </a>
+        <a
+          href="#demo"
+          class="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium min-h-10 text-base px-8 h-12 border [border-color:var(--button-outline)] shadow-xs"
+        >
+          Try Interactive Demo
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
+        <a
+          href="https://github.com/garrettsiegel/chromakit"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium min-h-10 text-base px-8 h-12 border [border-color:var(--button-outline)] shadow-xs"
+        >
+          <Github className="w-4 h-4" />
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

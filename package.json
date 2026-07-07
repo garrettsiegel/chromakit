@@ -159,8 +159,7 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vitest": "^4.0.18",
-    "wouter": "^3.10.0"
+    "vitest": "^4.0.18"
   },
   "size-limit": [
     {
