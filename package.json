@@ -23,7 +23,8 @@
   ],
   "sideEffects": [
     "*.css",
-    "**/*.css"
+    "**/*.css",
+    "./client/src/lib/color-picker/index.ts"
   ],
   "keywords": [
     "react",
