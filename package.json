@@ -99,11 +99,12 @@
   },
   "knip": {
     "entry": [
-      "client/src/main.tsx",
+      "client/src/pages/**/*.astro",
+      "client/src/pages/**/*.ts",
       "client/src/lib/color-picker/index.ts"
     ],
     "project": [
-      "client/src/**/*.{ts,tsx}"
+      "client/src/**/*.{ts,tsx,astro}"
     ],
     "ignore": [
       "coverage/**",

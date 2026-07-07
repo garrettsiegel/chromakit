@@ -7,13 +7,16 @@ interface Props {
   ogImage?: string;
   /** Emit the SoftwareApplication JSON-LD (home page only). */
   jsonLd?: boolean;
+  /** Keep the page out of search indexes (e.g. the 404). */
+  noindex?: boolean;
 }
 
 const {
   title,
   description,
-  ogImage = 'https://chromakit.site/og-image.png',
+  ogImage = 'https://www.chromakit.site/og-image.png',
   jsonLd = false,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -60,6 +63,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta
       name="keywords"
       content="react color picker, oklch color picker, oklab, react color picker component, typescript color picker, modern color picker react, customizable color picker, react color picker library, accessible color picker, react component, npm package, color converter, color palette"
@@ -104,7 +108,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
             author: { '@type': 'Person', name: 'Garrett Siegel' },
             license: 'https://opensource.org/licenses/MIT',
             programmingLanguage: 'TypeScript',
-            url: 'https://chromakit.site/',
+            url: 'https://www.chromakit.site/',
             downloadUrl: 'https://www.npmjs.com/package/chromakit-react',
             codeRepository: 'https://github.com/garrettsiegel/chromakit',
           })}

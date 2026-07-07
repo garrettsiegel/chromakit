@@ -3,5 +3,11 @@
   "outputDirectory": "dist/public",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "redirects": [
+    {
+      "source": "/docs",
+      "destination": "/docs/getting-started",
+      "permanent": false
+    }
+  ]
 }
