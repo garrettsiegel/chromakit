@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | { read f; case \"$f\" in *.ts|*.tsx|*.js|*.jsx) npx eslint --cache --fix \"$f\" ;; esac; }"
+            "command": "jq -r '.tool_input.file_path' | { read f; case \"$f\" in *.ts|*.tsx|*.js|*.jsx|*.astro) npx eslint --cache --fix \"$f\" ;; esac; }"
           }
         ]
       }

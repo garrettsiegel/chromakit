@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Demo site footer now uses the favicon logo instead of the placeholder gradient square, matching the navbar. _(Demo-site only — not part of the npm package.)_
+- **Migrated the demo/docs site from a Vite + React SPA to Astro** (static output with React islands for live picker demos). Every page now renders real, unique HTML (title, description, canonical, OG tags) instead of an empty root div with identical SPA-wide meta tags; static content (docs prose, tables, code blocks) ships zero JavaScript. Added `robots.txt` + sitemap. _(Demo-site only — the published library bundle is unchanged and verified byte-identical.)_
 
 ## [0.2.2] - 2026-07-07
 

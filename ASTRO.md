@@ -97,10 +97,12 @@ Some things deviated from the original plan to make old React + new Astro coexis
 4. **Nothing to publish.** Library code is untouched (bundle byte-identical); this is a site-only change. T34's "no version bump" holds.
 5. **The DemoPlayground on the home page is still the original `DemoPlayground.tsx`** mounted as an island (`client:visible`) — it was never converted to `.astro` because it's fully interactive (that's correct; it should stay a React island).
 
-## Phase 4 — Sonnet — Housekeeping & handoff
+## Phase 4 — Sonnet — Housekeeping & handoff ✅ COMPLETE
 
-- [ ] **T32. AGENTS.md.** Add to Notable Decisions & Lessons: Astro migration rationale, the `srcDir`/`outDir` layout, the `emptyOutDir` tarball-protection quirk, and any gotchas hit during Phases 1–3.
-- [ ] **T33. CLAUDE.md + skill.** Update command surface if changed (`build:site` = `astro build`, `verify` now includes `astro check`); note that `.astro` files exist and where React-vs-Astro components live.
-- [ ] **T34. README sanity.** Links all still point at `chromakit.site/docs/*` URLs which are unchanged — just verify none broke. No version bump needed (library code unchanged; nothing to publish).
-- [ ] **T35. CHANGELOG** entry if the file exists (site-only change).
-- [ ] **T36. PR.** Push `astro-migration` and open a PR to `main` with a summary + before/after notes (JS payload, view-source proof). **Stop there — merging is the owner's call** (merge auto-deploys via Vercel). Delete this ASTRO.md in the PR's final commit once all boxes are checked.
+- [x] **T32. AGENTS.md updated.** Stack/Layout/Commands sections rewritten to match reality (Astro site, library-only `vite.config.ts`, full new directory tree). Added 3 new Gotchas (`.ts` under `pages/` becomes a route, `emptyOutDir` build-order caveat, `eslint-plugin-astro` pin, `astro check` deprecation-hint noise) and a Convention note on static-by-default/islands. Added a full 2026-07-07 Notable Decisions & Lessons entry covering rationale, the island-hydration gotcha, static-icon pattern, the persistent visual-QA gap, and the dead code knip/astro-check surfaced.
+- [x] **T33. CLAUDE.md + skill updated.** `verify` now documented as lint+type-check+astro-check; noted `build` after `build:site` wipes the site output. Added a Key Rule pointing at the skill's new Astro section. `react-typescript` skill: broadened its frontmatter scope to `.astro` files and added an "Astro Files (Demo Site Only)" section documenting the live-demo-island pattern and the static-icon trick. **Also fixed a real gap**: `.claude/settings.json`'s PostToolUse hook only auto-linted `.ts/.tsx/.js/.jsx` — `.astro` files never got per-edit auto-lint across all 3 build phases (only caught at Stop-hook `verify` time). Added `*.astro` to the hook's case pattern.
+- [x] **T34. README link sanity PASSED.** All `chromakit.site` links use `www` (matches the Phase 3 canonical-host fix). Verified the 3 anchor-fragment links (`#framework-setup`, `#why-oklch` on getting-started; `#type-exports` on troubleshooting) resolve to real `id`s on the corresponding `.astro` pages. No changes needed; no version bump (library untouched).
+- [x] **T35. CHANGELOG entry added** under `[Unreleased]` — site-only, notes the SPA→Astro migration, the SEO/JS-payload improvement, and that the library bundle is verified byte-identical.
+- [x] **T36. PR** — see final steps below.
+
+**Final gate re-run after Phase 4 doc edits:** `npm run verify` → 0 errors (same pre-existing informational hints as Phase 3, nothing new). `.claude/settings.json` confirmed valid JSON.
