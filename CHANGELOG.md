@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Demo site footer now uses the favicon logo instead of the placeholder gradient square, matching the navbar. _(Demo-site only — not part of the npm package.)_
+
 ## [0.2.2] - 2026-07-07
 
 ### Changed

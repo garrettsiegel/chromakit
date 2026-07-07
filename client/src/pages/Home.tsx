@@ -66,7 +66,11 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Logo & Description */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary via-violet-500 to-pink-500" />
+              <img
+                src="/favicon.png"
+                alt="ChromaKit logo"
+                className="w-8 h-8 rounded-lg"
+              />
               <div>
                 <div className="font-bold">ChromaKit</div>
                 <p className="text-sm text-muted-foreground">
