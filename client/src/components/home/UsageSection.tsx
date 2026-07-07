@@ -1,3 +1,4 @@
+import { Link } from 'wouter';
 import { CodeBlock } from '@/components/demo/CodeBlock';
 
 // ============================================================
@@ -56,15 +57,13 @@ export function UsageSection() {
               Get started in seconds with zero configuration
             </p>
             <p className="text-sm text-muted-foreground">
-              For complete API documentation and advanced usage, visit the{' '}
-              <a
-                href="https://www.npmjs.com/package/chromakit-react"
-                target="_blank"
-                rel="noopener noreferrer"
+              For complete API documentation and advanced usage, read the{' '}
+              <Link
+                href="/docs"
                 className="text-primary hover:underline font-medium"
               >
-                NPM documentation →
-              </a>
+                full documentation →
+              </Link>
             </p>
           </div>
 

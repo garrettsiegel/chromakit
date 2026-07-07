@@ -562,3 +562,13 @@ html {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* Docs: sample theme override rendered live on the Theming page. */
+.ck-demo-theme {
+  --ck-primary: #ec4899;
+  --ck-accent: #f43f5e;
+  --ck-primary-glow: rgba(236, 72, 153, 0.4);
+  --ck-radius: 4px;
+  --ck-radius-md: 3px;
+  --ck-radius-sm: 2px;
+}
