@@ -78,11 +78,13 @@ export function DemoPlayground() {
 
           {/* Demo Tabs */}
           <Tabs defaultValue="full" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
-              <TabsTrigger value="full">Complete</TabsTrigger>
-              <TabsTrigger value="custom">Custom</TabsTrigger>
-              <TabsTrigger value="formats">Formats</TabsTrigger>
-            </TabsList>
+            <div className="flex justify-center mb-8">
+              <TabsList>
+                <TabsTrigger value="full">Complete</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
+                <TabsTrigger value="formats">Formats</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="full" className="space-y-8">
               <div className="flex flex-col lg:flex-row items-start gap-8 justify-center">
