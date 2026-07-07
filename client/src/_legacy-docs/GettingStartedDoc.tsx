@@ -10,7 +10,7 @@ import {
   nextPagesCode,
   viteCode,
   oklchCode,
-} from './data/getting-started-snippets';
+} from '@/site-data/getting-started-snippets';
 
 const BasicDemo = () => {
   const [color, setColor] = useState('#6366F1');

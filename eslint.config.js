@@ -5,6 +5,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import comments from 'eslint-plugin-eslint-comments';
+import astro from 'eslint-plugin-astro';
 import prettier from 'eslint-config-prettier';
 
 export default [
@@ -14,6 +15,8 @@ export default [
       'coverage/**',
       'node_modules/**',
       '.vite/**',
+      '.astro/**',
+      '.stats/**',
       'build/**',
     ],
   },
@@ -198,6 +201,25 @@ export default [
     rules: {
       'max-lines': 'off',
       'max-lines-per-function': 'off',
+    },
+  },
+  // Astro components: use the astro parser + recommended rules. The React/TS
+  // block above is scoped to .{js,jsx,ts,tsx}, so it never touches .astro.
+  ...astro.configs['flat/recommended'],
+  {
+    files: ['**/*.astro'],
+    languageOptions: {
+      globals: {
+        // Injected by astro.config.mjs vite `define`.
+        __PKG_VERSION__: 'readonly',
+      },
+    },
+    rules: {
+      // Disable-comment lockdown applies to .astro too.
+      'eslint-comments/no-use': ['error', { allow: [] }],
+    },
+    plugins: {
+      'eslint-comments': comments,
     },
   },
   prettier,

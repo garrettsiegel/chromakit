@@ -50,3 +50,6 @@ vite.config.ts.*
 
 # ESLint
 .eslintcache
+
+# Astro generated types
+.astro/

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import { HeroSection } from '@/components/home/HeroSection';
+import { FeaturesSection } from '@/components/home/FeaturesSection';
+import { DemoPlayground } from '@/components/home/DemoPlayground';
+import { UsageSection } from '@/components/home/UsageSection';
+import { FinalCTA } from '@/components/home/FinalCTA';
+
+const title = 'ChromaKit - Modern React Color Picker for Design Systems';
+const description =
+  'Modern color spaces (OKLCH/OKLAB) • ~10KB gzipped • TypeScript-first • Built for design systems • Accessible by default';
+---
+
+<BaseLayout title={title} description={description} jsonLd>
+  <div class="min-h-screen bg-background">
+    <SiteHeader />
+    <HeroSection client:load />
+    <FeaturesSection />
+    <DemoPlayground client:visible />
+    <UsageSection client:visible />
+    <FinalCTA client:visible />
+    <SiteFooter />
+  </div>
+</BaseLayout>

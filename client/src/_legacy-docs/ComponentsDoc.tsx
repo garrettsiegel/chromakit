@@ -2,7 +2,7 @@ import { DocSection } from '@/components/docs/DocSection';
 import { DemoCard } from '@/components/docs/DemoCard';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { CustomPickerDemo } from '@/components/demo/CustomPickerDemo';
-import { componentGroups } from './data/components-data';
+import { componentGroups } from '@/site-data/components-data';
 
 const buildYourOwnCode = `import {
   ColorArea,

@@ -1,0 +1,65 @@
+---
+import type { PropRow } from '@/components/docs/PropsTable';
+
+interface Props {
+  rows: PropRow[];
+  labels?: { name?: string; type?: string; default?: string };
+  showType?: boolean;
+  showDefault?: boolean;
+}
+
+const { rows, labels, showType = true, showDefault = true } = Astro.props;
+const nameLabel = labels?.name ?? 'Prop';
+const typeLabel = labels?.type ?? 'Type';
+const defaultLabel = labels?.default ?? 'Default';
+---
+
+<div class="overflow-x-auto rounded-lg border border-border">
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="bg-muted/50 text-left">
+        <th class="px-4 py-2.5 font-semibold">{nameLabel}</th>
+        {showType && <th class="px-4 py-2.5 font-semibold">{typeLabel}</th>}
+        {showDefault && <th class="px-4 py-2.5 font-semibold">{defaultLabel}</th>}
+        <th class="px-4 py-2.5 font-semibold">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr class="border-t border-border align-top">
+            <td class="px-4 py-2.5 whitespace-nowrap">
+              <code class="font-mono text-xs text-primary">{row.name}</code>
+              {row.required && (
+                <span class="ml-1 text-xs text-destructive">*</span>
+              )}
+            </td>
+            {showType && (
+              <td class="px-4 py-2.5">
+                {row.type ? (
+                  <code class="font-mono text-xs text-muted-foreground break-words">
+                    {row.type}
+                  </code>
+                ) : (
+                  <span class="text-muted-foreground">—</span>
+                )}
+              </td>
+            )}
+            {showDefault && (
+              <td class="px-4 py-2.5">
+                {row.default ? (
+                  <code class="font-mono text-xs text-muted-foreground">
+                    {row.default}
+                  </code>
+                ) : (
+                  <span class="text-muted-foreground">—</span>
+                )}
+              </td>
+            )}
+            <td class="px-4 py-2.5 text-muted-foreground">{row.description}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

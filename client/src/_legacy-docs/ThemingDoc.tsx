@@ -3,7 +3,7 @@ import { DocSection } from '@/components/docs/DocSection';
 import { DemoCard } from '@/components/docs/DemoCard';
 import { CodeBlock } from '@/components/demo/CodeBlock';
 import { PropsTable } from '@/components/docs/PropsTable';
-import { themingVars } from './data/theming-vars';
+import { themingVars } from '@/site-data/theming-vars';
 
 const overrideCode = `/* your stylesheet */
 .brand-picker {

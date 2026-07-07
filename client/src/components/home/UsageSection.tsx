@@ -1,4 +1,3 @@
-import { Link } from 'wouter';
 import { CodeBlock } from '@/components/demo/CodeBlock';
 
 // ============================================================
@@ -58,12 +57,12 @@ export function UsageSection() {
             </p>
             <p className="text-sm text-muted-foreground">
               For complete API documentation and advanced usage, read the{' '}
-              <Link
+              <a
                 href="/docs"
                 className="text-primary hover:underline font-medium"
               >
                 full documentation →
-              </Link>
+              </a>
             </p>
           </div>
 

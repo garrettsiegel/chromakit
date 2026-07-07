@@ -4,7 +4,7 @@ import { DemoCard } from '@/components/docs/DemoCard';
 import { CodeBlock } from '@/components/demo/CodeBlock';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ColorFormatsDisplay } from '@/components/demo/ColorFormatsDisplay';
-import { conversionGroups, helperRows } from './data/utilities-data';
+import { conversionGroups, helperRows } from '@/site-data/utilities-data';
 
 const converterCode = `import { parseColor, rgbaToColorValue, formatColor } from 'chromakit-react';
 

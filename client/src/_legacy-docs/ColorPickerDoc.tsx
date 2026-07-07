@@ -4,7 +4,7 @@ import { DocSection } from '@/components/docs/DocSection';
 import { DemoCard } from '@/components/docs/DemoCard';
 import { CodeBlock } from '@/components/demo/CodeBlock';
 import { PropsTable } from '@/components/docs/PropsTable';
-import { colorPickerProps } from './data/color-picker-props';
+import { colorPickerProps } from '@/site-data/color-picker-props';
 
 const DefaultDemo = () => {
   const [color, setColor] = useState('#6366F1');

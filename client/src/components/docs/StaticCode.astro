@@ -1,0 +1,44 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+  code: string;
+  lang?: 'tsx' | 'typescript' | 'bash' | 'css';
+}
+
+const { code, lang = 'tsx' } = Astro.props;
+---
+
+<div class="relative group not-prose">
+  <div
+    class="overflow-x-auto rounded-md border border-border/50 text-sm [&_pre]:p-4"
+  >
+    <Code code={code} lang={lang} theme="one-dark-pro" />
+  </div>
+  <button
+    type="button"
+    class="ck-copy absolute top-3 right-3 z-10 rounded-md bg-black/40 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+    data-code={code}
+    aria-label="Copy code"
+  >
+    Copy
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll('.ck-copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const code = btn.getAttribute('data-code') || '';
+      try {
+        await navigator.clipboard.writeText(code);
+        const prev = btn.textContent;
+        btn.textContent = 'Copied';
+        window.setTimeout(() => {
+          btn.textContent = prev;
+        }, 1500);
+      } catch {
+        /* clipboard unavailable */
+      }
+    });
+  });
+</script>
