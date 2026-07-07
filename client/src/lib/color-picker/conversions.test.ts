@@ -10,8 +10,11 @@ import {
   oklabToRgb,
   rgbToOklch,
   oklchToRgb,
+  parseColor,
+  rgbaToColorValue,
+  formatColor,
 } from './conversions';
-import type { RGB } from './types';
+import type { RGB, ColorFormat } from './types';
 
 // Helper functions to simplify tests
 const hexToRgb = (hex: string): RGB | null => {
@@ -284,6 +287,48 @@ describe('Color Conversions', () => {
       expect(rgb.r).toBeGreaterThanOrEqual(0);
       expect(rgb.g).toBeGreaterThanOrEqual(0);
       expect(rgb.b).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  describe('parseColor', () => {
+    it('parses hex, rgb, and hsl strings', () => {
+      expect(parseColor('#ff0000')).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+      expect(parseColor('rgb(0, 255, 0)')).toEqual({ r: 0, g: 255, b: 0, a: 1 });
+      expect(parseColor('hsl(240, 100%, 50%)')).toEqual({
+        r: 0,
+        g: 0,
+        b: 255,
+        a: 1,
+      });
+    });
+
+    it.each(['notacolor', '#GGGGGG', ''])(
+      'returns null for malformed input %j',
+      (input) => {
+        expect(parseColor(input)).toBeNull();
+      }
+    );
+  });
+
+  describe('formatColor', () => {
+    const color = rgbaToColorValue({ r: 255, g: 0, b: 0, a: 0.5 });
+
+    const expectations: [ColorFormat, RegExp][] = [
+      ['hex', /^#[0-9a-f]{6}$/],
+      ['hex8', /^#[0-9a-f]{8}$/],
+      ['rgb', /^rgb\(255, 0, 0\)$/],
+      ['rgba', /^rgba\(255, 0, 0, 0\.50\)$/],
+      ['hsl', /^hsl\(0, 100%, 50%\)$/],
+      ['hsla', /^hsla\(0, 100%, 50%, 0\.50\)$/],
+      ['hsv', /^hsv\(0, 100%, 100%\)$/],
+      ['hsva', /^hsva\(0, 100%, 100%, 0\.50\)$/],
+      ['oklab', /^oklab\(-?\d+\.\d{2} -?\d+\.\d{2} -?\d+\.\d{2}\)$/],
+      ['oklch', /^oklch\(\d+% \d+\.\d{2} \d+\)$/],
+      ['oklcha', /^oklch\(\d+% \d+\.\d{2} \d+ \/ 0\.50\)$/],
+    ];
+
+    it.each(expectations)('formats %s correctly', (format, pattern) => {
+      expect(formatColor(color, format)).toMatch(pattern);
     });
   });
 });

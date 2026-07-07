@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useRef, KeyboardEvent } from 'react';
+import type { KeyboardEvent } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 
@@ -18,7 +19,7 @@ export function ColorArea({
   onStart,
   onEnd,
   width = 256,
-  height: _height = 200,
+  height,
   className = '',
 }: ColorAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,6 +65,22 @@ export function ColorArea({
           e.preventDefault();
           newV = Math.max(0, hsva.v - step);
           break;
+        case 'Home':
+          e.preventDefault();
+          newS = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          newS = 100;
+          break;
+        case 'PageUp':
+          e.preventDefault();
+          newV = Math.min(100, hsva.v + 10);
+          break;
+        case 'PageDown':
+          e.preventDefault();
+          newV = Math.max(0, hsva.v - 10);
+          break;
         default:
           return;
       }
@@ -99,24 +116,14 @@ export function ColorArea({
       aria-valuetext={`Saturation ${hsva.s}%, Value ${hsva.v}%`}
       tabIndex={0}
       className={`ck-color-area ${className}`}
-      style={{ width }}
+      style={height != null ? { width, height } : { width }}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="color-area"
     >
       <div className="ck-color-area-layer" style={backgroundStyle} />
-      <div
-        className="ck-color-area-layer"
-        style={{
-          background: 'linear-gradient(to right, white, transparent)',
-        }}
-      />
-      <div
-        className="ck-color-area-layer"
-        style={{
-          background: 'linear-gradient(to top, black, transparent)',
-        }}
-      />
+      <div className="ck-color-area-layer ck-color-area-layer--saturation" />
+      <div className="ck-color-area-layer ck-color-area-layer--brightness" />
       <div
         className="ck-color-area-thumb"
         style={thumbStyle}

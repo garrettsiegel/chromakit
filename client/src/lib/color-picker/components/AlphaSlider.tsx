@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useRef, KeyboardEvent } from 'react';
+import type { KeyboardEvent } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 import { hsvToRgb } from '../conversions';
@@ -84,7 +85,7 @@ export function AlphaSlider({
     };
   }, [rgb, vertical]);
 
-  const thumbPosition = useMemo(() => `${hsva.a * 100}%`, [hsva.a]);
+  const thumbPosition = `${hsva.a * 100}%`;
 
   const alphaPercentage = Math.round(hsva.a * 100);
 
@@ -100,7 +101,6 @@ export function AlphaSlider({
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
       className={`ck-alpha-slider${vertical ? ' ck-alpha-slider--vertical' : ''} ${className}`}
-      style={vertical ? { width: '16px', height: '100%' } : undefined}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="alpha-slider"
@@ -111,7 +111,7 @@ export function AlphaSlider({
         className="ck-slider-thumb"
         style={
           vertical
-            ? { top: `${100 - hsva.a * 100}%`, left: '50%' }
+            ? { top: `${100 - hsva.a * 100}%` }
             : { left: thumbPosition }
         }
         data-testid="alpha-slider-thumb"

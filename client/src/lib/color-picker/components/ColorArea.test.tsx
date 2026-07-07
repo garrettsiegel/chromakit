@@ -34,7 +34,7 @@ describe('ColorArea', () => {
       expect(area).toHaveClass('ck-color-area', 'custom-class');
     });
 
-    it('should set custom width', () => {
+    it('should set custom width and height', () => {
       render(
         <ColorArea
           hsva={defaultHsva}
@@ -44,7 +44,13 @@ describe('ColorArea', () => {
         />
       );
       const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle({ width: '300px' });
+      expect(area).toHaveStyle({ width: '300px', height: '250px' });
+    });
+
+    it('should not apply an inline height when height is omitted', () => {
+      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
+      const area = screen.getByTestId('color-area');
+      expect(area.style.height).toBe('');
     });
 
     it('should display thumb at correct position', () => {
@@ -192,6 +198,86 @@ describe('ColorArea', () => {
         ...defaultHsva,
         s: 60, // +10 instead of +1
         v: 80,
+      });
+    });
+
+    it('should set saturation to 0 on Home', async () => {
+      const user = userEvent.setup();
+      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
+      const area = screen.getByTestId('color-area');
+
+      area.focus();
+      await user.keyboard('{Home}');
+
+      expect(mockOnChange).toHaveBeenCalledWith({
+        ...defaultHsva,
+        s: 0,
+        v: 80,
+      });
+    });
+
+    it('should set saturation to 100 on End', async () => {
+      const user = userEvent.setup();
+      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
+      const area = screen.getByTestId('color-area');
+
+      area.focus();
+      await user.keyboard('{End}');
+
+      expect(mockOnChange).toHaveBeenCalledWith({
+        ...defaultHsva,
+        s: 100,
+        v: 80,
+      });
+    });
+
+    it('should increase value by 10 on PageUp', async () => {
+      const user = userEvent.setup();
+      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
+      const area = screen.getByTestId('color-area');
+
+      area.focus();
+      await user.keyboard('{PageUp}');
+
+      expect(mockOnChange).toHaveBeenCalledWith({
+        ...defaultHsva,
+        s: 50,
+        v: 90,
+      });
+    });
+
+    it('should decrease value by 10 on PageDown', async () => {
+      const user = userEvent.setup();
+      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
+      const area = screen.getByTestId('color-area');
+
+      area.focus();
+      await user.keyboard('{PageDown}');
+
+      expect(mockOnChange).toHaveBeenCalledWith({
+        ...defaultHsva,
+        s: 50,
+        v: 70,
+      });
+    });
+
+    it('should clamp value to 100 on PageUp near the max', async () => {
+      const user = userEvent.setup();
+      render(
+        <ColorArea
+          hsva={{ ...defaultHsva, v: 95 }}
+          onChange={mockOnChange}
+        />
+      );
+      const area = screen.getByTestId('color-area');
+
+      area.focus();
+      await user.keyboard('{PageUp}');
+
+      expect(mockOnChange).toHaveBeenCalledWith({
+        ...defaultHsva,
+        s: 50,
+        v: 100,
       });
     });
 

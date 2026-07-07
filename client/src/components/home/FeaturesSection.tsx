@@ -42,8 +42,8 @@ export function FeaturesSection() {
         <div className="max-w-5xl mx-auto">
           {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, i) => (
-              <div key={i} className="space-y-4 text-center">
+            {features.map((feature) => (
+              <div key={feature.title} className="space-y-4 text-center">
                 {/* Icon */}
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary">
                   {feature.icon}

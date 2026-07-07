@@ -15,10 +15,8 @@ export type {
   OKLABA,
   ColorFormat,
   ColorValue,
-  ColorTheme,
   PresetGroup,
   PresetGroupsInput,
-  ColorPickerTheme,
   ColorPickerProps,
 } from './types';
 
@@ -57,18 +55,14 @@ export { useColorState, usePointerDrag, useDebounce } from './hooks';
 export { ColorArea } from './components/ColorArea';
 export { HueSlider } from './components/HueSlider';
 export { AlphaSlider } from './components/AlphaSlider';
-export {
-  ColorInputs,
-  RGBInputs,
-  HSLInputs,
-  HSVInputs,
-  OKLCHInputs,
-} from './components/ColorInputs';
-export {
-  ColorPreview,
-  ColorSwatch,
-  PresetColors,
-} from './components/ColorPreview';
+export { ColorInputs } from './components/ColorInputs';
+export { RGBInputs } from './components/RGBInputs';
+export { HSLInputs } from './components/HSLInputs';
+export { HSVInputs } from './components/HSVInputs';
+export { OKLCHInputs } from './components/OKLCHInputs';
+export { ColorPreview } from './components/ColorPreview';
+export { ColorSwatch } from './components/ColorSwatch';
+export { PresetColors } from './components/PresetColors';
 export { ColorPicker } from './components/ColorPicker';
 export { CopyButton } from './components/CopyButton';
 export { RecentColors } from './components/RecentColors';

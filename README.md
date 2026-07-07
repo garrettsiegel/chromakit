@@ -26,7 +26,7 @@ npm install chromakit-react
 
 <br />
 
-<img src="./chromakit.png" alt="ChromaKit - Modern React color picker with OKLCH support" width="100%" />
+<img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/chromakit.png" alt="ChromaKit - Modern React color picker with OKLCH support" width="100%" />
 
 </div>
 
@@ -267,6 +267,7 @@ interface ColorPickerProps {
   presets?: string[];
   presetGroups?: PresetGroup[] | Record<string, string[]>;
   enableHistory?: boolean;
+  historySize?: number;
   width?: number;
   height?: number;
   className?: string;
@@ -291,8 +292,9 @@ interface ColorPickerProps {
 | `presets`          | `string[]`                                    | Built-in defaults                | Custom preset colors array                          |
 | `presetGroups`     | `PresetGroup[]` or `Record<string, string[]>` | Built-in groups                  | Preset color groups with dropdown                   |
 | `enableHistory`    | `boolean`                                     | `true`                           | Store recent colors in localStorage                 |
+| `historySize`      | `number`                                      | `10`                             | Max number of colors kept in history                |
 | `width`            | `number`                                      | auto                             | Custom picker width in pixels                       |
-| `height`           | `number`                                      | `100`                            | Color area height in pixels                         |
+| `height`           | `number`                                      | auto                             | Color area height in px (stretches to controls if omitted) |
 | `className`        | `string`                                      | -                                | Additional CSS classes                              |
 
 **ColorValue Object:**
@@ -515,7 +517,7 @@ const [color, setColor] = useState('#6366F1');
 />
 ```
 
-**Preset groups with dropdown** (New in v0.1.10)
+**Preset groups with dropdown**
 
 ```tsx
 const presetGroups = [
@@ -924,10 +926,9 @@ clearColorHistory();
 
 ---
 
-\*\*I## Resources
+## Resources
 
 - [Migration Guide](./MIGRATION.md) - Switch from react-colorful/react-color
-- [Performance Benchmarks](./PERFORMANCE.md) - Bundle size & speed comparisons  
 - [Contributing Guide](./CONTRIBUTING.md) - Help improve ChromaKit
 - [Changelog](./CHANGELOG.md) - Release notes
 

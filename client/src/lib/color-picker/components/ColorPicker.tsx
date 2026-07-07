@@ -1,141 +1,37 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import type {
-  ColorPickerProps,
-  ColorFormat,
-} from '../types';
+import { useState, useCallback, useMemo, useReducer } from 'react';
+import type { ColorPickerProps, ColorFormat } from '../types';
 import { useColorState } from '../hooks';
-import { ColorArea } from './ColorArea';
-import { HueSlider } from './HueSlider';
-import { AlphaSlider } from './AlphaSlider';
-import {
-  RGBInputs,
-  HSLInputs,
-  HSVInputs,
-  OKLCHInputs,
-} from './ColorInputs';
-import { ColorPreview, PresetColors } from './ColorPreview';
-import { CopyButton } from './CopyButton';
-import { RecentColors } from './RecentColors';
-import { getColorHistory, addToColorHistory, copyToClipboard } from '../utils';
-import { formatColor } from '../conversions';
+import { getColorHistory, addToColorHistory } from '../utils';
+import { PickerLayout, type InputMode } from './PickerLayout';
+import { DEFAULT_PRESETS, DEFAULT_PRESET_GROUPS } from './preset-data';
 
-const DEFAULT_PRESETS = [
-  '#6366F1',
-  '#EC4899',
-  '#F97316',
-  '#22C55E',
-  '#06B6D4',
-  '#8B5CF6',
-];
+type PresetAction =
+  | { type: 'reset'; presets: string[] }
+  | { type: 'set'; presets: string[] }
+  | { type: 'update'; index: number; color: string }
+  | { type: 'delete'; index: number }
+  | { type: 'add'; color: string; limit: number };
 
-const DEFAULT_PRESET_GROUPS = [
-  {
-    name: 'Material',
-    colors: [
-      '#F44336',
-      '#E91E63',
-      '#9C27B0',
-      '#673AB7',
-      '#3F51B5',
-      '#2196F3',
-      '#03A9F4',
-      '#00BCD4',
-      '#009688',
-      '#4CAF50',
-      '#8BC34A',
-      '#CDDC39',
-      '#FFEB3B',
-      '#FFC107',
-      '#FF9800',
-      '#FF5722',
-      '#795548',
-      '#9E9E9E',
-      '#607D8B',
-    ],
-  },
-  {
-    name: 'Tailwind',
-    colors: [
-      '#EF4444',
-      '#F97316',
-      '#EAB308',
-      '#22C55E',
-      '#10B981',
-      '#14B8A6',
-      '#06B6D4',
-      '#0EA5E9',
-      '#3B82F6',
-      '#6366F1',
-      '#8B5CF6',
-      '#D946EF',
-      '#EC4899',
-      '#F43F5E',
-    ],
-  },
-  {
-    name: 'shadcn/ui',
-    colors: [
-      '#0F172A',
-      '#1E293B',
-      '#334155',
-      '#475569',
-      '#64748B',
-      '#3B82F6',
-      '#6366F1',
-      '#10B981',
-      '#F59E0B',
-      '#F43F5E',
-    ],
-  },
-  {
-    name: 'Bootstrap',
-    colors: [
-      '#0D6EFD',
-      '#6610F2',
-      '#6F42C1',
-      '#D63384',
-      '#DC3545',
-      '#FD7E14',
-      '#FFC107',
-      '#198754',
-      '#20C997',
-      '#0DCAF0',
-    ],
-  },
-  {
-    name: 'Chakra UI',
-    colors: [
-      '#3182CE',
-      '#2B6CB0',
-      '#2C5282',
-      '#63B3ED',
-      '#90CDF4',
-      '#38A169',
-      '#48BB78',
-      '#68D391',
-      '#D69E2E',
-      '#ED8936',
-    ],
-  },
-  {
-    name: 'Grayscale',
-    colors: [
-      '#000000',
-      '#1F1F1F',
-      '#3F3F3F',
-      '#5F5F5F',
-      '#7F7F7F',
-      '#9F9F9F',
-      '#BFBFBF',
-      '#DFDFDF',
-      '#FFFFFF',
-    ],
-  },
-];
+function presetsReducer(state: string[], action: PresetAction): string[] {
+  switch (action.type) {
+    case 'reset':
+    case 'set':
+      return [...action.presets];
+    case 'update': {
+      if (action.index < 0 || action.index >= state.length) return state;
+      const next = [...state];
+      next[action.index] = action.color;
+      return next;
+    }
+    case 'delete':
+      return state.filter((_, i) => i !== action.index);
+    case 'add':
+      return state.length < action.limit ? [...state, action.color] : state;
+    default:
+      return state;
+  }
+}
 
-type InputMode = 'single' | 'rgb' | 'hsl' | 'hsv' | 'oklch';
-
-// Map color formats to input modes
 const FORMAT_TO_MODE: Record<ColorFormat, InputMode> = {
   hex: 'single',
   hex8: 'single',
@@ -175,15 +71,19 @@ export function ColorPicker({
   presetGroups = DEFAULT_PRESET_GROUPS,
   className = '',
   width,
+  height,
   showCopyButton = true,
   showPresets = true,
   enableHistory = true,
-  _historySize = 10,
+  historySize = 10,
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
 
-  // Track customizable presets
-  const [customPresets, setCustomPresets] = useState<string[]>(presets);
+  const [customPresets, dispatchPresets] = useReducer(
+    presetsReducer,
+    presets,
+    (initialPresets) => [...initialPresets]
+  );
 
   const normalizedPresetGroups = useMemo(() => {
     if (!presetGroups) return [];
@@ -194,37 +94,30 @@ export function ColorPicker({
     }));
   }, [presetGroups]);
 
-  // Track selected preset group
   const [selectedPresetGroup, setSelectedPresetGroup] = useState<string | null>(
     null
   );
 
-  // Load color history
   const [history, setHistory] = useState<string[]>(() =>
-    enableHistory ? getColorHistory() : []
+    enableHistory ? getColorHistory().slice(0, historySize) : []
   );
 
-  // Fixed compact dimensions - horizontal compact layout
   const dimensions = useMemo(
     () => ({
       areaWidth: 160,
-      areaHeight: 100,
+      areaHeight: height,
     }),
-    []
+    [height]
   );
 
   const { hsva, colorValue, updateColor, setFromString, startDrag, endDrag } =
-    useColorState(initialColor, onChange, onChangeComplete);
+    useColorState(initialColor, onChange, onChangeComplete, value);
 
-  const [format, setFormat] = useState<ColorFormat>(() => {
-    // Default to first available format
-    return formats[0] || 'hex';
-  });
+  const [format, setFormat] = useState<ColorFormat>(() => formats[0] || 'hex');
 
-  // Determine available input modes based on formats prop
   const availableModes = useMemo(() => {
     const modes = new Set<InputMode>();
-    modes.add('single'); // Always include text input
+    modes.add('single'); // ALWAYS INCLUDE TEXT INPUT
     for (const f of formats) {
       modes.add(FORMAT_TO_MODE[f]);
     }
@@ -233,23 +126,15 @@ export function ColorPicker({
 
   const [inputMode, setInputMode] = useState<InputMode>('single');
 
-  // Derive valid inputMode from availableModes to prevent cascading renders
   const validInputMode = useMemo(() => {
     return availableModes.includes(inputMode)
       ? inputMode
       : availableModes[0] || 'single';
   }, [availableModes, inputMode]);
 
-  // Derive valid format from formats prop to prevent cascading renders
   const validFormat = useMemo(() => {
     return formats.includes(format) ? format : formats[0] || 'hex';
   }, [formats, format]);
-
-  useEffect(() => {
-    if (value) {
-      setFromString(value);
-    }
-  }, [value, setFromString]);
 
   const handlePresetSelect = useCallback(
     (color: string) => {
@@ -257,95 +142,42 @@ export function ColorPicker({
       if (newColorValue) {
         onChangeComplete?.(newColorValue);
         if (enableHistory) {
-          const updated = addToColorHistory(color);
+          const updated = addToColorHistory(color, historySize);
           setHistory(updated);
         }
       }
     },
-    [setFromString, onChangeComplete, enableHistory]
+    [setFromString, onChangeComplete, enableHistory, historySize]
   );
 
   const handleCopy = useCallback(
     (success: boolean) => {
       if (success && enableHistory) {
         const currentColor = colorValue.hex;
-        const updated = addToColorHistory(currentColor);
+        const updated = addToColorHistory(currentColor, historySize);
         setHistory(updated);
       }
     },
-    [colorValue, enableHistory]
+    [colorValue, enableHistory, historySize]
   );
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      const isInInput =
-        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+  const handleUpdatePreset = useCallback((index: number, color: string) => {
+    dispatchPresets({ type: 'update', index, color });
+  }, []);
 
-      // Cmd/Ctrl + C to copy color
-      if (
-        (e.metaKey || e.ctrlKey) &&
-        e.key === 'c' &&
-        !isInInput &&
-        showCopyButton
-      ) {
-        e.preventDefault();
-        const colorText = formatColor(colorValue, validFormat);
-        copyToClipboard(colorText).then((success) => {
-          if (success && enableHistory) {
-            const updated = addToColorHistory(colorValue.hex);
-            setHistory(updated);
-          }
-        });
-      }
+  const handleDeletePreset = useCallback((index: number) => {
+    dispatchPresets({ type: 'delete', index });
+  }, []);
 
-      // Cmd/Ctrl + C to copy color
-      if ((e.metaKey || e.ctrlKey) && e.key === 'c' && showCopyButton) {
-        e.preventDefault();
-        copyToClipboard(formatColor(colorValue, validFormat));
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [colorValue, validFormat, showCopyButton, enableHistory]);
-
-  // Use custom presets (allows user modification)
-  const allPresets = customPresets;
-
-  // Handler to update a preset color (e.g., on long-press or right-click)
-  const handleUpdatePreset = useCallback(
-    (index: number, color: string) => {
-      const newPresets = [...customPresets];
-      newPresets[index] = color;
-      setCustomPresets(newPresets);
-    },
-    [customPresets]
-  );
-
-  // Handler to delete a preset
-  const handleDeletePreset = useCallback(
-    (index: number) => {
-      const newPresets = customPresets.filter((_, i) => i !== index);
-      setCustomPresets(newPresets);
-    },
-    [customPresets]
-  );
-
-  // Handler to add current color as a new preset
   const handleAddPreset = useCallback(() => {
-    if (customPresets.length < 24) {
-      setCustomPresets([...customPresets, colorValue.hex]);
-    }
-  }, [customPresets, colorValue.hex]);
+    dispatchPresets({ type: 'add', color: colorValue.hex, limit: 24 });
+  }, [colorValue.hex]);
 
-  // Handler to load a preset group
   const handleLoadPresetGroup = useCallback(
     (groupName: string) => {
       const group = normalizedPresetGroups.find((g) => g.name === groupName);
       if (group) {
-        setCustomPresets(group.colors);
+        dispatchPresets({ type: 'set', presets: group.colors });
         setSelectedPresetGroup(groupName);
       }
     },
@@ -353,170 +185,38 @@ export function ColorPicker({
   );
 
   return (
-    <div
-      className={`ck-color-picker ${className}`.trim()}
-      style={width ? { width } : undefined}
-      data-testid="color-picker"
-    >
-      <div className="ck-picker-main">
-        {/* Color Area on the left */}
-        <ColorArea
-          hsva={hsva}
-          onChange={updateColor}
-          onStart={startDrag}
-          onEnd={endDrag}
-          width={dimensions.areaWidth}
-          height={dimensions.areaHeight}
-        />
-
-        {/* Controls on the right */}
-        <div className="ck-picker-controls">
-          {/* Sliders */}
-          <div className="ck-controls-row">
-            <div className="ck-sliders-group">
-              <HueSlider
-                hsva={hsva}
-                onChange={updateColor}
-                onStart={startDrag}
-                onEnd={endDrag}
-              />
-              {showAlpha && (
-                <AlphaSlider
-                  hsva={hsva}
-                  onChange={updateColor}
-                  onStart={startDrag}
-                  onEnd={endDrag}
-                />
-              )}
-            </div>
-          </div>
-
-          {/* Inputs */}
-          {showInputs && (
-            <div className="ck-inputs">
-              {availableModes.length > 1 && (
-                <div className="ck-input-modes">
-                  {availableModes.map((mode) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setInputMode(mode)}
-                      className={`ck-input-mode-btn ${validInputMode === mode ? 'active' : ''}`}
-                      data-testid={`input-mode-${mode}`}
-                    >
-                      {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Preview + Format Selector */}
-          {showPreview && (
-            <div className="ck-action-buttons-row">
-              <ColorPreview
-                colorValue={colorValue}
-                size="lg"
-                className="ck-preview-wide"
-              />
-              <div className="ck-action-buttons">
-                {validInputMode === 'single' && (
-                  <select
-                    value={validFormat}
-                    onChange={(e) => setFormat(e.target.value as ColorFormat)}
-                    className="ck-select"
-                    data-testid="color-format-select"
-                  >
-                    {formats.map((f) => (
-                      <option key={f} value={f}>
-                        {f.toUpperCase()}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Color Value Inputs */}
-          {showInputs && (
-            <div className="ck-inputs-values">
-              {validInputMode === 'single' && (
-                <div className="ck-input-row">
-                  <input
-                    type="text"
-                    value={formatColor(colorValue, validFormat)}
-                    onChange={(e) => setFromString(e.target.value)}
-                    className="ck-input"
-                    data-testid="color-input-text"
-                  />
-                  {showCopyButton && (
-                    <CopyButton
-                      text={formatColor(colorValue, validFormat)}
-                      onCopy={handleCopy}
-                    />
-                  )}
-                </div>
-              )}
-              {validInputMode === 'rgb' && (
-                <RGBInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-              {validInputMode === 'hsl' && (
-                <HSLInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-              {validInputMode === 'hsv' && (
-                <HSVInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-              {validInputMode === 'oklch' && (
-                <OKLCHInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-            </div>
-          )}
-
-          {/* Recent Colors */}
-          {enableHistory && history.length > 0 && (
-            <RecentColors onColorSelect={handlePresetSelect} />
-          )}
-
-          {/* Presets */}
-          {showPresets && allPresets && allPresets.length > 0 && (
-            <div className="ck-presets">
-              <PresetColors
-                colors={allPresets}
-                selectedColor={colorValue.hex}
-                onSelect={handlePresetSelect}
-                onUpdatePreset={(index) =>
-                  handleUpdatePreset(index, colorValue.hex)
-                }
-                onDeletePreset={handleDeletePreset}
-                onAddPreset={handleAddPreset}
-                currentColor={colorValue.hex}
-                editable={true}
-                presetGroups={normalizedPresetGroups}
-                selectedPresetGroup={selectedPresetGroup}
-                onLoadPresetGroup={handleLoadPresetGroup}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <PickerLayout
+      className={className}
+      width={width}
+      hsva={hsva}
+      updateColor={updateColor}
+      startDrag={startDrag}
+      endDrag={endDrag}
+      dimensions={dimensions}
+      showAlpha={showAlpha}
+      showInputs={showInputs}
+      showPreview={showPreview}
+      showCopyButton={showCopyButton}
+      formats={formats}
+      validInputMode={validInputMode}
+      availableModes={availableModes}
+      setInputMode={setInputMode}
+      validFormat={validFormat}
+      setFormat={setFormat}
+      colorValue={colorValue}
+      setFromString={setFromString}
+      handleCopy={handleCopy}
+      enableHistory={enableHistory}
+      history={history}
+      handlePresetSelect={handlePresetSelect}
+      showPresets={showPresets}
+      customPresets={customPresets}
+      handleUpdatePreset={handleUpdatePreset}
+      handleDeletePreset={handleDeletePreset}
+      handleAddPreset={handleAddPreset}
+      normalizedPresetGroups={normalizedPresetGroups}
+      selectedPresetGroup={selectedPresetGroup}
+      handleLoadPresetGroup={handleLoadPresetGroup}
+    />
   );
 }

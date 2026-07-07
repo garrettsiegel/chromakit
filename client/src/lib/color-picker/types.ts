@@ -45,7 +45,11 @@ export interface OKLCHA extends OKLCH {
 }
 
 export interface OKLABA extends OKLAB {
-  alpha: number; // 0-1
+  /**
+   * Alpha channel, 0-1. Named `alpha` (not `a`, as on the other *A types)
+   * because OKLAB already uses `a` for its green–red axis.
+   */
+  alpha: number;
 }
 
 export type ColorFormat =
@@ -75,31 +79,12 @@ export interface ColorValue {
   oklcha: OKLCHA;
 }
 
-export interface ColorTheme {
-  id: string;
-  name: string;
-  colors: string[];
-}
-
 export interface PresetGroup {
   name: string;
   colors: string[];
 }
 
 export type PresetGroupsInput = PresetGroup[] | Record<string, string[]>;
-
-export interface ColorPickerTheme {
-  background?: string;
-  border?: string;
-  thumb?: string;
-  thumbBorder?: string;
-  thumbSize?: number;
-  inputBackground?: string;
-  inputBorder?: string;
-  inputText?: string;
-  labelText?: string;
-  borderRadius?: number;
-}
 
 export interface ColorPickerProps {
   value?: string;
@@ -112,17 +97,16 @@ export interface ColorPickerProps {
   showPreview?: boolean;
   presets?: string[];
   presetGroups?: PresetGroupsInput;
-  themes?: ColorTheme[];
-  theme?: ColorPickerTheme;
   className?: string;
   /** Show preset color swatches */
   showPresets?: boolean;
   width?: number;
+  /** Color area height in pixels. When omitted, the area stretches to match the controls. */
   height?: number;
   /** Show copy button for quick color copying */
   showCopyButton?: boolean;
   /** Enable color history (stored in localStorage) */
   enableHistory?: boolean;
-  /** Maximum number of colors to keep in history */
-  _historySize?: number;
+  /** Maximum number of colors to keep in history (default 10) */
+  historySize?: number;
 }

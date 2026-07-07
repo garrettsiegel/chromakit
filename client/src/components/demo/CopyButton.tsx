@@ -1,6 +1,7 @@
-import { useState, useCallback, memo } from 'react';
+import { memo } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 interface CopyButtonProps {
   text: string;
@@ -8,19 +9,13 @@ interface CopyButtonProps {
 }
 
 export const CopyButton = memo(function CopyButton({ text, className = '' }: CopyButtonProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = useCallback(async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [text]);
+  const { copied, copy } = useCopyToClipboard(text);
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={handleCopy}
+      onClick={copy}
       className={`${className} transition-transform active:scale-95`}
       data-testid="button-copy"
       aria-label={copied ? 'Copied!' : 'Copy to clipboard'}

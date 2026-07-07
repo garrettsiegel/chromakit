@@ -4,8 +4,13 @@ import tailwindcss from '@tailwindcss/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync } from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const pkg = JSON.parse(
+  readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
+) as { version: string };
 
 export default defineConfig(({ mode }) => {
   // Library build mode
@@ -63,11 +68,12 @@ export default defineConfig(({ mode }) => {
   // Development/demo mode
   return {
     plugins: [react(), tailwindcss()],
+    define: {
+      __PKG_VERSION__: JSON.stringify(pkg.version),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'client', 'src'),
-        '@shared': path.resolve(__dirname, 'shared'),
-        '@assets': path.resolve(__dirname, 'attached_assets'),
       },
     },
     root: path.resolve(__dirname, 'client'),

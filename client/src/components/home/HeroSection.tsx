@@ -1,7 +1,9 @@
-import { useState, useCallback, memo } from 'react';
+import { memo } from 'react';
 import { Copy, Check, ArrowRight, Github, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import { INSTALL_COMMAND } from '@/lib/constants';
 
 const ColorShowcase = memo(function ColorShowcase() {
   const colors = [
@@ -13,14 +15,17 @@ const ColorShowcase = memo(function ColorShowcase() {
   ];
 
   return (
-    <div className="flex items-center justify-center gap-3 py-8">
-      {colors.map((color, i) => (
+    <div
+      className="flex items-center justify-center gap-3 py-8"
+      aria-hidden="true"
+    >
+      {colors.map((color) => (
         <div
-          key={i}
+          key={color.label}
           className="group relative"
         >
           <div
-            className="w-20 h-20 rounded-2xl border-2 border-border transition-transform duration-300 hover:scale-110 hover:-translate-y-1 cursor-pointer"
+            className="w-20 h-20 rounded-2xl border-2 border-border transition-transform duration-300 hover:scale-110 hover:-translate-y-1"
             style={{ backgroundColor: color.oklch }}
           />
           <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -33,20 +38,13 @@ const ColorShowcase = memo(function ColorShowcase() {
 });
 
 const InstallCommand = memo(function InstallCommand() {
-  const [copied, setCopied] = useState(false);
-  const command = 'npm install chromakit-react';
-
-  const handleCopy = useCallback(async () => {
-    await navigator.clipboard.writeText(command);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [command]);
+  const { copied, copy } = useCopyToClipboard(INSTALL_COMMAND);
 
   return (
     <div className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-border bg-card/50 backdrop-blur-sm">
-      <code className="font-mono text-sm text-foreground">{command}</code>
+      <code className="font-mono text-sm text-foreground">{INSTALL_COMMAND}</code>
       <button
-        onClick={handleCopy}
+        onClick={copy}
         className="p-1.5 rounded-lg hover:bg-muted transition-colors"
         aria-label="Copy install command"
       >

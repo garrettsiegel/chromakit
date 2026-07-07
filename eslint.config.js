@@ -4,6 +4,7 @@ import tsparser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import comments from 'eslint-plugin-eslint-comments';
 import prettier from 'eslint-config-prettier';
 
 export default [
@@ -72,6 +73,9 @@ export default [
         React: 'readonly',
         JSX: 'readonly',
 
+        // Injected by vite.config.ts `define`
+        __PKG_VERSION__: 'readonly',
+
         // Test globals
         jest: 'readonly',
         describe: 'readonly',
@@ -90,6 +94,7 @@ export default [
       react: react,
       'react-hooks': reactHooks,
       'jsx-a11y': jsxA11y,
+      'eslint-comments': comments,
     },
     rules: {
       ...tseslint.configs.recommended.rules,
@@ -104,7 +109,9 @@ export default [
 
       // TypeScript specific rules
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -114,9 +121,9 @@ export default [
       ],
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-empty-object-type': 'warn',
-      '@typescript-eslint/no-require-imports': 'warn',
+      '@typescript-eslint/no-require-imports': 'error',
 
-      // React hooks rules - downgrade to warnings
+      // React hooks rules
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/immutability': 'warn',
 
@@ -125,8 +132,58 @@ export default [
       'jsx-a11y/click-events-have-key-events': 'warn',
       'jsx-a11y/no-static-element-interactions': 'warn',
 
+      // Imports
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react',
+              importNames: ['default'],
+              message:
+                'Do not default-import React. Use the automatic JSX runtime and named imports.',
+            },
+          ],
+          patterns: [
+            {
+              group: ['../../*'],
+              message: 'No deep relative imports. Use the @/ alias.',
+            },
+          ],
+        },
+      ],
+
+      // Forbidden syntax
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'TSEnumDeclaration',
+          message: 'Use const objects or union types instead of enums.',
+        },
+        {
+          selector: "ImportNamespaceSpecifier[parent.source.value='react']",
+          message:
+            'Do not namespace-import React. Use named imports (forwardRef, type HTMLAttributes, ...).',
+        },
+      ],
+
+      // Disable-comment lockdown: rules are fixed in code, never silenced.
+      // Legitimate exceptions must be added to `allow` deliberately by a human.
+      'eslint-comments/no-use': ['error', { allow: [] }],
+
+      // Size limits (tests exempted below)
+      'max-lines': [
+        'error',
+        { max: 300, skipBlankLines: true, skipComments: true },
+      ],
+      'max-lines-per-function': [
+        'error',
+        { max: 200, skipBlankLines: true, skipComments: true },
+      ],
+
       // General rules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-debugger': 'error',
       'prefer-const': 'warn',
       'no-var': 'error',
     },
@@ -134,6 +191,13 @@ export default [
       react: {
         version: 'detect',
       },
+    },
+  },
+  {
+    files: ['**/*.test.{ts,tsx}', 'vitest.setup.ts'],
+    rules: {
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
     },
   },
   prettier,

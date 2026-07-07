@@ -7,24 +7,107 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- ESLint configuration for code quality and consistency
-- Prettier configuration for code formatting
-- GitHub Actions CI/CD workflow for automated testing and building
-- CHANGELOG.md to track project changes
-- Comprehensive test suite for ColorPicker component
-- Tests for ColorInputs and EyeDropperButton components
-- Node.js version specification in package.json
+## [0.2.0] - 2026-07-06
 
 ### Fixed
 
-- TypeScript type errors in test files by adding proper vitest jest-dom imports
-- Test coverage gaps in main components
+- `onChangeComplete` reporting the color from before a drag instead of the final color (stale closure in `useColorState`/`usePointerDrag`)
+- `RecentColors` showing a stale history snapshot instead of updating live
+- Pointer event listeners leaking if a drag is interrupted by unmount
+- Invalid nested `<button>` markup in `ColorSwatch` (the preset delete button is now a sibling of the swatch button)
+- Numeric channel inputs (RGB/HSL/HSV/OKLCH) snapping mid-edit while typing multi-digit values
+- Dark mode reverting on page refresh on the demo site (theme wasn't persisted before first paint)
+
+### Added
+
+- `ColorArea` keyboard support for Home/End (saturation) and PageUp/PageDown (brightness)
+- `historySize` prop to cap the color history length (formerly the non-functional `_historySize`)
+- Working `height` prop for `ColorPicker`/`ColorArea` (previously ignored; omitting it preserves the auto-stretch behavior)
+- Vertical slider styles (`ck-hue-slider--vertical` / `ck-alpha-slider--vertical`) now live in `chromakit.css`
 
 ### Changed
 
-- Improved development tooling and automation
+- `formatColor`'s `format` parameter is now typed as `ColorFormat` instead of `string`
+- Internal restructure into focused modules (`conversions/`, per-component input files, `PickerLayout`); the public export surface is unchanged
+- npm package no longer bundles the 1MB readme banner image — installs are ~1MB smaller
+
+### Removed
+
+- **Breaking (types only):** removed the non-functional `theme`/`themes` props and their `ColorPickerTheme`/`ColorTheme` exported types. Theming is done via CSS custom properties in `chromakit.css`, which these props never actually affected.
+- **Breaking (minor):** removed the non-functional `size` prop from `ColorSwatch` and `currentColor` from `PresetColors`; `ColorSwatch` now renders inside a `ck-swatch-wrapper` div
+
+## [0.1.16] - 2026-01-29
+
+### Changed
+
+- Documentation and README image updates
+
+## [0.1.15] - 2026-01-29
+
+### Changed
+
+- UI redesign with a blue theme
+- Performance optimizations
+- Improved NPM docs links
+- Required Node 20+ for Vitest 4 compatibility
+
+## [0.1.14] - 2026-01-26
+
+### Fixed
+
+- Duplicate "Contributing" section in README
+
+## [0.1.13] - 2026-01-26
+
+### Changed
+
+- Removed "Made with love by" attribution from README
+
+## [0.1.12] - 2026-01-26
+
+### Changed
+
+- Removed emojis from README
+
+## [0.1.11] - 2026-01-26
+
+### Fixed
+
+- CI test failures
+
+### Changed
+
+- Enhanced README with visuals
+
+## [0.1.10] - 2026-01-26
+
+### Added
+
+- Preset color group dropdown with defaults
+
+### Fixed
+
+- Color picker responsiveness on smaller viewports
+- Missing color format support
+
+## [0.1.9] - 2026-01-26
+
+### Removed
+
+- EyeDropper functionality (originally added in [0.1.7])
+
+### Fixed
+
+- CI failures across ESLint, accessibility warnings, and Testing Library v16 compatibility
+- Node.js 18.x support (downgraded Vite/Vitest to match)
+
+## [0.1.8] - 2026-01-26
+
+### Changed
+
+- Homepage redesign and documentation audit
+- Compact ColorPicker layout (removed `size` prop in favor of explicit dimensions)
+- Performance and styling improvements
 
 ## [0.1.7] - 2026-01-26
 
@@ -44,7 +127,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 8KB gzipped bundle size
 - Comprehensive documentation including:
   - Migration guide from react-colorful
-  - Performance benchmarks and analysis
   - Contributing guidelines
 - Extensive test coverage for utilities and hooks
 
@@ -68,5 +150,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS custom properties for theming
 - Efficient re-render optimization with React.memo and useMemo
 
-[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.1.7...HEAD
+[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/garrettsiegel/chromakit/compare/v0.1.16...v0.2.0
+[0.1.16]: https://github.com/garrettsiegel/chromakit/compare/v0.1.15...v0.1.16
+[0.1.15]: https://github.com/garrettsiegel/chromakit/compare/v0.1.14...v0.1.15
+[0.1.14]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.14
+[0.1.13]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.13
+[0.1.12]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.12
+[0.1.11]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.11
+[0.1.10]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.10
+[0.1.9]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.9
+[0.1.8]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.8
 [0.1.7]: https://github.com/garrettsiegel/chromakit/releases/tag/v0.1.7

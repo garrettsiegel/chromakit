@@ -199,6 +199,31 @@ describe('useColorState', () => {
       expect(onChangeComplete).toHaveBeenCalledWith(result.current.colorValue);
     });
 
+    it('should report the final color even when a stale endDrag reference is invoked', () => {
+      // Mimics usePointerDrag registering a pointerup listener at drag start:
+      // the listener captures the endDrag from that render, then the color
+      // changes during the drag before the (stale) reference is finally called.
+      const onChangeComplete = vi.fn();
+      const { result } = renderHook(() =>
+        useColorState('#ff0000', undefined, onChangeComplete)
+      );
+
+      const staleEndDrag = result.current.endDrag;
+
+      act(() => {
+        result.current.startDrag();
+        result.current.updateColor({ h: 120, s: 100, v: 100, a: 1 }); // green
+      });
+
+      act(() => {
+        staleEndDrag();
+      });
+
+      expect(onChangeComplete).toHaveBeenCalledTimes(1);
+      const reported = onChangeComplete.mock.calls[0][0];
+      expect(reported.hsva.h).toBeCloseTo(120, 0); // final green, not initial red
+    });
+
     it('should not call onChangeComplete if drag was not started', () => {
       const onChangeComplete = vi.fn();
       const { result } = renderHook(() =>
@@ -402,6 +427,42 @@ describe('usePointerDrag', () => {
       'pointerup',
       expect.any(Function)
     );
+  });
+
+  it('should remove document listeners if unmounted mid-drag', () => {
+    const onMove = vi.fn();
+    const { result, unmount } = renderHook(() => usePointerDrag(onMove));
+
+    (
+      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+    ).current = mockElement;
+
+    const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener');
+
+    act(() => {
+      result.current.handlePointerDown({
+        preventDefault: vi.fn(),
+        clientX: 50,
+        clientY: 50,
+      } as unknown as React.PointerEvent);
+    });
+
+    // Unmount while the drag is still active (no pointerup fired).
+    unmount();
+
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'pointermove',
+      expect.any(Function)
+    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'pointerup',
+      expect.any(Function)
+    );
+
+    // A late pointermove must not reach the (now removed) handler.
+    onMove.mockClear();
+    fireEvent.pointerMove(document, { clientX: 75, clientY: 75 });
+    expect(onMove).not.toHaveBeenCalled();
   });
 
   it('should work with external ref', () => {

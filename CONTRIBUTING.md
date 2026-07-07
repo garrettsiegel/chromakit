@@ -27,13 +27,16 @@ Thank you for your interest in contributing to ChromaKit! We welcome contributio
 chromakit/
 ├── client/src/lib/color-picker/  # Library source code
 │   ├── components/               # React components
+│   │   └── *.test.tsx            # Component tests (colocated)
 │   ├── conversions.ts           # Color space conversions
+│   ├── conversions.test.ts       # Unit tests (colocated)
 │   ├── hooks.ts                 # React hooks
+│   ├── hooks.test.ts            # Unit tests (colocated)
 │   ├── types.ts                 # TypeScript types
 │   └── index.ts                 # Public API
 ├── client/src/pages/            # Demo website
 ├── client/src/components/       # Demo components
-└── tests/                       # Test files
+└── vitest.config.ts             # Test configuration
 ```
 
 ### Making Changes
@@ -74,7 +77,7 @@ chromakit/
 
 ### Testing
 
-- Write tests for new features in the `tests/` directory
+- Write tests for new features as colocated `*.test.ts`/`*.test.tsx` files near the source file
 - Ensure all tests pass before submitting a PR
 - Run tests with:
   ```bash

@@ -1,14 +1,36 @@
+import { useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { screen } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import {
-  ColorInputs,
-  RGBInputs,
-  HSLInputs,
-  HSVInputs,
-} from './ColorInputs';
+import { ColorInputs } from './ColorInputs';
+import { RGBInputs } from './RGBInputs';
+import { HSLInputs } from './HSLInputs';
+import { HSVInputs } from './HSVInputs';
+import { OKLCHInputs } from './OKLCHInputs';
+import { parseColor, rgbaToColorValue } from '../conversions';
 import type { ColorValue } from '../types';
+
+// Mirrors how ColorPicker actually wires inputs: onChange's string is parsed and
+// round-tripped back into a fresh ColorValue, which is what previously caused
+// mid-edit snapping in HSV/OKLCH inputs without a local draft buffer.
+function ControlledHSVInputs({ initial }: { initial: ColorValue }) {
+  const [colorValue, setColorValue] = useState(initial);
+  const handleChange = (colorString: string) => {
+    const rgba = parseColor(colorString);
+    if (rgba) setColorValue(rgbaToColorValue(rgba));
+  };
+  return <HSVInputs colorValue={colorValue} onChange={handleChange} />;
+}
+
+function ControlledOKLCHInputs({ initial }: { initial: ColorValue }) {
+  const [colorValue, setColorValue] = useState(initial);
+  const handleChange = (colorString: string) => {
+    const rgba = parseColor(colorString);
+    if (rgba) setColorValue(rgbaToColorValue(rgba));
+  };
+  return <OKLCHInputs colorValue={colorValue} onChange={handleChange} />;
+}
 
 const mockColorValue: ColorValue = {
   rgba: { r: 255, g: 0, b: 0, a: 1 },
@@ -399,12 +421,59 @@ describe('HSVInputs', () => {
 
     expect(onChange).toHaveBeenCalled();
   });
+
+  it('should not snap mid-edit when typing a multi-digit value (regression)', async () => {
+    const user = userEvent.setup();
+    render(<ControlledHSVInputs initial={mockColorValue} />);
+
+    const hInput = screen.getByTestId('hsv-input-h') as HTMLInputElement;
+    await user.clear(hInput);
+    await user.type(hInput, '180');
+
+    expect(hInput.value).toBe('180');
+  });
 });
 
 describe('OKLCHInputs', () => {
-  it('should render component without errors', () => {
-    // OKLCH component requires proper color value structure
-    // These tests would need actual ColorValue from conversions
-    expect(true).toBe(true);
+  it('should render OKLCH channel inputs with correct values', () => {
+    render(<OKLCHInputs colorValue={mockColorValue} onChange={vi.fn()} />);
+
+    expect(screen.getByTestId('oklch-input-l')).toBeInTheDocument();
+    expect(screen.getByTestId('oklch-input-c')).toBeInTheDocument();
+    expect(screen.getByTestId('oklch-input-h')).toBeInTheDocument();
+
+    const lInput = screen.getByTestId('oklch-input-l') as HTMLInputElement;
+    const hInput = screen.getByTestId('oklch-input-h') as HTMLInputElement;
+    expect(lInput.value).toBe('0.63');
+    expect(hInput.value).toBe('29');
+  });
+
+  it('should call onChange when an OKLCH value changes', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+
+    render(<OKLCHInputs colorValue={mockColorValue} onChange={onChange} />);
+
+    const hInput = screen.getByTestId('oklch-input-h');
+    await user.clear(hInput);
+    await user.type(hInput, '180');
+
+    expect(onChange).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/oklch\(/));
+  });
+
+  it('should not snap mid-edit when typing a multi-digit value (regression)', async () => {
+    const user = userEvent.setup();
+    // Low chroma keeps every hue safely inside the sRGB gamut, so the
+    // OKLCH -> RGB -> OKLCH round trip the wrapper performs doesn't clip and
+    // drift the hue — isolating the draft-buffer behavior under test.
+    const lowChromaGray = rgbaToColorValue({ r: 128, g: 128, b: 128, a: 1 });
+    render(<ControlledOKLCHInputs initial={lowChromaGray} />);
+
+    const hInput = screen.getByTestId('oklch-input-h') as HTMLInputElement;
+    await user.clear(hInput);
+    await user.type(hInput, '180');
+
+    expect(hInput.value).toBe('180');
   });
 });

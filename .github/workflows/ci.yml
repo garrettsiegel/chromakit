@@ -22,6 +22,12 @@ jobs:
       - run: npm ci
       - run: npm run type-check
       - run: npm run lint
+      - name: Block eslint-disable comments
+        run: |
+          if git grep -n "eslint-disable" -- "*.ts" "*.tsx" "*.js" "*.jsx"; then
+            echo "eslint-disable comments are not allowed."
+            exit 1
+          fi
       - run: npm run test:ci
       - run: npm run build
       - run: npm run size

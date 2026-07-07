@@ -1,4 +1,4 @@
-import type { RGB, RGBA as _RGBA, ColorValue as _ColorValue } from './types';
+import type { RGB } from './types';
 import { rgbToHsv, hsvToRgb } from './conversions';
 
 /**
@@ -107,7 +107,10 @@ export function getColorHistory(): string[] {
   }
 }
 
-export function addToColorHistory(color: string): string[] {
+export function addToColorHistory(
+  color: string,
+  maxSize: number = MAX_HISTORY_SIZE
+): string[] {
   if (typeof window === 'undefined' || !window.localStorage) {
     return [];
   }
@@ -116,7 +119,7 @@ export function addToColorHistory(color: string): string[] {
     // Remove if already exists
     const filtered = history.filter((c) => c !== color);
     // Add to beginning
-    const updated = [color, ...filtered].slice(0, MAX_HISTORY_SIZE);
+    const updated = [color, ...filtered].slice(0, Math.max(0, maxSize));
     localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
     return updated;
   } catch {
@@ -163,11 +166,3 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     return false;
   }
 }
-
-/**
- * Check if EyeDropper API is supported
- */
-
-/**
- * Open native eyedropper to pick color from screen
- */

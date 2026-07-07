@@ -1,10 +1,5 @@
 {
-  "include": [
-    "client/src/**/*",
-    "shared/**/*",
-    "server/**/*",
-    "vitest-setup.d.ts"
-  ],
+  "include": ["client/src/**/*"],
   "exclude": ["node_modules", "build", "dist"],
   "compilerOptions": {
     "incremental": true,
@@ -20,8 +15,7 @@
     "moduleResolution": "bundler",
     "types": ["node", "vite/client", "@testing-library/jest-dom"],
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["./client/src/*"]
     }
   }
 }

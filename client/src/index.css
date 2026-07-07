@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Tailwind v4 does not auto-load a legacy config; load it so the theme's
+   custom color/border-radius utilities (bg-primary, text-foreground, …) generate. */
+@config "../../tailwind.config.ts";
 
 /* LIGHT MODE - Modern Vibrant Design */
 :root {

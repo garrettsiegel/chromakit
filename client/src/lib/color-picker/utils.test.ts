@@ -190,6 +190,15 @@ describe('Color History Utils', () => {
       const history = getColorHistory();
       expect(history).toHaveLength(10);
     });
+
+    it('should respect a custom max size', () => {
+      let updated: string[] = [];
+      for (let i = 0; i < 10; i++) {
+        updated = addToColorHistory(`#${i.toString(16).padStart(6, '0')}`, 3);
+      }
+      expect(updated).toHaveLength(3);
+      expect(getColorHistory()).toHaveLength(3);
+    });
   });
 
   describe('clearColorHistory', () => {

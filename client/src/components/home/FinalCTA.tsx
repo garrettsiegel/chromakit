@@ -1,16 +1,10 @@
-import { useState } from 'react';
 import { Copy, Check, ArrowRight, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import { INSTALL_COMMAND } from '@/lib/constants';
 
 export function FinalCTA() {
-  const [copied, setCopied] = useState(false);
-  const installCommand = 'npm install chromakit-react';
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(installCommand);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const { copied, copy } = useCopyToClipboard(INSTALL_COMMAND);
 
   return (
     <section className="relative py-20 md:py-32">
@@ -29,10 +23,10 @@ export function FinalCTA() {
           {/* Install Command */}
           <div className="inline-flex items-center gap-2 px-5 py-4 rounded-xl border border-border bg-card">
             <code className="font-mono text-sm flex-1 text-left">
-              {installCommand}
+              {INSTALL_COMMAND}
             </code>
             <button
-              onClick={handleCopy}
+              onClick={copy}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label="Copy install command"
             >
