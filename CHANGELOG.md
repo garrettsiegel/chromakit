@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-07
+
+### Changed
+
+- Cache-bust the README banner URL so npm renders the refreshed image (npm's image proxy had cached the old banner at the unchanged URL).
+- Demo site navbar now uses the favicon logo instead of a placeholder gradient square. _(Demo-site only — not part of the npm package.)_
+
 ## [0.2.1] - 2026-07-07
 
 ### Fixed
@@ -160,7 +167,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS custom properties for theming
 - Efficient re-render optimization with React.memo and useMemo
 
-[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/garrettsiegel/chromakit/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/garrettsiegel/chromakit/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/garrettsiegel/chromakit/compare/v0.1.16...v0.2.0
 [0.1.16]: https://github.com/garrettsiegel/chromakit/compare/v0.1.15...v0.1.16

@@ -15,7 +15,11 @@ export default function Home() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary via-violet-500 to-pink-500" />
+            <img
+              src="/favicon.png"
+              alt="ChromaKit logo"
+              className="w-8 h-8 rounded-lg"
+            />
             <h1 className="text-xl font-bold">ChromaKit</h1>
             <Badge variant="secondary" className="text-xs hidden sm:inline-flex">
               v{__PKG_VERSION__}

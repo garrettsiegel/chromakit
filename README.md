@@ -26,7 +26,7 @@ npm install chromakit-react
 
 <br />
 
-<img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/chromakit.png" alt="ChromaKit - Modern React color picker with OKLCH support" width="100%" />
+<img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/chromakit.png?v=0.2.2" alt="ChromaKit - Modern React color picker with OKLCH support" width="100%" />
 
 </div>
 
