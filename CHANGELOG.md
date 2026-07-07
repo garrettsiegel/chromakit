@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-07
+
 ### Fixed
 
 - Excluded the bundle-analysis report (`stats.html`) from the published tarball; the visualizer now writes to `.stats/` instead of `dist/`. Cuts the package unpacked size roughly in half (0.2.0 shipped it inadvertently).
+
+### Changed
+
+- Refreshed the demo site's brand imagery (README banner, Open Graph card, favicon) to the current blue theme. The favicon is now a PNG; the stale orange `favicon.svg` was removed. _(Demo-site assets only — not part of the npm package.)_
 
 ## [0.2.0] - 2026-07-06
 
@@ -154,7 +160,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS custom properties for theming
 - Efficient re-render optimization with React.memo and useMemo
 
-[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/garrettsiegel/chromakit/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/garrettsiegel/chromakit/compare/v0.1.16...v0.2.0
 [0.1.16]: https://github.com/garrettsiegel/chromakit/compare/v0.1.15...v0.1.16
 [0.1.15]: https://github.com/garrettsiegel/chromakit/compare/v0.1.14...v0.1.15
