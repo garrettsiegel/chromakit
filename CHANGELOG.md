@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-28
+
+### Added
+
+- `parseColor` now accepts CSS `oklab()` strings, e.g. `oklab(0.65 0.18 -0.08)` and `oklab(65% 45% -20% / 50%)`. Lightness may be a number or a percentage; the `a`/`b` axes may be signed numbers or percentages (100% = the 0.4 spec reference range); alpha is optional and may be a number or percentage. Complements the existing `oklch()` parsing and enables OKLab-based interpolation and gradient workflows. ([#3](https://github.com/garrettsiegel/chromakit/issues/3))
+
+## [0.2.3] - 2026-07-07
+
 ### Changed
 
 - Demo site footer now uses the favicon logo instead of the placeholder gradient square, matching the navbar. _(Demo-site only — not part of the npm package.)_
