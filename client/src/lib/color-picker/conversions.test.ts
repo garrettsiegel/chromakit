@@ -302,7 +302,23 @@ describe('Color Conversions', () => {
       });
     });
 
-    it.each(['notacolor', '#GGGGGG', ''])(
+    it('parses oklab strings, round-tripping through rgb', () => {
+      const red = parseColor('oklab(0.6280 0.2249 0.1258)');
+      expect(red).not.toBeNull();
+      expect(red?.r).toBeCloseTo(255, -1);
+      expect(red?.g).toBeCloseTo(0, -1);
+      expect(red?.b).toBeCloseTo(0, -1);
+      expect(red?.a).toBe(1);
+    });
+
+    it('parses oklab percentages, negative axes, and alpha', () => {
+      const numeric = parseColor('oklab(0.65 0.18 -0.08 / 0.5)');
+      const percent = parseColor('oklab(65% 45% -20% / 50%)');
+      expect(numeric).toEqual(percent);
+      expect(numeric?.a).toBe(0.5);
+    });
+
+    it.each(['notacolor', '#GGGGGG', '', 'oklab(0.5 0.1)'])(
       'returns null for malformed input %j',
       (input) => {
         expect(parseColor(input)).toBeNull();

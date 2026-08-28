@@ -3,6 +3,7 @@ import type {
   RGBA,
   HSLA,
   OKLCHA,
+  OKLABA,
   ColorValue,
   ColorFormat,
 } from '../types';
@@ -10,7 +11,12 @@ import { clamp } from './math';
 import { parseHex, rgbaToHex, rgbaToHex8 } from './hex';
 import { rgbToHsl, hslaToRgba } from './hsl';
 import { rgbToHsv } from './hsv';
-import { rgbToOklab, rgbToOklch, oklchaToRgba } from './oklab';
+import {
+  rgbToOklab,
+  rgbToOklch,
+  oklchaToRgba,
+  oklabaToRgba,
+} from './oklab';
 
 export function parseColor(color: string): RGBA | null {
   const trimmed = color.trim().toLowerCase();
@@ -57,6 +63,26 @@ export function parseColor(color: string): RGBA | null {
       a: oklchMatch[4] !== undefined ? parseFloat(oklchMatch[4]) : 1,
     };
     return oklchaToRgba(oklcha);
+  }
+
+  // ACCEPTS oklab(L% a b / A) AND oklab(L a b / A). The a/b axes may be numbers
+  // or percentages, where 100% is the 0.4 reference range from the CSS spec.
+  const oklabMatch = trimmed.match(
+    /^oklab\s*\(\s*([\d.]+)(%?)\s+(-?[\d.]+)(%?)\s+(-?[\d.]+)(%?)(?:\s*\/\s*([\d.]+)(%?))?\s*\)$/
+  );
+  if (oklabMatch) {
+    const axis = (value: string, isPercent: string): number =>
+      isPercent ? (parseFloat(value) / 100) * 0.4 : parseFloat(value);
+    const L = parseFloat(oklabMatch[1]);
+    const alphaRaw =
+      oklabMatch[7] !== undefined ? parseFloat(oklabMatch[7]) : 1;
+    const oklaba: OKLABA = {
+      L: clamp(oklabMatch[2] || L > 1 ? L / 100 : L, 0, 1),
+      a: axis(oklabMatch[3], oklabMatch[4]),
+      b: axis(oklabMatch[5], oklabMatch[6]),
+      alpha: clamp(oklabMatch[8] ? alphaRaw / 100 : alphaRaw, 0, 1),
+    };
+    return oklabaToRgba(oklaba);
   }
 
   return null;
