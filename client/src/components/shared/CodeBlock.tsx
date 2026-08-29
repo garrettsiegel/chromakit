@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Highlight, themes, type Language } from 'prism-react-renderer';
-import { CopyButton } from './CopyButton';
+import { CopyIconButton } from './CopyIconButton';
 
 interface CodeBlockProps {
   code: string;
@@ -29,7 +29,7 @@ export const CodeBlock = memo(function CodeBlock({
         )}
       </Highlight>
       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <CopyButton text={code.trim()} />
+        <CopyIconButton text={code.trim()} />
       </div>
     </div>
   );

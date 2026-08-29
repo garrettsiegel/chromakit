@@ -1,4 +1,4 @@
-import type { PropRow } from '@/components/docs/PropsTable';
+import type { PropRow } from '@/components/docs/props-table-types';
 
 // Sourced from ColorPickerProps in lib/color-picker/types.ts and the
 // default values in components/ColorPicker.tsx.

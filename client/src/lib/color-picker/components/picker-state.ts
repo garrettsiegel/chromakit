@@ -2,10 +2,10 @@ import { useCallback, useMemo, useReducer, useState } from 'react';
 import type { PresetGroup, PresetGroupsInput } from '../types';
 import { getColorHistory, addToColorHistory } from '../utils';
 
-const MAX_CUSTOM_PRESETS = 24;
+/** Upper bound on how many swatches a user can keep in the editable row. */
+export const MAX_CUSTOM_PRESETS = 24;
 
 type PresetAction =
-  | { type: 'reset'; presets: string[] }
   | { type: 'set'; presets: string[] }
   | { type: 'update'; index: number; color: string }
   | { type: 'delete'; index: number }
@@ -13,7 +13,6 @@ type PresetAction =
 
 function presetsReducer(state: string[], action: PresetAction): string[] {
   switch (action.type) {
-    case 'reset':
     case 'set':
       return [...action.presets];
     case 'update': {

@@ -54,13 +54,16 @@ client/
     components/
       demos/                      # React island wrappers, one per live demo (e.g. ConverterDemoCard.tsx) —
                                   #   mounted with client:visible/client:load from .astro pages
-      docs/                       # DocSection.astro, PropsTable.astro (+ PropsTable.ts for the shared PropRow
-                                  #   type), StaticCode.astro (build-time shiki, zero JS), DemoCard.tsx (the
-                                  #   Preview/Code tab wrapper used inside demo islands)
+      docs/                       # DocSection.astro, PropsTable.astro (+ props-table-types.ts for the shared
+                                  #   PropRow type), StaticCode.astro (build-time shiki, zero JS), DemoCard.tsx
+                                  #   (the Preview/Code tab wrapper used inside demo islands)
       home/                       # HeroSection/FeaturesSection/FinalCTA/UsageSection.astro (static) +
-                                  #   DemoPlayground.tsx (the one fully-interactive home island)
+                                  #   DemoPlayground.tsx (the one fully-interactive home island) +
+                                  #   InstallCommandBox.tsx
       layout/                     # SiteHeader.astro, SiteFooter.astro
-      demo/, ui/                  # shared demo-only helpers (CodeBlock, CopyButton, shadcn-style primitives)
+      shared/                     # site-only primitives reused across demos/docs (CodeBlock,
+                                  #   CopyIconButton, ColorFormatsDisplay)
+      ui/                         # shadcn-style primitives kept by the site (card, tabs)
     hooks/, index.css            # demo-site-only helpers and global styles
 ```
 
@@ -134,3 +137,12 @@ _Newest at the bottom._
   - The `moduleSideEffects` flag on the CSS module is **not** the signal — it stays `no-treeshake` in both broken and fixed builds. The deciding factor is the flag on the *importer* (`index.ts`). Diffing per-module flags between builds shows nothing; the difference is in Rollup's dependency-inclusion walk (`addRelevantSideEffectDependencies`), which skips a dependency whose importer isn't itself side-effectful.
   - Reproduces in **plain Vite** (no Astro) with a two-line entry importing `{ ColorPicker }` from the source barrel — bisect there, not in the full Astro build.
   - This entry is inert for the **published npm package** (the glob points at a `client/src/...` source path that isn't in the `dist`-only tarball); it only fixes the site's source-consumption path. npm consumers are still told to `import 'chromakit-react/chromakit.css'` explicitly (docs unchanged), and library-build size budgets are unaffected (ES bundle stayed 9.42 kB gzip).
+
+- **2026-08-28**: Repo-wide cleanup pass (library + site), no behavior or public-API change — the built bundle's 64 runtime exports are byte-identical before and after.
+  - **Single-format text input now goes through `ColorInputs`.** `InputValuePanel` had its own derived-value `<input>` with no draft state, so half-typed colors (`#f0`, `rg`) snapped back mid-edit; `ColorInputs` already solved that and was orphaned. `ColorInputs` gained optional `showCopyButton`/`onCopy`; the format `<select>` stays in `PickerLayout` where it belongs visually.
+  - **`PickerLayout` props went 28 → 21** by passing the `useColorState` and `usePresets` return objects whole (`color`, `presets`) instead of spraying their fields. `handleUpdatePreset`/`handleAddPreset` wrappers and the `dimensions` memo are gone; the color area's fixed width is a named `AREA_WIDTH` constant.
+  - **The five `*Inputs` components are one factory.** `createChannelEditor({ space, channels, select, serialize })` builds RGB/HSL/HSV/OKLCH/OKLAB; `inputId`/`testId` derive from the space name and channel key, so the tables shrank and the ids are guaranteed consistent. `HSVInputs` now serializes via `hsvaToRgba` instead of hand-rolled HSV→HSL math.
+  - **Shared conversion math lives in `conversions/math.ts`**: `rgbToHue` (was duplicated three times in two different styles) and `srgbToLinear`/`linearToSrgbChannel`/`linearToSrgb` (was duplicated in `lab.ts` and `oklab.ts`).
+  - **Barrels collapsed**: `conversions.ts` moved to `conversions/index.ts`, and `index.ts` now does `export *` for conversions, hooks, and utils instead of re-listing ~50 names by hand. Keep those three modules' exports intentional — everything they export is now public API.
+  - **Preset cap is one constant** (`MAX_CUSTOM_PRESETS`, exported from `picker-state.ts`); the reducer's dead `'reset'` action is gone.
+  - **Site**: `ui/button.tsx` (shadcn cva + radix Slot, one consumer) deleted along with the `--sidebar-*`/`--chart-*` tokens and the elevate CSS block, dropping the `@radix-ui/react-slot` and `class-variance-authority` devDeps; `components/demo/` merged into `shared/` + `demos/`; the site's `CopyButton` renamed `CopyIconButton` so it no longer collides with the library's; `lib/constants.ts` folded into its one consumer; `PropsTable.ts` renamed `props-table-types.ts`. ESLint now writes its cache to `node_modules/.cache/eslint/` so stray `.eslintcache` files stop appearing under `src/`.

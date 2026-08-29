@@ -134,8 +134,10 @@ export function parseColor(color: string): RGBA | null {
   );
   if (oklabMatch) {
     const L = parseFloat(oklabMatch[1]);
+    // A bare L above 1 is read as a percentage, matching an explicit `%`.
+    const lIsPercent = Boolean(oklabMatch[2]) || L > 1;
     const oklaba: OKLABA = {
-      L: clamp(oklabMatch[2] || L > 1 ? L / 100 : L, 0, 1),
+      L: clamp(lIsPercent ? L / 100 : L, 0, 1),
       a: component(oklabMatch[3], oklabMatch[4], 0.4),
       b: component(oklabMatch[5], oklabMatch[6], 0.4),
       alpha: alphaComponent(oklabMatch[7], oklabMatch[8]),

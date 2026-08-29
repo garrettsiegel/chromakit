@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { ColorValue, ColorFormat } from '../types';
 import { parseColor, formatColor } from '../conversions';
+import { CopyButton } from './CopyButton';
 
 interface ColorInputsProps {
   colorValue: ColorValue;
@@ -10,6 +11,8 @@ interface ColorInputsProps {
   showAlpha?: boolean;
   availableFormats?: ColorFormat[];
   className?: string;
+  showCopyButton?: boolean;
+  onCopy?: (success: boolean) => void;
 }
 
 const ALL_FORMATS: {
@@ -39,6 +42,8 @@ export function ColorInputs({
   showAlpha = true,
   availableFormats,
   className = '',
+  showCopyButton = false,
+  onCopy,
 }: ColorInputsProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftValue, setDraftValue] = useState('');
@@ -119,6 +124,7 @@ export function ColorInputs({
             ))}
           </select>
         )}
+        {showCopyButton && <CopyButton text={derivedValue} onCopy={onCopy} />}
       </div>
     </div>
   );

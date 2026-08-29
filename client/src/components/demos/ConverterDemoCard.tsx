@@ -1,6 +1,6 @@
 import { useColorState } from '@/lib/color-picker';
 import { DemoCard } from '@/components/docs/DemoCard';
-import { ColorFormatsDisplay } from '@/components/demo/ColorFormatsDisplay';
+import { ColorFormatsDisplay } from '@/components/shared/ColorFormatsDisplay';
 
 const converterCode = `import { parseColor, rgbaToColorValue, formatColor } from 'chromakit-react';
 

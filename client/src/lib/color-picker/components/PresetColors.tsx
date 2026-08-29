@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { PresetGroup } from '../types';
 import { ColorSwatch } from './ColorSwatch';
+import { MAX_CUSTOM_PRESETS } from './picker-state';
 
 interface PresetColorsProps {
   colors: string[];
@@ -15,8 +16,6 @@ interface PresetColorsProps {
   selectedPresetGroup?: string | null;
   onLoadPresetGroup?: (groupName: string) => void;
 }
-
-const MAX_PRESETS = 24;
 
 export function PresetColors({
   colors,
@@ -133,7 +132,7 @@ export function PresetColors({
             editing={isEditing}
           />
         ))}
-        {isEditing && onAddPreset && colors.length < MAX_PRESETS && (
+        {isEditing && onAddPreset && colors.length < MAX_CUSTOM_PRESETS && (
           <button
             type="button"
             className="ck-swatch-btn ck-swatch-add"

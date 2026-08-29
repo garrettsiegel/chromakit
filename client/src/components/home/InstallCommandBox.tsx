@@ -1,5 +1,6 @@
-import { CopyButton } from '@/components/demo/CopyButton';
-import { INSTALL_COMMAND } from '@/lib/constants';
+import { CopyIconButton } from '@/components/shared/CopyIconButton';
+
+const INSTALL_COMMAND = 'npm install chromakit-react';
 
 interface InstallCommandBoxProps {
   variant?: 'hero' | 'cta';
@@ -17,6 +18,6 @@ export const InstallCommandBox = ({
     <code className="font-mono text-sm flex-1 text-left text-foreground">
       {INSTALL_COMMAND}
     </code>
-    <CopyButton text={INSTALL_COMMAND} />
+    <CopyIconButton text={INSTALL_COMMAND} />
   </div>
 );

@@ -1,5 +1,6 @@
 import type { ColorFormat } from '../types';
 import type { useColorState } from '../hooks';
+import type { usePresets } from './picker-state';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
@@ -11,80 +12,57 @@ import { InputValuePanel, type InputMode } from './InputValuePanel';
 
 export type { InputMode };
 
+/** Width of the saturation/value area, in pixels. */
+const AREA_WIDTH = 160;
+
 interface PickerLayoutProps {
   className: string;
   width?: number | string;
-  hsva: ReturnType<typeof useColorState>['hsva'];
-  updateColor: ReturnType<typeof useColorState>['updateColor'];
-  startDrag: ReturnType<typeof useColorState>['startDrag'];
-  endDrag: ReturnType<typeof useColorState>['endDrag'];
-  dimensions: {
-    areaWidth: number;
-    areaHeight: number | undefined;
-  };
+  areaHeight?: number;
+  /** The live color state, straight from `useColorState`. */
+  color: ReturnType<typeof useColorState>;
+  /** The editable swatch state, straight from `usePresets`. */
+  presets: ReturnType<typeof usePresets>;
+  formats: ColorFormat[];
+  format: ColorFormat;
+  setFormat: (format: ColorFormat) => void;
+  inputMode: InputMode;
+  availableModes: InputMode[];
+  setInputMode: (mode: InputMode) => void;
+  history: string[];
+  onSelectColor: (color: string) => void;
+  onCopy: (success: boolean) => void;
   showAlpha: boolean;
   showInputs: boolean;
   showPreview: boolean;
   showCopyButton: boolean;
   showEyeDropper: boolean;
-  formats: ColorFormat[];
-  validInputMode: InputMode;
-  availableModes: InputMode[];
-  setInputMode: (mode: InputMode) => void;
-  validFormat: ColorFormat;
-  setFormat: (format: ColorFormat) => void;
-  colorValue: ReturnType<typeof useColorState>['colorValue'];
-  setFromString: ReturnType<typeof useColorState>['setFromString'];
-  handleCopy: (success: boolean) => void;
-  enableHistory: boolean;
-  history: string[];
-  handlePresetSelect: (color: string) => void;
   showPresets: boolean;
-  customPresets: string[];
-  handleUpdatePreset: (index: number, color: string) => void;
-  handleDeletePreset: (index: number) => void;
-  handleAddPreset: () => void;
-  normalizedPresetGroups: {
-    name: string;
-    colors: string[];
-  }[];
-  selectedPresetGroup: string | null;
-  handleLoadPresetGroup: (groupName: string) => void;
+  enableHistory: boolean;
 }
 
 export function PickerLayout({
   className,
   width,
-  hsva,
-  updateColor,
-  startDrag,
-  endDrag,
-  dimensions,
+  areaHeight,
+  color,
+  presets,
+  formats,
+  format,
+  setFormat,
+  inputMode,
+  availableModes,
+  setInputMode,
+  history,
+  onSelectColor,
+  onCopy,
   showAlpha,
   showInputs,
   showPreview,
   showCopyButton,
   showEyeDropper,
-  formats,
-  validInputMode,
-  availableModes,
-  setInputMode,
-  validFormat,
-  setFormat,
-  colorValue,
-  setFromString,
-  handleCopy,
-  enableHistory,
-  history,
-  handlePresetSelect,
   showPresets,
-  customPresets,
-  handleUpdatePreset,
-  handleDeletePreset,
-  handleAddPreset,
-  normalizedPresetGroups,
-  selectedPresetGroup,
-  handleLoadPresetGroup,
+  enableHistory,
 }: PickerLayoutProps) {
   return (
     <div
@@ -94,29 +72,29 @@ export function PickerLayout({
     >
       <div className="ck-picker-main">
         <ColorArea
-          hsva={hsva}
-          onChange={updateColor}
-          onStart={startDrag}
-          onEnd={endDrag}
-          width={dimensions.areaWidth}
-          height={dimensions.areaHeight}
+          hsva={color.hsva}
+          onChange={color.updateColor}
+          onStart={color.startDrag}
+          onEnd={color.endDrag}
+          width={AREA_WIDTH}
+          height={areaHeight}
         />
 
         <div className="ck-picker-controls">
           <div className="ck-controls-row">
             <div className="ck-sliders-group">
               <HueSlider
-                hsva={hsva}
-                onChange={updateColor}
-                onStart={startDrag}
-                onEnd={endDrag}
+                hsva={color.hsva}
+                onChange={color.updateColor}
+                onStart={color.startDrag}
+                onEnd={color.endDrag}
               />
               {showAlpha && (
                 <AlphaSlider
-                  hsva={hsva}
-                  onChange={updateColor}
-                  onStart={startDrag}
-                  onEnd={endDrag}
+                  hsva={color.hsva}
+                  onChange={color.updateColor}
+                  onStart={color.startDrag}
+                  onEnd={color.endDrag}
                 />
               )}
             </div>
@@ -131,7 +109,7 @@ export function PickerLayout({
                       key={mode}
                       type="button"
                       onClick={() => setInputMode(mode)}
-                      className={`ck-input-mode-btn ${validInputMode === mode ? 'active' : ''}`}
+                      className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
                       data-testid={`input-mode-${mode}`}
                     >
                       {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
@@ -145,15 +123,17 @@ export function PickerLayout({
           {showPreview && (
             <div className="ck-action-buttons-row">
               <ColorPreview
-                colorValue={colorValue}
+                colorValue={color.colorValue}
                 size="lg"
                 className="ck-preview-wide"
               />
               <div className="ck-action-buttons">
-                {showEyeDropper && <EyeDropperButton onPick={setFromString} />}
-                {validInputMode === 'single' && (
+                {showEyeDropper && (
+                  <EyeDropperButton onPick={color.setFromString} />
+                )}
+                {inputMode === 'single' && (
                   <select
-                    value={validFormat}
+                    value={format}
                     onChange={(e) => setFormat(e.target.value as ColorFormat)}
                     className="ck-select"
                     data-testid="color-format-select"
@@ -172,35 +152,35 @@ export function PickerLayout({
           {showInputs && (
             <div className="ck-inputs-values">
               <InputValuePanel
-                inputMode={validInputMode}
-                colorValue={colorValue}
-                format={validFormat}
-                setFromString={setFromString}
+                inputMode={inputMode}
+                colorValue={color.colorValue}
+                format={format}
+                setFromString={color.setFromString}
                 showAlpha={showAlpha}
                 showCopyButton={showCopyButton}
-                onCopy={handleCopy}
+                onCopy={onCopy}
               />
             </div>
           )}
 
           {enableHistory && history.length > 0 && (
-            <RecentColors colors={history} onColorSelect={handlePresetSelect} />
+            <RecentColors colors={history} onColorSelect={onSelectColor} />
           )}
 
-          {showPresets && customPresets.length > 0 && (
+          {showPresets && presets.customPresets.length > 0 && (
             <div className="ck-presets">
               <PresetColors
-                colors={customPresets}
-                selectedColor={colorValue.hex}
-                onSelect={handlePresetSelect}
+                colors={presets.customPresets}
+                selectedColor={color.colorValue.hex}
+                onSelect={onSelectColor}
                 onUpdatePreset={(index) =>
-                  handleUpdatePreset(index, colorValue.hex)
+                  presets.updatePreset(index, color.colorValue.hex)
                 }
-                onDeletePreset={handleDeletePreset}
-                onAddPreset={handleAddPreset}
-                presetGroups={normalizedPresetGroups}
-                selectedPresetGroup={selectedPresetGroup}
-                onLoadPresetGroup={handleLoadPresetGroup}
+                onDeletePreset={presets.deletePreset}
+                onAddPreset={() => presets.addPreset(color.colorValue.hex)}
+                presetGroups={presets.normalizedPresetGroups}
+                selectedPresetGroup={presets.selectedPresetGroup}
+                onLoadPresetGroup={presets.loadPresetGroup}
               />
             </div>
           )}

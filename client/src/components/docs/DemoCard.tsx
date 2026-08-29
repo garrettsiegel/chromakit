@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { Language } from 'prism-react-renderer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { CodeBlock } from '@/components/demo/CodeBlock';
+import { CodeBlock } from '@/components/shared/CodeBlock';
 
 interface DemoCardProps {
   code: string;

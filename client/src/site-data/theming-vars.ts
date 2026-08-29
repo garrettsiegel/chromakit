@@ -1,4 +1,4 @@
-import type { PropRow } from '@/components/docs/PropsTable';
+import type { PropRow } from '@/components/docs/props-table-types';
 
 // CSS custom properties defined in lib/color-picker/chromakit.css.
 // The "default" column shows the light-theme value.

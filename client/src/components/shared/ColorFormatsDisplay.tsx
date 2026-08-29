@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import type { ColorFormat, ColorValue } from '@/lib/color-picker';
 import { formatColor } from '@/lib/color-picker';
-import { CopyButton } from './CopyButton';
+import { CopyIconButton } from './CopyIconButton';
 
 const COLOR_FORMATS: ColorFormat[] = [
   'hex',
@@ -33,7 +33,7 @@ export const ColorFormatsDisplay = memo(function ColorFormatsDisplay({ colorValu
             <code className="flex-1 text-xs font-mono truncate">
               {formatted}
             </code>
-            <CopyButton text={formatted} />
+            <CopyIconButton text={formatted} />
           </div>
         );
       })}

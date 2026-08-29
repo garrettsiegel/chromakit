@@ -55,28 +55,11 @@ export function ColorPicker({
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
 
-  const {
-    customPresets,
-    normalizedPresetGroups,
-    selectedPresetGroup,
-    updatePreset,
-    deletePreset,
-    addPreset,
-    loadPresetGroup,
-  } = usePresets(presets, presetGroups);
+  const presetState = usePresets(presets, presetGroups);
 
   const { history, remember } = useColorHistory(enableHistory, historySize);
 
-  const dimensions = useMemo(
-    () => ({
-      areaWidth: 160,
-      areaHeight: height,
-    }),
-    [height]
-  );
-
-  const { hsva, colorValue, updateColor, setFromString, startDrag, endDrag } =
-    useColorState(initialColor, onChange, onChangeComplete, value);
+  const color = useColorState(initialColor, onChange, onChangeComplete, value);
 
   const [format, setFormat] = useState<ColorFormat>(() => formats[0] || 'hex');
 
@@ -101,12 +84,14 @@ export function ColorPicker({
     return formats.includes(format) ? format : formats[0] || 'hex';
   }, [formats, format]);
 
-  const handlePresetSelect = useCallback(
-    (color: string) => {
-      const newColorValue = setFromString(color);
+  const { setFromString } = color;
+
+  const handleSelectColor = useCallback(
+    (selected: string) => {
+      const newColorValue = setFromString(selected);
       if (newColorValue) {
         onChangeComplete?.(newColorValue);
-        remember(color);
+        remember(selected);
       }
     },
     [setFromString, onChangeComplete, remember]
@@ -114,55 +99,34 @@ export function ColorPicker({
 
   const handleCopy = useCallback(
     (success: boolean) => {
-      if (success) remember(colorValue.hex);
+      if (success) remember(color.colorValue.hex);
     },
-    [colorValue.hex, remember]
-  );
-
-  const handleUpdatePreset = useCallback(
-    (index: number, color: string) => updatePreset(index, color),
-    [updatePreset]
-  );
-
-  const handleAddPreset = useCallback(
-    () => addPreset(colorValue.hex),
-    [addPreset, colorValue.hex]
+    [color.colorValue.hex, remember]
   );
 
   return (
     <PickerLayout
       className={className}
       width={width}
-      hsva={hsva}
-      updateColor={updateColor}
-      startDrag={startDrag}
-      endDrag={endDrag}
-      dimensions={dimensions}
+      areaHeight={height}
+      color={color}
+      presets={presetState}
+      formats={formats}
+      format={validFormat}
+      setFormat={setFormat}
+      inputMode={validInputMode}
+      availableModes={availableModes}
+      setInputMode={setInputMode}
+      history={history}
+      onSelectColor={handleSelectColor}
+      onCopy={handleCopy}
       showAlpha={showAlpha}
       showInputs={showInputs}
       showPreview={showPreview}
       showCopyButton={showCopyButton}
       showEyeDropper={showEyeDropper}
-      formats={formats}
-      validInputMode={validInputMode}
-      availableModes={availableModes}
-      setInputMode={setInputMode}
-      validFormat={validFormat}
-      setFormat={setFormat}
-      colorValue={colorValue}
-      setFromString={setFromString}
-      handleCopy={handleCopy}
-      enableHistory={enableHistory}
-      history={history}
-      handlePresetSelect={handlePresetSelect}
       showPresets={showPresets}
-      customPresets={customPresets}
-      handleUpdatePreset={handleUpdatePreset}
-      handleDeletePreset={deletePreset}
-      handleAddPreset={handleAddPreset}
-      normalizedPresetGroups={normalizedPresetGroups}
-      selectedPresetGroup={selectedPresetGroup}
-      handleLoadPresetGroup={loadPresetGroup}
+      enableHistory={enableHistory}
     />
   );
 }

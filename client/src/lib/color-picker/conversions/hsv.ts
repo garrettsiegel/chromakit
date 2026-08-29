@@ -1,5 +1,5 @@
 import type { RGB, RGBA, HSV, HSVA } from '../types';
-import { round } from './math';
+import { round, rgbToHue } from './math';
 
 export function rgbToHsv(rgb: RGB): HSV {
   const r = rgb.r / 255;
@@ -16,20 +16,11 @@ export function rgbToHsv(rgb: RGB): HSV {
     return { h: 0, s: round(s * 100), v: round(v * 100) };
   }
 
-  let h = 0;
-  switch (max) {
-    case r:
-      h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-      break;
-    case g:
-      h = ((b - r) / d + 2) / 6;
-      break;
-    case b:
-      h = ((r - g) / d + 4) / 6;
-      break;
-  }
-
-  return { h: round(h * 360), s: round(s * 100), v: round(v * 100) };
+  return {
+    h: round(rgbToHue(r, g, b, max, d)),
+    s: round(s * 100),
+    v: round(v * 100),
+  };
 }
 
 export function rgbaToHsva(rgba: RGBA): HSVA {
