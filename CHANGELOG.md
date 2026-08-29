@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **The text input no longer fights you while typing.** In single-format mode the input's value was derived from the color on every render, so a half-typed value like `#f0` or `rg` was overwritten before it could be finished. It now keeps what you typed until the field is committed or blurred, matching the behavior the `ColorInputs` component already had.
+
+### Changed
+
+- Internal cleanup only, with no change to the public API: the single-format input now routes through `ColorInputs` (which gained optional `showCopyButton` / `onCopy` props); the five per-space channel editors are generated from one shared factory; `rgbToHue` and the sRGB transfer functions are shared out of `conversions/math.ts` instead of being written out two or three times; and `index.ts` re-exports the conversions, hooks, and utils modules wholesale rather than re-listing every name.
+
 ## [0.4.0] - 2026-08-28
 
 ### Added
