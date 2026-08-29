@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-28
+
+### Added
+
+- **Screen color sampler (EyeDropper).** New `EyeDropperButton` component and `showEyeDropper` prop on `ColorPicker`, backed by the browser EyeDropper API. The button renders only where the API exists (Chromium today), so Firefox and Safari users never see a control that cannot work. Also exported as `isEyeDropperSupported()` and `openEyeDropper()`.
+- **CSS color keywords.** `parseColor` now accepts all 148 CSS Color 4 named colors plus `transparent`, so `red`, `rebeccapurple`, and `darkgrey` work anywhere a color string is taken. Exposed as `getNamedColor()` / `getNamedColorNames()`.
+- **`hwb()`, `lab()`, and `lch()` parsing**, joining the existing `oklch()` and `oklab()` support. CIE Lab and LCH use the D50 white point per CSS Color 4. New `hwbToRgb`, `rgbToHwb`, `labToRgb`, `lchToLab`, and `lchToRgb` conversions with `HWB`, `LAB`, and `LCH` types.
+- **`OKLABInputs` component and `oklaba` format**, completing the OKLab surface so it matches the OKLCH pair. `ColorValue` now carries an `oklaba` field.
+- **`"use client"` directive** in the built bundle, so the picker imports directly into React Server Component frameworks (Next.js App Router) without a wrapper file.
+
+### Fixed
+
+- **Hue no longer snaps to red in controlled mode.** When `value` is controlled, HSVA was re-derived from RGB on every render; black, white, and gray carry no hue in RGB, so dragging value or saturation to an edge reset the hue ring to 0. The picker now carries the last hue and saturation the user steered through those degenerate states.
+
+### Changed
+
+- Gamut mapping for out-of-sRGB OKLab and OKLCH colors now reduces chroma at constant lightness and hue, as CSS Color 4 prescribes, instead of clipping each RGB channel independently. Clipping visibly shifted the hue of vivid colors; in-gamut colors are unaffected.
+- Bundle size budget raised to 13.5 kB (ES) and 14 kB (UMD) gzipped to cover the named-color table and the new color spaces.
+- Internal: preset and history state extracted from `ColorPicker` into `usePresets` / `useColorHistory`, and the per-mode channel editors into `InputValuePanel`.
+
 ## [0.3.0] - 2026-08-28
 
 ### Added

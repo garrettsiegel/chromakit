@@ -15,6 +15,7 @@ const mockColorValue: ColorValue = {
   hex: '#ff0000',
   hex8: '#ff0000ff',
   oklab: { L: 0.628, a: 0.225, b: 0.126 },
+  oklaba: { L: 0.628, a: 0.225, b: 0.126, alpha: 1 },
   oklch: { L: 0.628, C: 0.258, h: 29.23 },
   oklcha: { L: 0.628, C: 0.258, h: 29.23, a: 1 },
 };
@@ -59,7 +60,11 @@ describe('ColorSwatch', () => {
     const onClick = vi.fn();
     const onLongPress = vi.fn();
     render(
-      <ColorSwatch color="#ff0000" onClick={onClick} onLongPress={onLongPress} />
+      <ColorSwatch
+        color="#ff0000"
+        onClick={onClick}
+        onLongPress={onLongPress}
+      />
     );
 
     const swatch = screen.getByTestId('color-swatch');
@@ -75,7 +80,11 @@ describe('ColorSwatch', () => {
     const onClick = vi.fn();
     const onLongPress = vi.fn();
     render(
-      <ColorSwatch color="#ff0000" onClick={onClick} onLongPress={onLongPress} />
+      <ColorSwatch
+        color="#ff0000"
+        onClick={onClick}
+        onLongPress={onLongPress}
+      />
     );
 
     const swatch = screen.getByTestId('color-swatch');
@@ -180,8 +189,9 @@ describe('PresetColors', () => {
   });
 
   it('hides the add-preset button once the 24-color limit is reached', () => {
-    const colors = Array.from({ length: 24 }, (_, i) =>
-      `#${i.toString(16).padStart(6, '0')}`
+    const colors = Array.from(
+      { length: 24 },
+      (_, i) => `#${i.toString(16).padStart(6, '0')}`
     );
     render(
       <PresetColors colors={colors} onSelect={vi.fn()} onAddPreset={vi.fn()} />

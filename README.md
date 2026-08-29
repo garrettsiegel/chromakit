@@ -122,12 +122,28 @@ oklch(50% 0.2 60)   // Yellow at 50% brightness
 
 ---
 
+## Accepted Color Strings
+
+`parseColor`, the `value` prop, and the text field all accept:
+
+| Form          | Examples                                      |
+| ------------- | --------------------------------------------- |
+| Hex           | `#f00`, `#ff0000`, `#ff0000cc`                |
+| Keywords      | `red`, `rebeccapurple`, `transparent`         |
+| RGB / HSL     | `rgb(255, 0, 0)`, `hsla(0, 100%, 50%, 0.5)`   |
+| HWB           | `hwb(0 0% 0%)`, `hwb(0deg 0% 0% / 50%)`       |
+| CIE Lab / LCH | `lab(54% 80.8 69.9)`, `lch(54% 106.8 40.9)`   |
+| OKLab / OKLCH | `oklab(0.63 0.22 0.13)`, `oklch(63% 0.26 29)` |
+
+Colors outside the sRGB gamut are mapped by reducing chroma at constant lightness and hue, per CSS Color 4, so vivid inputs keep their hue.
+
+---
+
 ## Framework Setup
 
-**Next.js App Router** — mark the component with `'use client'`:
+**Next.js App Router** — works out of the box; the bundle ships its own `'use client'` directive, so no wrapper file is needed:
 
 ```tsx
-'use client';
 import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
 ```
@@ -153,25 +169,25 @@ Full details: **[Framework setup docs →](https://www.chromakit.site/docs/getti
 
 The batteries-included component — color area, hue/alpha sliders, format-switchable inputs, presets, history, and copy.
 
-| Prop               | Type                                          | Default        | Description                                          |
-| ------------------ | --------------------------------------------- | -------------- | --------------------------------------------------- |
-| `value`            | `string`                                      | —              | Controlled color in any supported format            |
-| `defaultValue`     | `string`                                      | `'#6366F1'`    | Initial color for uncontrolled mode                 |
-| `onChange`         | `(color: ColorValue) => void`                 | —              | Fires on every change (drag, typing)                |
-| `onChangeComplete` | `(color: ColorValue) => void`                 | —              | Fires when a change settles (pointer up)            |
-| `formats`          | `ColorFormat[]`                               | all 11 formats | Which format tabs the inputs expose                 |
-| `showAlpha`        | `boolean`                                     | `true`         | Show the alpha (transparency) slider                |
-| `showInputs`       | `boolean`                                     | `true`         | Show the numeric / text input fields                |
-| `showPreview`      | `boolean`                                     | `true`         | Show the color preview swatch                       |
-| `showPresets`      | `boolean`                                     | `true`         | Show the preset color swatches section              |
-| `showCopyButton`   | `boolean`                                     | `true`         | Show the copy-to-clipboard button                   |
-| `presets`          | `string[]`                                    | built-in       | Custom preset colors                                |
-| `presetGroups`     | `PresetGroup[] \| Record<string, string[]>`   | built-in       | Named preset groups selectable from a dropdown      |
-| `enableHistory`    | `boolean`                                     | `true`         | Remember recent colors in `localStorage`            |
-| `historySize`      | `number`                                      | `10`           | Maximum number of colors kept in history            |
-| `width`            | `number`                                      | auto           | Picker width in pixels                              |
-| `height`           | `number`                                      | auto           | Color-area height in pixels                         |
-| `className`        | `string`                                      | —              | Extra classes on the root (the theming hook)        |
+| Prop               | Type                                        | Default        | Description                                    |
+| ------------------ | ------------------------------------------- | -------------- | ---------------------------------------------- |
+| `value`            | `string`                                    | —              | Controlled color in any supported format       |
+| `defaultValue`     | `string`                                    | `'#6366F1'`    | Initial color for uncontrolled mode            |
+| `onChange`         | `(color: ColorValue) => void`               | —              | Fires on every change (drag, typing)           |
+| `onChangeComplete` | `(color: ColorValue) => void`               | —              | Fires when a change settles (pointer up)       |
+| `formats`          | `ColorFormat[]`                             | all 11 formats | Which format tabs the inputs expose            |
+| `showAlpha`        | `boolean`                                   | `true`         | Show the alpha (transparency) slider           |
+| `showInputs`       | `boolean`                                   | `true`         | Show the numeric / text input fields           |
+| `showPreview`      | `boolean`                                   | `true`         | Show the color preview swatch                  |
+| `showPresets`      | `boolean`                                   | `true`         | Show the preset color swatches section         |
+| `showCopyButton`   | `boolean`                                   | `true`         | Show the copy-to-clipboard button              |
+| `presets`          | `string[]`                                  | built-in       | Custom preset colors                           |
+| `presetGroups`     | `PresetGroup[] \| Record<string, string[]>` | built-in       | Named preset groups selectable from a dropdown |
+| `enableHistory`    | `boolean`                                   | `true`         | Remember recent colors in `localStorage`       |
+| `historySize`      | `number`                                    | `10`           | Maximum number of colors kept in history       |
+| `width`            | `number`                                    | auto           | Picker width in pixels                         |
+| `height`           | `number`                                    | auto           | Color-area height in pixels                    |
+| `className`        | `string`                                    | —              | Extra classes on the root (the theming hook)   |
 
 `onChange` and `onChangeComplete` receive a **`ColorValue`** with every format pre-converted (`hex`, `hex8`, `rgb`, `rgba`, `hsl`, `hsla`, `hsv`, `hsva`, `oklab`, `oklch`, `oklcha`), so you never convert manually.
 
@@ -193,12 +209,12 @@ Everything below has a dedicated page with **live, interactive examples** on the
 
 ## Browser Support
 
-| Environment            | Minimum version |
-| ---------------------- | --------------- |
-| Chrome / Edge          | 88+             |
-| Firefox                | 87+             |
-| Safari                 | 15+             |
-| Node.js (SSR / build)  | 20+             |
+| Environment           | Minimum version |
+| --------------------- | --------------- |
+| Chrome / Edge         | 88+             |
+| Firefox               | 87+             |
+| Safari                | 15+             |
+| Node.js (SSR / build) | 20+             |
 
 ChromaKit computes OKLCH/OKLAB in JavaScript, so it works even where the CSS `oklch()` syntax isn't yet supported — you only need `oklch()` support in your app if you render the string output.
 
@@ -210,11 +226,16 @@ ChromaKit is written in TypeScript and ships complete declarations. Every public
 
 ```tsx
 import type {
-  RGB, RGBA,
-  HSL, HSLA,
-  HSV, HSVA,
-  OKLAB, OKLABA,
-  OKLCH, OKLCHA,
+  RGB,
+  RGBA,
+  HSL,
+  HSLA,
+  HSV,
+  HSVA,
+  OKLAB,
+  OKLABA,
+  OKLCH,
+  OKLCHA,
   ColorFormat,
   ColorValue,
   ColorPickerProps,

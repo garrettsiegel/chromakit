@@ -6,9 +6,42 @@ function srgbToLinear(c: number): number {
   return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
 }
 
-function linearToSrgb(c: number): number {
+/** Encode a linear-light channel as an sRGB value, unclamped and unrounded. */
+function linearToSrgbChannel(c: number): number {
   const v = c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
-  return Math.round(clamp(v * 255, 0, 255));
+  return v * 255;
+}
+
+function linearToSrgb(c: number): number {
+  return Math.round(clamp(linearToSrgbChannel(c), 0, 255));
+}
+
+/** Linear-light sRGB channels for an OKLab color, before gamut mapping. */
+function oklabToLinearSrgb(oklab: OKLAB): [number, number, number] {
+  const l_ = oklab.L + 0.3963377774 * oklab.a + 0.2158037573 * oklab.b;
+  const m_ = oklab.L - 0.1055613458 * oklab.a - 0.0638541728 * oklab.b;
+  const s_ = oklab.L - 0.0894841775 * oklab.a - 1.291485548 * oklab.b;
+
+  const l = l_ * l_ * l_;
+  const m = m_ * m_ * m_;
+  const s = s_ * s_ * s_;
+
+  return [
+    +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+  ];
+}
+
+// A channel this far outside 0-255 still rounds into range, so treating it as
+// in-gamut avoids pointless chroma reduction from floating-point noise.
+const GAMUT_TOLERANCE = 0.5;
+
+function isInGamut(linear: [number, number, number]): boolean {
+  return linear.every((channel) => {
+    const v = linearToSrgbChannel(channel);
+    return v >= -GAMUT_TOLERANCE && v <= 255 + GAMUT_TOLERANCE;
+  });
 }
 
 export function rgbToOklab(rgb: RGB): OKLAB {
@@ -36,23 +69,45 @@ export function rgbaToOklaba(rgba: RGBA): OKLABA {
   return { ...oklab, alpha: round(rgba.a, 3) };
 }
 
+/**
+ * Convert OKLab to sRGB.
+ *
+ * Colors outside the sRGB gamut are gamut-mapped by reducing chroma at constant
+ * lightness and hue (a binary search for the most saturated in-gamut color),
+ * which is what CSS Color 4 prescribes. Clipping each channel independently
+ * would be cheaper but visibly shifts the hue of vivid out-of-gamut colors.
+ */
 export function oklabToRgb(oklab: OKLAB): RGB {
-  const l_ = oklab.L + 0.3963377774 * oklab.a + 0.2158037573 * oklab.b;
-  const m_ = oklab.L - 0.1055613458 * oklab.a - 0.0638541728 * oklab.b;
-  const s_ = oklab.L - 0.0894841775 * oklab.a - 1.291485548 * oklab.b;
+  const L = clamp(oklab.L, 0, 1);
+  const direct = oklabToLinearSrgb({ ...oklab, L });
 
-  const l = l_ * l_ * l_;
-  const m = m_ * m_ * m_;
-  const s = s_ * s_ * s_;
+  if (isInGamut(direct)) {
+    return {
+      r: linearToSrgb(direct[0]),
+      g: linearToSrgb(direct[1]),
+      b: linearToSrgb(direct[2]),
+    };
+  }
 
-  const r = +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
-  const g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
-  const b = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
+  const { C, h } = oklabToOklch({ ...oklab, L });
+  let low = 0;
+  let high = C;
 
+  // 24 halvings resolve chroma far below one 8-bit step.
+  for (let i = 0; i < 24; i++) {
+    const mid = (low + high) / 2;
+    if (isInGamut(oklabToLinearSrgb(oklchToOklab({ L, C: mid, h })))) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+
+  const mapped = oklabToLinearSrgb(oklchToOklab({ L, C: low, h }));
   return {
-    r: linearToSrgb(r),
-    g: linearToSrgb(g),
-    b: linearToSrgb(b),
+    r: linearToSrgb(mapped[0]),
+    g: linearToSrgb(mapped[1]),
+    b: linearToSrgb(mapped[2]),
   };
 }
 

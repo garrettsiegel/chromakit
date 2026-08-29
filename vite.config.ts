@@ -31,6 +31,10 @@ export default defineConfig({
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
+        // The picker is interactive, so every consumer needs it on the client.
+        // Emitting the directive here means React Server Component frameworks
+        // (Next.js App Router) can import it directly without a wrapper file.
+        banner: "'use client';",
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',

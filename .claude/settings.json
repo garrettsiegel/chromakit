@@ -21,5 +21,8 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": ["Bash(gh pr merge:*)"]
   }
 }

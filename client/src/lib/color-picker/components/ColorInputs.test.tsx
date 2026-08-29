@@ -42,6 +42,7 @@ const mockColorValue: ColorValue = {
   hex: '#ff0000',
   hex8: '#ff0000ff',
   oklab: { L: 0.628, a: 0.225, b: 0.126 },
+  oklaba: { L: 0.628, a: 0.225, b: 0.126, alpha: 1 },
   oklch: { L: 0.628, C: 0.258, h: 29.23 },
   oklcha: { L: 0.628, C: 0.258, h: 29.23, a: 1 },
 };

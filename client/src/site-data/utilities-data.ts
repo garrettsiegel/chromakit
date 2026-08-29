@@ -58,8 +58,16 @@ export const conversionGroups: UtilGroup[] = [
     title: 'HSL & HSV',
     description: 'Cylindrical RGB models.',
     rows: [
-      { name: 'rgbToHsl', type: '(rgb: RGB) => HSL', description: 'RGB → HSL.' },
-      { name: 'hslToRgb', type: '(hsl: HSL) => RGB', description: 'HSL → RGB.' },
+      {
+        name: 'rgbToHsl',
+        type: '(rgb: RGB) => HSL',
+        description: 'RGB → HSL.',
+      },
+      {
+        name: 'hslToRgb',
+        type: '(hsl: HSL) => RGB',
+        description: 'HSL → RGB.',
+      },
       {
         name: 'rgbaToHsla',
         type: '(rgba: RGBA) => HSLA',
@@ -70,8 +78,16 @@ export const conversionGroups: UtilGroup[] = [
         type: '(hsla: HSLA) => RGBA',
         description: 'HSLA → RGBA.',
       },
-      { name: 'rgbToHsv', type: '(rgb: RGB) => HSV', description: 'RGB → HSV.' },
-      { name: 'hsvToRgb', type: '(hsv: HSV) => RGB', description: 'HSV → RGB.' },
+      {
+        name: 'rgbToHsv',
+        type: '(rgb: RGB) => HSV',
+        description: 'RGB → HSV.',
+      },
+      {
+        name: 'hsvToRgb',
+        type: '(hsv: HSV) => RGB',
+        description: 'HSV → RGB.',
+      },
       {
         name: 'rgbaToHsva',
         type: '(rgba: RGBA) => HSVA',
@@ -141,6 +157,55 @@ export const conversionGroups: UtilGroup[] = [
       },
     ],
   },
+  {
+    id: 'hwb-lab-lch',
+    title: 'HWB, CIE Lab & LCH',
+    description: 'Additional CSS Color 4 spaces (Lab and LCH use D50).',
+    rows: [
+      {
+        name: 'hwbToRgb',
+        type: '(hwb: HWB) => RGB',
+        description: 'HWB → RGB.',
+      },
+      {
+        name: 'rgbToHwb',
+        type: '(rgb: RGB) => HWB',
+        description: 'RGB → HWB.',
+      },
+      {
+        name: 'labToRgb',
+        type: '(lab: LAB) => RGB',
+        description: 'CIE Lab → RGB.',
+      },
+      {
+        name: 'lchToRgb',
+        type: '(lch: LCH) => RGB',
+        description: 'CIE LCH → RGB.',
+      },
+      {
+        name: 'lchToLab',
+        type: '(lch: LCH) => LAB',
+        description: 'CIE LCH → CIE Lab.',
+      },
+    ],
+  },
+  {
+    id: 'named-colors',
+    title: 'Named colors',
+    description: 'The 148 CSS color keywords.',
+    rows: [
+      {
+        name: 'getNamedColor',
+        type: '(name: string) => string | null',
+        description: 'Resolve a CSS keyword to hex, or null.',
+      },
+      {
+        name: 'getNamedColorNames',
+        type: '() => string[]',
+        description: 'Every supported CSS color keyword.',
+      },
+    ],
+  },
 ];
 
 export const helperRows: PropRow[] = [
@@ -203,5 +268,15 @@ export const helperRows: PropRow[] = [
     name: 'copyToClipboard',
     type: '(text: string) => Promise<boolean>',
     description: 'Copy text, resolving to success.',
+  },
+  {
+    name: 'isEyeDropperSupported',
+    type: '() => boolean',
+    description: 'Whether this browser can sample screen colors.',
+  },
+  {
+    name: 'openEyeDropper',
+    type: '() => Promise<string | null>',
+    description: 'Sample a screen color; null if cancelled.',
   },
 ];

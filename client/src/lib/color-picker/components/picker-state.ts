@@ -1,0 +1,110 @@
+import { useCallback, useMemo, useReducer, useState } from 'react';
+import type { PresetGroup, PresetGroupsInput } from '../types';
+import { getColorHistory, addToColorHistory } from '../utils';
+
+const MAX_CUSTOM_PRESETS = 24;
+
+type PresetAction =
+  | { type: 'reset'; presets: string[] }
+  | { type: 'set'; presets: string[] }
+  | { type: 'update'; index: number; color: string }
+  | { type: 'delete'; index: number }
+  | { type: 'add'; color: string; limit: number };
+
+function presetsReducer(state: string[], action: PresetAction): string[] {
+  switch (action.type) {
+    case 'reset':
+    case 'set':
+      return [...action.presets];
+    case 'update': {
+      if (action.index < 0 || action.index >= state.length) return state;
+      const next = [...state];
+      next[action.index] = action.color;
+      return next;
+    }
+    case 'delete':
+      return state.filter((_, i) => i !== action.index);
+    case 'add':
+      return state.length < action.limit ? [...state, action.color] : state;
+    default:
+      return state;
+  }
+}
+
+/**
+ * Editable swatch state: the working preset list plus the named groups a user
+ * can load into it.
+ */
+export function usePresets(
+  presets: string[],
+  presetGroups: PresetGroupsInput | undefined
+) {
+  const [customPresets, dispatch] = useReducer(
+    presetsReducer,
+    presets,
+    (initial) => [...initial]
+  );
+
+  const [selectedPresetGroup, setSelectedPresetGroup] = useState<string | null>(
+    null
+  );
+
+  const normalizedPresetGroups = useMemo<PresetGroup[]>(() => {
+    if (!presetGroups) return [];
+    if (Array.isArray(presetGroups)) return presetGroups;
+    return Object.entries(presetGroups).map(([name, colors]) => ({
+      name,
+      colors,
+    }));
+  }, [presetGroups]);
+
+  const updatePreset = useCallback((index: number, color: string) => {
+    dispatch({ type: 'update', index, color });
+  }, []);
+
+  const deletePreset = useCallback((index: number) => {
+    dispatch({ type: 'delete', index });
+  }, []);
+
+  const addPreset = useCallback((color: string) => {
+    dispatch({ type: 'add', color, limit: MAX_CUSTOM_PRESETS });
+  }, []);
+
+  const loadPresetGroup = useCallback(
+    (groupName: string) => {
+      const group = normalizedPresetGroups.find((g) => g.name === groupName);
+      if (group) {
+        dispatch({ type: 'set', presets: group.colors });
+        setSelectedPresetGroup(groupName);
+      }
+    },
+    [normalizedPresetGroups]
+  );
+
+  return {
+    customPresets,
+    normalizedPresetGroups,
+    selectedPresetGroup,
+    updatePreset,
+    deletePreset,
+    addPreset,
+    loadPresetGroup,
+  };
+}
+
+/** Recently used colors, persisted to localStorage when enabled. */
+export function useColorHistory(enabled: boolean, size: number) {
+  const [history, setHistory] = useState<string[]>(() =>
+    enabled ? getColorHistory().slice(0, size) : []
+  );
+
+  const remember = useCallback(
+    (color: string) => {
+      if (!enabled) return;
+      setHistory(addToColorHistory(color, size));
+    },
+    [enabled, size]
+  );
+
+  return { history, remember };
+}
