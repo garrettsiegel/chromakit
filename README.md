@@ -17,7 +17,7 @@ A controlled React color picker and conversion toolkit for modern color systems.
 
 ChromaKit combines a complete color picker, composable picker primitives, color parsing, conversion utilities, and WCAG contrast helpers in one TypeScript package. It supports React 18 and 19 and declares zero runtime dependencies.
 
-Current production budgets, measured with `size-limit` for v0.5.0:
+Current production budgets, measured with `size-limit` for v0.5.1:
 
 | Asset      | Gzipped size |
 | ---------- | -----------: |
