@@ -140,12 +140,8 @@
   height: 100%;
 }
 
-.ck-color-area:focus {
-  outline: none;
-}
-
-.ck-color-area:focus-visible {
-  outline: 2px solid var(--ck-primary);
+.ck-color-area:focus-within {
+  outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:
     var(--ck-glass-shadow),
@@ -163,6 +159,47 @@
 
 .ck-color-area-layer--brightness {
   background: linear-gradient(to top, black, transparent);
+}
+
+.ck-color-area-axis {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ck-color-area-axis-status {
+  position: absolute;
+  z-index: 4;
+  inset-inline-start: 8px;
+  inset-block-end: 8px;
+  padding: 4px 6px;
+  border: 1px solid currentColor;
+  background: var(--ck-glass-bg-strong);
+  color: var(--ck-text);
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ck-color-area-axis-status span {
+  display: none;
+}
+
+.ck-color-area-axis--saturation:focus ~ .ck-color-area-axis-status,
+.ck-color-area-axis--brightness:focus ~ .ck-color-area-axis-status {
+  opacity: 1;
+}
+
+.ck-color-area-axis--saturation:focus
+  ~ .ck-color-area-axis-status
+  .ck-color-area-status-saturation,
+.ck-color-area-axis--brightness:focus
+  ~ .ck-color-area-axis-status
+  .ck-color-area-status-brightness {
+  display: inline;
 }
 
 .ck-color-area-thumb {
@@ -217,16 +254,12 @@
 /* Sliders - glassmorphic with glow effects */
 .ck-hue-slider {
   position: relative;
-  height: 10px;
+  height: 44px;
   width: 100%;
   cursor: pointer;
   touch-action: none;
   user-select: none;
-  border-radius: 9999px;
-  box-shadow:
-    var(--ck-glass-shadow),
-    inset 0 0 0 1px var(--ck-glass-border);
-  border: 1px solid var(--ck-glass-border);
+  border-radius: var(--ck-radius-sm);
   transition: box-shadow 0.2s ease;
 }
 
@@ -242,7 +275,7 @@
 }
 
 .ck-hue-slider:focus-visible {
-  outline: 2px solid var(--ck-primary);
+  outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:
     var(--ck-glass-shadow),
@@ -251,7 +284,8 @@
 
 .ck-hue-slider-track {
   position: absolute;
-  inset: 0;
+  inset: 17px 0;
+  border: 1px solid var(--ck-glass-border);
   border-radius: 9999px;
   background: linear-gradient(
     to right,
@@ -267,8 +301,13 @@
 
 .ck-hue-slider--vertical,
 .ck-alpha-slider--vertical {
-  width: 16px;
+  width: 44px;
   height: 100%;
+}
+
+.ck-hue-slider--vertical .ck-hue-slider-track,
+.ck-alpha-slider--vertical .ck-alpha-slider-track {
+  inset: 0 17px;
 }
 
 .ck-hue-slider--vertical .ck-hue-slider-track {
@@ -291,8 +330,8 @@
 
 .ck-slider-thumb {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 16px;
+  height: 16px;
   top: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -319,16 +358,12 @@
 /* Alpha Slider - glassmorphic */
 .ck-alpha-slider {
   position: relative;
-  height: 10px;
+  height: 44px;
   width: 100%;
   cursor: pointer;
   touch-action: none;
   user-select: none;
-  border-radius: 9999px;
-  box-shadow:
-    var(--ck-glass-shadow),
-    inset 0 0 0 1px var(--ck-glass-border);
-  border: 1px solid var(--ck-glass-border);
+  border-radius: var(--ck-radius-sm);
   transition: box-shadow 0.2s ease;
 }
 
@@ -344,7 +379,7 @@
 }
 
 .ck-alpha-slider:focus-visible {
-  outline: 2px solid var(--ck-primary);
+  outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:
     var(--ck-glass-shadow),
@@ -353,7 +388,8 @@
 
 .ck-alpha-slider-track {
   position: absolute;
-  inset: 0;
+  inset: 17px 0;
+  border: 1px solid var(--ck-glass-border);
   border-radius: 9999px;
 }
 
@@ -450,11 +486,15 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
   color: var(--ck-text-muted);
   white-space: nowrap;
   min-width: 0;
+  min-height: 44px;
   position: relative;
 }
 
@@ -490,7 +530,7 @@
   flex: 1;
   min-width: 0;
   padding: 5px 7px;
-  height: 30px;
+  min-height: 44px;
   font-size: 11px;
   font-family:
     ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
@@ -501,7 +541,10 @@
   border-radius: var(--ck-radius-sm);
   color: var(--ck-text);
   outline: none;
-  transition: all 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ck-input:hover {
@@ -518,7 +561,7 @@
 /* Format select - glassmorphic */
 .ck-select {
   padding: 5px 7px;
-  height: 30px;
+  min-height: 44px;
   font-size: 10px;
   font-weight: 500;
   background: var(--ck-glass-bg);
@@ -532,7 +575,10 @@
   min-width: 70px;
   max-width: 100px;
   flex-shrink: 0;
-  transition: all 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ck-select:hover {
@@ -586,7 +632,11 @@
   color: var(--ck-text);
   outline: none;
   width: 100%;
-  transition: all 0.2s ease;
+  min-height: 44px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ck-channel-input:hover {
@@ -648,7 +698,12 @@
   border-radius: 4px;
   color: var(--ck-primary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ck-presets-edit-btn:hover {
@@ -668,7 +723,11 @@
   color: var(--ck-text);
   cursor: pointer;
   outline: none;
-  transition: all 0.2s ease;
+  min-height: 44px;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .ck-presets-dropdown:hover {
@@ -687,7 +746,7 @@
 .ck-swatch-wrapper {
   position: relative;
   aspect-ratio: 1;
-  min-height: 20px;
+  min-height: 44px;
 }
 
 .ck-swatch-wrapper .ck-swatch-btn {
@@ -698,11 +757,14 @@
 
 .ck-swatch-btn {
   aspect-ratio: 1;
-  min-height: 20px;
+  min-height: 44px;
   border: none;
   border-radius: var(--ck-radius-sm);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   padding: 0;
@@ -819,7 +881,7 @@
 }
 
 .ck-swatch-btn:focus-visible {
-  outline: 2px solid var(--ck-primary);
+  outline: 3px solid var(--ck-primary);
   outline-offset: 2px;
 }
 
@@ -837,8 +899,8 @@
 
 .ck-eyedropper-btn,
 .ck-copy-btn {
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -848,7 +910,12 @@
   border: 1px solid var(--ck-glass-border);
   border-radius: var(--ck-radius-sm);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--ck-text-muted);
   padding: 0;
   box-shadow: var(--ck-glass-shadow);
@@ -872,7 +939,7 @@
 
 .ck-eyedropper-btn:focus-visible,
 .ck-copy-btn:focus-visible {
-  outline: 2px solid var(--ck-primary);
+  outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:
     var(--ck-glass-shadow),
@@ -928,11 +995,14 @@
 .ck-recent-color-swatch {
   width: 100%;
   aspect-ratio: 1;
-  min-height: 20px;
+  min-height: 44px;
   border: 1px solid var(--ck-glass-border);
   border-radius: var(--ck-radius-sm);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0;
   box-shadow:
     var(--ck-glass-shadow),
@@ -948,7 +1018,7 @@
 }
 
 .ck-recent-color-swatch:focus-visible {
-  outline: 2px solid var(--ck-primary);
+  outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:
     var(--ck-glass-shadow),
@@ -966,6 +1036,7 @@
 @media (max-width: 640px) {
   .ck-color-picker {
     flex-direction: column;
+    min-width: 100%;
   }
 
   .ck-picker-main {

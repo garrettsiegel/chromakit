@@ -1,50 +1,48 @@
 ---
-import { Palette, Code2, Zap } from 'lucide-react';
-
-// No client:* directive on the icons below: Astro renders framework
-// components to static HTML at build time and ships zero JS for them.
-const FEATURES = [
-  {
-    Icon: Palette,
-    title: 'OKLCH Color Space',
-    description:
-      'Perceptually uniform colors that match human vision. Create smooth gradients without muddy middle tones.',
-  },
-  {
-    Icon: Code2,
-    title: 'Composable Components',
-    description:
-      'Build custom pickers with ColorArea, HueSlider, and more. Complete control over your design.',
-  },
-  {
-    Icon: Zap,
-    title: 'Performance First',
-    description:
-      '60 FPS interactions with optimized React 19 hooks. Zero dependencies. Built for production.',
-  },
+const FACTS = [
+  ['React', '18 and 19 peer support'],
+  ['Runtime', '0 package dependencies'],
+  ['TypeScript', 'Strict, exported types'],
+  ['Spaces', 'OKLCH · OKLAB · HSL · HSV · RGB · HEX'],
+  ['Theming', 'Documented --ck-* CSS variables'],
+  ['ES bundle', '12.4 kB gzip, measured locally'],
 ];
 ---
 
-<section class="relative py-16 md:py-24">
-  <div class="container mx-auto px-6 relative z-10">
-    <div class="max-w-5xl mx-auto">
-      <div class="grid md:grid-cols-3 gap-8">
-        {
-          FEATURES.map(({ Icon, title, description }) => (
-            <div class="space-y-4 text-center">
-              <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary">
-                <Icon className="w-6 h-6" />
-              </div>
-              <div class="space-y-2">
-                <h3 class="text-lg font-semibold">{title}</h3>
-                <p class="text-sm text-muted-foreground leading-relaxed">
-                  {description}
-                </p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
+<section class="facts-section" aria-labelledby="facts-title">
+  <div class="container">
+    <div class="facts-heading">
+      <h2 id="facts-title">Built to join a system, not become one.</h2>
     </div>
+    <dl class="facts-grid rule-grid">
+      {
+        FACTS.map(([term, detail]) => (
+          <div>
+            <dt>{term}</dt>
+            <dd>{detail}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <figure class="color-study">
+      <picture>
+        <source srcset="/brand/color-study-960.avif" type="image/avif" />
+        <source srcset="/brand/color-study-960.webp" type="image/webp" />
+        <img
+          src="/brand/color-study-master.png"
+          alt=""
+          width="1492"
+          height="1054"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+      <figcaption>
+        <p>
+          Perceptual spaces keep lightness and chroma explicit. ChromaKit keeps
+          those values available as data, not decoration.
+        </p>
+      </figcaption>
+    </figure>
   </div>
 </section>

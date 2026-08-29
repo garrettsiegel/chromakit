@@ -6,7 +6,7 @@ const controlledCode = `const [color, setColor] = useState('#6366F1');
 
 <ColorPicker
   value={color}
-  onChange={(c) => setColor(c.hex)}
+  onChange={(c) => setColor(c.hex8)}
   onChangeComplete={(c) => console.log('final', c.oklch)}
 />`;
 
@@ -14,7 +14,7 @@ export const ControlledDemoCard = () => {
   const [color, setColor] = useState('#6366F1');
   return (
     <DemoCard code={controlledCode}>
-      <ColorPicker value={color} onChange={(c) => setColor(c.hex)} />
+      <ColorPicker value={color} onChange={(c) => setColor(c.hex8)} />
     </DemoCard>
   );
 };

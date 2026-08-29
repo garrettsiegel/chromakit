@@ -42,50 +42,43 @@ export function ColorArea({
     containerRef
   );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
+  const handleAxisKeyDown = useCallback(
+    (axis: 's' | 'v', e: KeyboardEvent<HTMLDivElement>) => {
       const step = e.shiftKey ? 10 : 1;
-      let newS = hsva.s;
-      let newV = hsva.v;
+      let nextValue = hsva[axis];
 
       switch (e.key) {
         case 'ArrowLeft':
-          e.preventDefault();
-          newS = Math.max(0, hsva.s - step);
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          newS = Math.min(100, hsva.s + step);
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          newV = Math.min(100, hsva.v + step);
-          break;
         case 'ArrowDown':
           e.preventDefault();
-          newV = Math.max(0, hsva.v - step);
+          nextValue = Math.max(0, nextValue - step);
+          break;
+        case 'ArrowRight':
+        case 'ArrowUp':
+          e.preventDefault();
+          nextValue = Math.min(100, nextValue + step);
           break;
         case 'Home':
           e.preventDefault();
-          newS = 0;
+          nextValue = 0;
           break;
         case 'End':
           e.preventDefault();
-          newS = 100;
+          nextValue = 100;
           break;
         case 'PageUp':
           e.preventDefault();
-          newV = Math.min(100, hsva.v + 10);
+          nextValue = Math.min(100, nextValue + 10);
           break;
         case 'PageDown':
           e.preventDefault();
-          newV = Math.max(0, hsva.v - 10);
+          nextValue = Math.max(0, nextValue - 10);
           break;
         default:
           return;
       }
 
-      onChange({ ...hsva, s: newS, v: newV });
+      onChange({ ...hsva, [axis]: nextValue });
     },
     [hsva, onChange]
   );
@@ -108,22 +101,50 @@ export function ColorArea({
   return (
     <div
       ref={containerRef}
-      role="slider"
-      aria-label="Color saturation and value"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={hsva.s}
-      aria-valuetext={`Saturation ${hsva.s}%, Value ${hsva.v}%`}
-      tabIndex={0}
+      role="group"
+      aria-label="Saturation and brightness color area"
       className={`ck-color-area ${className}`}
       style={height != null ? { width, height } : { width }}
       onPointerDown={handlePointerDown}
-      onKeyDown={handleKeyDown}
       data-testid="color-area"
     >
       <div className="ck-color-area-layer" style={backgroundStyle} />
       <div className="ck-color-area-layer ck-color-area-layer--saturation" />
       <div className="ck-color-area-layer ck-color-area-layer--brightness" />
+      <div
+        className="ck-color-area-axis ck-color-area-axis--saturation"
+        role="slider"
+        tabIndex={0}
+        aria-label="Saturation"
+        aria-orientation="horizontal"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={hsva.s}
+        aria-valuetext={`${hsva.s}% saturation`}
+        onKeyDown={(event) => handleAxisKeyDown('s', event)}
+        data-testid="saturation-slider"
+      />
+      <div
+        className="ck-color-area-axis ck-color-area-axis--brightness"
+        role="slider"
+        tabIndex={0}
+        aria-label="Brightness"
+        aria-orientation="vertical"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={hsva.v}
+        aria-valuetext={`${hsva.v}% brightness`}
+        onKeyDown={(event) => handleAxisKeyDown('v', event)}
+        data-testid="brightness-slider"
+      />
+      <div className="ck-color-area-axis-status" aria-hidden="true">
+        <span className="ck-color-area-status-saturation">
+          Saturation {hsva.s}%
+        </span>
+        <span className="ck-color-area-status-brightness">
+          Brightness {hsva.v}%
+        </span>
+      </div>
       <div
         className="ck-color-area-thumb"
         style={thumbStyle}

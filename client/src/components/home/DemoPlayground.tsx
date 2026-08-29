@@ -1,132 +1,104 @@
-import { useState, useCallback } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useCallback, useState } from 'react';
 import {
   ColorPicker,
+  parseColor,
+  rgbaToColorValue,
   type ColorValue,
   type PresetGroup,
 } from '@/lib/color-picker';
-import { CustomPickerDemo } from '@/components/demos/CustomPickerDemo';
 import { ColorFormatsDisplay } from '@/components/shared/ColorFormatsDisplay';
 
-// ============================================================
-// PRESET GROUPS
-// ============================================================
+const INITIAL_COLOR = '#ddfe3f';
 
-const DEMO_PRESET_GROUPS: PresetGroup[] = [
+const PRESET_GROUPS: PresetGroup[] = [
   {
-    name: 'Material',
+    name: 'Workbench',
     colors: [
-      '#F44336',
-      '#E91E63',
-      '#9C27B0',
-      '#673AB7',
-      '#3F51B5',
-      '#2196F3',
-      '#03A9F4',
-      '#00BCD4',
-      '#009688',
-      '#4CAF50',
-      '#8BC34A',
-      '#CDDC39',
-    ],
-  },
-  {
-    name: 'Tailwind',
-    colors: [
-      '#EF4444',
-      '#F97316',
-      '#EAB308',
-      '#22C55E',
-      '#10B981',
-      '#14B8A6',
-      '#06B6D4',
-      '#0EA5E9',
-      '#3B82F6',
-      '#6366F1',
-      '#8B5CF6',
-      '#EC4899',
+      '#DDFE3F',
+      '#202516',
+      '#12140E',
+      '#F6F3E9',
+      '#B7C0FF',
+      '#FF784F',
+      '#FF68C8',
     ],
   },
 ];
 
-// ============================================================
-// MAIN DEMO PLAYGROUND COMPONENT
-// ============================================================
+function initialColorValue(): ColorValue {
+  const rgba = parseColor(INITIAL_COLOR);
+  return rgba
+    ? rgbaToColorValue(rgba)
+    : rgbaToColorValue({ r: 221, g: 254, b: 63, a: 1 });
+}
 
 export function DemoPlayground() {
-  const [color, setColor] = useState('#7c3aed');
-  const [colorValue, setColorValue] = useState<ColorValue | null>(null);
+  const [color, setColor] = useState(INITIAL_COLOR);
+  const [colorValue, setColorValue] = useState(initialColorValue);
 
-  const handleColorChange = useCallback((newColor: ColorValue) => {
-    setColor(newColor.hex);
-    setColorValue(newColor);
+  const handleColorChange = useCallback((nextColor: ColorValue) => {
+    setColor(nextColor.hex8);
+    setColorValue(nextColor);
   }, []);
 
   return (
-    <section id="demo" className="relative py-16 md:py-24 bg-muted/30">
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-6xl mx-auto space-y-12">
-          {/* Heading */}
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Try It Live
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Experience the smoothest color picker for React
-            </p>
+    <section
+      id="workbench"
+      className="workbench-section"
+      aria-labelledby="workbench-title"
+    >
+      <div className="container">
+        <header className="workbench-heading">
+          <h2 id="workbench-title">The color workbench</h2>
+          <p>
+            Drag, type, use arrow keys, or choose a preset. Every representation
+            stays in sync from one color value.
+          </p>
+        </header>
+
+        <div className="workbench-grid">
+          <div className="workbench-picker">
+            <h3 className="workbench-field-title">Pick</h3>
+            <ColorPicker
+              value={color}
+              onChange={handleColorChange}
+              presetGroups={PRESET_GROUPS}
+              height={230}
+              showEyeDropper
+            />
           </div>
 
-          {/* Demo Tabs */}
-          <Tabs defaultValue="full" className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList>
-                <TabsTrigger value="full">Complete</TabsTrigger>
-                <TabsTrigger value="custom">Custom</TabsTrigger>
-                <TabsTrigger value="formats">Formats</TabsTrigger>
-              </TabsList>
+          <div className="workbench-ledger" aria-live="polite">
+            <div
+              className="workbench-sample"
+              style={{ backgroundColor: colorValue.hex }}
+            >
+              <span>{colorValue.hex}</span>
             </div>
-
-            <TabsContent value="full" className="space-y-8">
-              <div className="flex flex-col lg:flex-row items-start gap-8 justify-center">
-                <div className="flex-shrink-0">
-                  <ColorPicker
-                    value={color}
-                    onChange={handleColorChange}
-                    presetGroups={DEMO_PRESET_GROUPS}
-                  />
-                </div>
-                {colorValue && (
-                  <div className="flex-1 min-w-0 w-full lg:max-w-md">
-                    <ColorFormatsDisplay colorValue={colorValue} />
-                  </div>
-                )}
+            <dl>
+              <div>
+                <dt>Lightness</dt>
+                <dd>{Math.round(colorValue.oklch.L * 100)}%</dd>
               </div>
-            </TabsContent>
-
-            <TabsContent value="custom">
-              <div className="flex justify-center">
-                <CustomPickerDemo />
+              <div>
+                <dt>Chroma</dt>
+                <dd>{colorValue.oklch.C.toFixed(3)}</dd>
               </div>
-            </TabsContent>
-
-            <TabsContent value="formats">
-              <div className="flex flex-col items-center gap-8">
-                <div className="flex-shrink-0">
-                  <ColorPicker
-                    value={color}
-                    onChange={handleColorChange}
-                    showPresets={false}
-                    width={280}
-                  />
-                </div>
-                {colorValue && (
-                  <div className="w-full max-w-2xl">
-                    <ColorFormatsDisplay colorValue={colorValue} />
-                  </div>
-                )}
+              <div>
+                <dt>Hue</dt>
+                <dd>{Math.round(colorValue.oklch.h)}°</dd>
               </div>
-            </TabsContent>
-          </Tabs>
+              <div>
+                <dt>Alpha</dt>
+                <dd>{Math.round(colorValue.rgba.a * 100)}%</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="workbench-formats">
+            <h3 className="workbench-field-title">Copy any format</h3>
+            <ColorFormatsDisplay colorValue={colorValue} />
+          </div>
         </div>
       </div>
     </section>

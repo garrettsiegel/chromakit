@@ -1,0 +1,107 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R4 V5 · macrostructure: editorial workbench · genre: editorial · tone: technical print · anchor: olive/chartreuse · theme: studied-DNA (Helsinki Climate + Hullabaoo + Project 3) · contrast: pass (40–41) · nav: N3 · footer: Ft2 · slop: pass (42–49) · mobile: pass (34, 49–57) */
+:root {
+  color-scheme: light;
+
+  /* Brand palette — every component color resolves through this set. */
+  --color-paper: #f6f3e9;
+  --color-paper-deep: #e9e4d5;
+  --color-olive: #202516;
+  --color-ink: #12140e;
+  --color-chartreuse: #ddfe3f;
+  --color-periwinkle: #b7c0ff;
+  --color-orange: #ff784f;
+  --color-magenta: #ff68c8;
+  --color-muted-ink: #4a5140;
+  --color-paper-soft: #dcd8c9;
+  --color-paper-rule: rgb(246 243 233 / 0.55);
+  --color-paper-rule-soft: rgb(246 243 233 / 0.5);
+  --color-magenta-glow: rgb(255 104 200 / 0.35);
+
+  /* RGB channels allow Tailwind alpha modifiers without changing the source colors. */
+  --background: 246 243 233;
+  --foreground: 18 20 14;
+  --border: 108 114 94;
+  --card: 246 243 233;
+  --card-foreground: 18 20 14;
+  --card-border: 108 114 94;
+  --popover: 246 243 233;
+  --popover-foreground: 18 20 14;
+  --popover-border: 108 114 94;
+  --primary: 32 37 22;
+  --primary-foreground: 246 243 233;
+  --secondary: 233 228 213;
+  --secondary-foreground: 18 20 14;
+  --muted: 233 228 213;
+  --muted-foreground: 74 81 64;
+  --accent: 221 254 63;
+  --accent-foreground: 18 20 14;
+  --destructive: 185 48 25;
+  --destructive-foreground: 246 243 233;
+  --input: 108 114 94;
+  --ring: 32 37 22;
+
+  --font-display: 'Anybody', 'Arial Black', sans-serif;
+  --font-sans: 'Geist', Arial, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.0625rem, 1vw + 0.75rem, 1.25rem);
+  --text-title: clamp(2.75rem, 8vw, 7.5rem);
+  --text-section: clamp(2rem, 4vw, 4.5rem);
+  --leading-tight: 0.92;
+  --leading-body: 1.55;
+  --tracking-tight: -0.045em;
+  --tracking-label: 0.08em;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+
+  --content-max: 90rem;
+  --reading-max: 46rem;
+  --rule: 1px solid rgb(var(--border));
+  --rule-strong: 2px solid var(--color-ink);
+  --radius: 0.125rem;
+  --focus-size: 3px;
+  --focus-offset: 3px;
+  --motion-fast: 120ms;
+  --motion-standard: 180ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: 32 37 22;
+  --foreground: 246 243 233;
+  --border: 150 157 127;
+  --card: 32 37 22;
+  --card-foreground: 246 243 233;
+  --card-border: 150 157 127;
+  --popover: 32 37 22;
+  --popover-foreground: 246 243 233;
+  --popover-border: 150 157 127;
+  --primary: 221 254 63;
+  --primary-foreground: 18 20 14;
+  --secondary: 18 20 14;
+  --secondary-foreground: 246 243 233;
+  --muted: 18 20 14;
+  --muted-foreground: 220 216 201;
+  --accent: 221 254 63;
+  --accent-foreground: 18 20 14;
+  --destructive: 255 120 79;
+  --destructive-foreground: 18 20 14;
+  --input: 150 157 127;
+  --ring: 221 254 63;
+  --rule: 1px solid rgb(var(--border));
+  --rule-strong: 2px solid var(--color-paper);
+}

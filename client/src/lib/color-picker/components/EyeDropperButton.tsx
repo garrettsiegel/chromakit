@@ -1,5 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useSyncExternalStore } from 'react';
 import { isEyeDropperSupported, openEyeDropper } from '../utils';
+
+const subscribeToSupport = () => () => undefined;
 
 interface EyeDropperButtonProps {
   onPick: (color: string) => void;
@@ -18,6 +20,11 @@ export function EyeDropperButton({
   className = '',
 }: EyeDropperButtonProps) {
   const [picking, setPicking] = useState(false);
+  const supported = useSyncExternalStore(
+    subscribeToSupport,
+    isEyeDropperSupported,
+    () => false
+  );
 
   const handlePick = useCallback(async () => {
     setPicking(true);
@@ -26,7 +33,7 @@ export function EyeDropperButton({
     if (color) onPick(color);
   }, [onPick]);
 
-  if (!isEyeDropperSupported()) return null;
+  if (!supported) return null;
 
   return (
     <button

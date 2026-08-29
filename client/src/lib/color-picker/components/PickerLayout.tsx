@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from 'react';
 import type { ColorFormat } from '../types';
 import type { useColorState } from '../hooks';
 import type { usePresets } from './picker-state';
@@ -108,7 +109,14 @@ export function PickerLayout({
                     <button
                       key={mode}
                       type="button"
+                      aria-pressed={inputMode === mode}
                       onClick={() => setInputMode(mode)}
+                      onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          setInputMode(mode);
+                        }
+                      }}
                       className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
                       data-testid={`input-mode-${mode}`}
                     >
@@ -133,6 +141,7 @@ export function PickerLayout({
                 )}
                 {inputMode === 'single' && (
                   <select
+                    aria-label="Color format"
                     value={format}
                     onChange={(e) => setFormat(e.target.value as ColorFormat)}
                     className="ck-select"

@@ -1,74 +1,46 @@
 ---
 import StaticCode from '@/components/docs/StaticCode.astro';
 
-const basicUsageCode = `import { ColorPicker } from 'chromakit-react';
+const controlledUsage = `import { useState } from 'react';
+import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
-import { useState } from 'react';
 
-function App() {
-  const [color, setColor] = useState('#7c3aed');
+export function BrandColorField() {
+  const [color, setColor] = useState('#ddfe3f');
 
   return (
     <ColorPicker
       value={color}
-      onChange={(colorValue) => setColor(colorValue.hex)}
+      onChange={(next) => setColor(next.hex8)}
     />
   );
 }`;
 
-const customComponentsCode = `import {
-  ColorArea,
-  HueSlider,
-  AlphaSlider,
-  useColorState
-} from 'chromakit-react';
-
-function CustomPicker() {
-  const { hsva, colorValue, updateColor } = useColorState('#7c3aed');
-
-  return (
-    <div className="space-y-4">
-      <ColorArea hsva={hsva} onChange={updateColor} />
-      <HueSlider hsva={hsva} onChange={updateColor} />
-      <AlphaSlider hsva={hsva} onChange={updateColor} />
-    </div>
-  );
+const themeCode = `.brand-picker {
+  --ck-primary: #202516;
+  --ck-accent: #ddfe3f;
+  --ck-background: #f6f3e9;
+  --ck-foreground: #12140e;
+  --ck-radius: 2px;
 }`;
 ---
 
-<section id="usage" class="relative py-16 md:py-24">
-  <div class="container mx-auto px-6 relative z-10">
-    <div class="max-w-4xl mx-auto space-y-12">
-      <div class="text-center space-y-4">
-        <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
-          Quick Start
-        </h2>
-        <p class="text-lg text-muted-foreground">
-          Get started in seconds with zero configuration
-        </p>
-        <p class="text-sm text-muted-foreground">
-          For complete API documentation and advanced usage, read the
-          <a href="/docs" class="text-primary hover:underline font-medium">
-            full documentation →
-          </a>
-        </p>
-      </div>
-
-      <div class="grid gap-8">
-        <div class="space-y-4">
-          <h3 class="text-xl font-semibold">Basic Usage</h3>
-          <StaticCode code={basicUsageCode} lang="tsx" />
-        </div>
-
-        <div class="space-y-4">
-          <h3 class="text-xl font-semibold">Build Your Own</h3>
-          <p class="text-muted-foreground">
-            Compose custom pickers with individual components for complete
-            control
-          </p>
-          <StaticCode code={customComponentsCode} lang="tsx" />
-        </div>
-      </div>
-    </div>
+<section class="usage-section" aria-labelledby="usage-title">
+  <div class="container usage-heading">
+    <h2 id="usage-title">Controlled by React. Styled by CSS.</h2>
+    <p>
+      Keep color state in your application and tune the visual skin through
+      stable custom properties. No wrapper theme API is required.
+    </p>
+  </div>
+  <div class="container usage-grid rule-grid">
+    <section>
+      <h3>Use a controlled value</h3>
+      <StaticCode code={controlledUsage} lang="tsx" />
+    </section>
+    <section>
+      <h3>Override the package tokens</h3>
+      <StaticCode code={themeCode} lang="css" />
+    </section>
   </div>
 </section>

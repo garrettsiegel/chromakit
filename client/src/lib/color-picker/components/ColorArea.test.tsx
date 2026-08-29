@@ -1,385 +1,166 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render } from '@testing-library/react';
-import { screen, fireEvent } from '@testing-library/dom';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ColorArea } from './ColorArea';
 import type { HSVA } from '../types';
+import { ColorArea } from './ColorArea';
 
 describe('ColorArea', () => {
   const defaultHsva: HSVA = { h: 200, s: 50, v: 80, a: 1 };
-  const mockOnChange = vi.fn();
-  const mockOnStart = vi.fn();
-  const mockOnEnd = vi.fn();
+  const onChange = vi.fn();
+  const onStart = vi.fn();
+  const onEnd = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering', () => {
-    it('should render with default props', () => {
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-      expect(area).toBeInTheDocument();
-    });
+  it('renders the visual plane and positions the pointer', () => {
+    render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
 
-    it('should apply custom className', () => {
-      render(
-        <ColorArea
-          hsva={defaultHsva}
-          onChange={mockOnChange}
-          className="custom-class"
-        />
-      );
-      const area = screen.getByTestId('color-area');
-      expect(area).toHaveClass('ck-color-area', 'custom-class');
-    });
-
-    it('should set custom width and height', () => {
-      render(
-        <ColorArea
-          hsva={defaultHsva}
-          onChange={mockOnChange}
-          width={300}
-          height={250}
-        />
-      );
-      const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle({ width: '300px', height: '250px' });
-    });
-
-    it('should not apply an inline height when height is omitted', () => {
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-      expect(area.style.height).toBe('');
-    });
-
-    it('should display thumb at correct position', () => {
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const thumb = screen.getByTestId('color-area-thumb');
-      expect(thumb).toHaveStyle({
-        left: '50%',
-        top: '20%', // 100 - 80 = 20
-      });
-    });
-
-    it('should update background color based on hue', () => {
-      const { rerender } = render(
-        <ColorArea hsva={defaultHsva} onChange={mockOnChange} />
-      );
-      const area = screen.getByTestId('color-area');
-      const firstLayer = area.querySelector('.ck-color-area-layer');
-      expect(firstLayer).toHaveStyle({
-        backgroundColor: 'hsl(200, 100%, 50%)',
-      });
-
-      rerender(
-        <ColorArea hsva={{ ...defaultHsva, h: 120 }} onChange={mockOnChange} />
-      );
-      expect(firstLayer).toHaveStyle({
-        backgroundColor: 'hsl(120, 100%, 50%)',
-      });
+    expect(screen.getByTestId('color-area')).toBeInTheDocument();
+    expect(screen.getByTestId('color-area-thumb')).toHaveStyle({
+      left: '50%',
+      top: '20%',
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA attributes', () => {
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByRole('slider');
+  it('applies dimensions and custom classes without an implicit height', () => {
+    const { rerender } = render(
+      <ColorArea
+        hsva={defaultHsva}
+        onChange={onChange}
+        className="custom-class"
+        width={300}
+        height={250}
+      />
+    );
+    const area = screen.getByTestId('color-area');
 
-      expect(area).toHaveAttribute('aria-label', 'Color saturation and value');
-      expect(area).toHaveAttribute('aria-valuemin', '0');
-      expect(area).toHaveAttribute('aria-valuemax', '100');
-      expect(area).toHaveAttribute('aria-valuenow', '50');
-      expect(area).toHaveAttribute(
-        'aria-valuetext',
-        'Saturation 50%, Value 80%'
-      );
+    expect(area).toHaveClass('ck-color-area', 'custom-class');
+    expect(area).toHaveStyle({ width: '300px', height: '250px' });
+
+    rerender(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+    expect(area.style.height).toBe('');
+  });
+
+  it('updates the hue layer', () => {
+    const { rerender } = render(
+      <ColorArea hsva={defaultHsva} onChange={onChange} />
+    );
+    const layer = screen
+      .getByTestId('color-area')
+      .querySelector('.ck-color-area-layer');
+
+    expect(layer).toHaveStyle({ backgroundColor: 'hsl(200, 100%, 50%)' });
+    rerender(
+      <ColorArea hsva={{ ...defaultHsva, h: 120 }} onChange={onChange} />
+    );
+    expect(layer).toHaveStyle({ backgroundColor: 'hsl(120, 100%, 50%)' });
+  });
+
+  describe('semantics', () => {
+    it('exposes a labeled group with independent axis sliders', () => {
+      render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+
+      expect(
+        screen.getByRole('group', {
+          name: 'Saturation and brightness color area',
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('slider', { name: 'Saturation' })
+      ).toHaveAttribute('aria-valuetext', '50% saturation');
+      expect(
+        screen.getByRole('slider', { name: 'Brightness' })
+      ).toHaveAttribute('aria-valuetext', '80% brightness');
     });
 
-    it('should be keyboard focusable', () => {
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-      expect(area).toHaveAttribute('tabIndex', '0');
-    });
+    it('keeps both controls keyboard focusable and oriented', () => {
+      render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+      const saturation = screen.getByTestId('saturation-slider');
+      const brightness = screen.getByTestId('brightness-slider');
 
-    it('should update aria-valuetext when color changes', () => {
-      const { rerender } = render(
-        <ColorArea hsva={defaultHsva} onChange={mockOnChange} />
-      );
-      const area = screen.getByRole('slider');
-      expect(area).toHaveAttribute(
-        'aria-valuetext',
-        'Saturation 50%, Value 80%'
-      );
-
-      rerender(
-        <ColorArea
-          hsva={{ h: 200, s: 75, v: 60, a: 1 }}
-          onChange={mockOnChange}
-        />
-      );
-      expect(area).toHaveAttribute(
-        'aria-valuetext',
-        'Saturation 75%, Value 60%'
-      );
+      expect(saturation).toHaveAttribute('tabIndex', '0');
+      expect(saturation).toHaveAttribute('aria-orientation', 'horizontal');
+      expect(brightness).toHaveAttribute('tabIndex', '0');
+      expect(brightness).toHaveAttribute('aria-orientation', 'vertical');
     });
   });
 
-  describe('Keyboard Navigation', () => {
-    it('should increase saturation on ArrowRight', async () => {
+  describe('keyboard input', () => {
+    it('changes saturation with arrow keys', async () => {
       const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
+      render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+      screen.getByTestId('saturation-slider').focus();
 
-      area.focus();
       await user.keyboard('{ArrowRight}');
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, s: 51 });
 
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 51,
-        v: 80,
-      });
-    });
-
-    it('should decrease saturation on ArrowLeft', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
       await user.keyboard('{ArrowLeft}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 49,
-        v: 80,
-      });
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, s: 49 });
     });
 
-    it('should increase value on ArrowUp', async () => {
+    it('changes brightness with arrow keys', async () => {
       const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
+      render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+      screen.getByTestId('brightness-slider').focus();
 
-      area.focus();
       await user.keyboard('{ArrowUp}');
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, v: 81 });
 
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 50,
-        v: 81,
-      });
-    });
-
-    it('should decrease value on ArrowDown', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
       await user.keyboard('{ArrowDown}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 50,
-        v: 79,
-      });
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, v: 79 });
     });
 
-    it('should use larger step with Shift key', async () => {
+    it('supports large steps, bounds, Home, and End on either axis', async () => {
       const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
+      render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+      const saturation = screen.getByTestId('saturation-slider');
+      saturation.focus();
 
-      area.focus();
       await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 60, // +10 instead of +1
-        v: 80,
-      });
-    });
-
-    it('should set saturation to 0 on Home', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, s: 60 });
       await user.keyboard('{Home}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 0,
-        v: 80,
-      });
-    });
-
-    it('should set saturation to 100 on End', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, s: 0 });
       await user.keyboard('{End}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 100,
-        v: 80,
-      });
+      expect(onChange).toHaveBeenLastCalledWith({ ...defaultHsva, s: 100 });
     });
 
-    it('should increase value by 10 on PageUp', async () => {
+    it('supports page steps and clamps brightness', async () => {
       const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
+      const highValue = { ...defaultHsva, v: 95 };
+      render(<ColorArea hsva={highValue} onChange={onChange} />);
+      screen.getByTestId('brightness-slider').focus();
 
-      area.focus();
       await user.keyboard('{PageUp}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 50,
-        v: 90,
-      });
-    });
-
-    it('should decrease value by 10 on PageDown', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
+      expect(onChange).toHaveBeenLastCalledWith({ ...highValue, v: 100 });
       await user.keyboard('{PageDown}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 50,
-        v: 70,
-      });
+      expect(onChange).toHaveBeenLastCalledWith({ ...highValue, v: 85 });
     });
 
-    it('should clamp value to 100 on PageUp near the max', async () => {
+    it('ignores unrelated keys', async () => {
       const user = userEvent.setup();
-      render(
-        <ColorArea
-          hsva={{ ...defaultHsva, v: 95 }}
-          onChange={mockOnChange}
-        />
-      );
-      const area = screen.getByTestId('color-area');
+      render(<ColorArea hsva={defaultHsva} onChange={onChange} />);
+      screen.getByTestId('saturation-slider').focus();
 
-      area.focus();
-      await user.keyboard('{PageUp}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...defaultHsva,
-        s: 50,
-        v: 100,
-      });
-    });
-
-    it('should clamp saturation at boundaries', async () => {
-      const user = userEvent.setup();
-      const maxSaturation: HSVA = { h: 200, s: 100, v: 80, a: 1 };
-      render(<ColorArea hsva={maxSaturation} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
-      await user.keyboard('{ArrowRight}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...maxSaturation,
-        s: 100, // Should not exceed 100
-      });
-    });
-
-    it('should clamp value at boundaries', async () => {
-      const user = userEvent.setup();
-      const minValue: HSVA = { h: 200, s: 50, v: 0, a: 1 };
-      render(<ColorArea hsva={minValue} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
-      await user.keyboard('{ArrowDown}');
-
-      expect(mockOnChange).toHaveBeenCalledWith({
-        ...minValue,
-        v: 0, // Should not go below 0
-      });
-    });
-
-    it('should prevent default behavior on arrow keys', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
-
-      // Just test that the onChange is called, which confirms the key handler works
-      await user.keyboard('{ArrowRight}');
-
-      expect(mockOnChange).toHaveBeenCalled();
-    });
-
-    it('should not handle non-arrow keys', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
       await user.keyboard('a');
-
-      expect(mockOnChange).not.toHaveBeenCalled();
+      expect(onChange).not.toHaveBeenCalled();
     });
   });
 
-  describe('Pointer Interactions', () => {
-    it('should call onStart when pointer down', () => {
+  describe('pointer input', () => {
+    it('starts, moves, and completes a drag on the visual plane', () => {
       render(
         <ColorArea
           hsva={defaultHsva}
-          onChange={mockOnChange}
-          onStart={mockOnStart}
-        />
-      );
-      const area = screen.getByTestId('color-area');
-
-      fireEvent.pointerDown(area, { clientX: 100, clientY: 100 });
-
-      expect(mockOnStart).toHaveBeenCalled();
-    });
-
-    it('should call onEnd after pointer interaction', () => {
-      render(
-        <ColorArea
-          hsva={defaultHsva}
-          onChange={mockOnChange}
-          onEnd={mockOnEnd}
-        />
-      );
-      const area = screen.getByTestId('color-area');
-
-      fireEvent.pointerDown(area, { clientX: 100, clientY: 100 });
-      fireEvent.pointerUp(area);
-
-      expect(mockOnEnd).toHaveBeenCalled();
-    });
-
-    it('should update color on pointer drag', () => {
-      const { container: _container } = render(
-        <ColorArea
-          hsva={defaultHsva}
-          onChange={mockOnChange}
+          onChange={onChange}
+          onStart={onStart}
+          onEnd={onEnd}
           width={256}
           height={200}
         />
       );
       const area = screen.getByTestId('color-area');
-
-      // Mock getBoundingClientRect
       area.getBoundingClientRect = vi.fn(() => ({
         left: 0,
         top: 0,
@@ -393,85 +174,23 @@ describe('ColorArea', () => {
       }));
 
       fireEvent.pointerDown(area, { clientX: 128, clientY: 100 });
-      fireEvent.pointerMove(area, { clientX: 128, clientY: 100 });
+      fireEvent.pointerMove(document, { clientX: 128, clientY: 100 });
+      fireEvent.pointerUp(document);
 
-      // Should update to middle of the area (50% saturation, 50% value)
-      expect(mockOnChange).toHaveBeenCalled();
+      expect(onStart).toHaveBeenCalledOnce();
+      expect(onChange).toHaveBeenCalledWith({ ...defaultHsva, s: 50, v: 50 });
+      expect(onEnd).toHaveBeenCalledOnce();
     });
   });
 
-  describe('Edge Cases', () => {
-    it('should handle very small dimensions', () => {
-      render(
-        <ColorArea
-          hsva={defaultHsva}
-          onChange={mockOnChange}
-          width={10}
-          height={10}
-        />
-      );
-      const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle({ width: '10px' });
-    });
+  it('handles extreme axis values', () => {
+    render(
+      <ColorArea hsva={{ h: 360, s: 100, v: 0, a: 1 }} onChange={onChange} />
+    );
 
-    it('should handle extreme hue values', () => {
-      const extremeHue: HSVA = { h: 0, s: 50, v: 80, a: 1 };
-      render(<ColorArea hsva={extremeHue} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-      const firstLayer = area.querySelector('.ck-color-area-layer');
-      expect(firstLayer).toHaveStyle({ backgroundColor: 'hsl(0, 100%, 50%)' });
-    });
-
-    it('should handle saturation at 0', () => {
-      const grayscale: HSVA = { h: 200, s: 0, v: 80, a: 1 };
-      render(<ColorArea hsva={grayscale} onChange={mockOnChange} />);
-      const thumb = screen.getByTestId('color-area-thumb');
-      expect(thumb).toHaveStyle({ left: '0%' });
-    });
-
-    it('should handle value at 0', () => {
-      const black: HSVA = { h: 200, s: 50, v: 0, a: 1 };
-      render(<ColorArea hsva={black} onChange={mockOnChange} />);
-      const thumb = screen.getByTestId('color-area-thumb');
-      expect(thumb).toHaveStyle({ top: '100%' });
-    });
-
-    it('should handle maximum values', () => {
-      const maxColor: HSVA = { h: 360, s: 100, v: 100, a: 1 };
-      render(<ColorArea hsva={maxColor} onChange={mockOnChange} />);
-      const thumb = screen.getByTestId('color-area-thumb');
-      expect(thumb).toHaveStyle({ left: '100%', top: '0%' });
-    });
-  });
-
-  describe('Performance', () => {
-    it('should not re-render unnecessarily', () => {
-      const { rerender } = render(
-        <ColorArea hsva={defaultHsva} onChange={mockOnChange} />
-      );
-
-      // Re-render with same props
-      rerender(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-
-      // Component should still be functional
-      const area = screen.getByTestId('color-area');
-      expect(area).toBeInTheDocument();
-    });
-
-    it('should handle rapid keyboard input', async () => {
-      const user = userEvent.setup();
-      render(<ColorArea hsva={defaultHsva} onChange={mockOnChange} />);
-      const area = screen.getByTestId('color-area');
-
-      area.focus();
-
-      // Rapid key presses
-      await user.keyboard(
-        '{ArrowRight}{ArrowRight}{ArrowRight}{ArrowUp}{ArrowUp}'
-      );
-
-      // Should have called onChange for each key press
-      expect(mockOnChange).toHaveBeenCalledTimes(5);
+    expect(screen.getByTestId('color-area-thumb')).toHaveStyle({
+      left: '100%',
+      top: '100%',
     });
   });
 });

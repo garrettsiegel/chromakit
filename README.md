@@ -1,276 +1,192 @@
 <div align="center">
+  <img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/client/public/brand/readme-hero.png" alt="ChromaKit editorial color workbench showing a real picker, synchronized OKLCH values, and format outputs" width="100%" />
 
 # ChromaKit
 
-### The Modern React Color Picker with Perceptually Uniform Colors
-
-**Build better design systems with OKLCH color space support**
+A controlled React color picker and conversion toolkit for modern color systems.
 
 [![npm version](https://img.shields.io/npm/v/chromakit-react.svg)](https://www.npmjs.com/package/chromakit-react)
-[![npm downloads](https://img.shields.io/npm/dm/chromakit-react.svg)](https://www.npmjs.com/package/chromakit-react)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/chromakit-react)](https://bundlephobia.com/package/chromakit-react)
-[![license](https://img.shields.io/npm/l/chromakit-react.svg)](https://github.com/garrettsiegel/chromakit/blob/main/LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![CI](https://github.com/garrettsiegel/chromakit/actions/workflows/ci.yml/badge.svg)](https://github.com/garrettsiegel/chromakit/actions/workflows/ci.yml)
+[![MIT license](https://img.shields.io/npm/l/chromakit-react.svg)](https://github.com/garrettsiegel/chromakit/blob/main/LICENSE)
 
-[**Live Demo**](https://www.chromakit.site) • [**Documentation**](https://www.chromakit.site/docs) • [**Migration Guide**](./MIGRATION.md)
+[Live workbench](https://www.chromakit.site/) · [Documentation](https://www.chromakit.site/docs/getting-started) · [npm](https://www.npmjs.com/package/chromakit-react)
 
----
+</div>
+
+## What it gives you
+
+ChromaKit combines a complete color picker, composable picker primitives, color parsing, conversion utilities, and WCAG contrast helpers in one TypeScript package. It supports React 18 and 19 and declares zero runtime dependencies.
+
+Current production budgets, measured with `size-limit` for v0.5.0:
+
+| Asset      | Gzipped size |
+| ---------- | -----------: |
+| ES module  |      12.4 kB |
+| UMD module |      13.0 kB |
+| CSS        |       3.3 kB |
+
+## Install
 
 ```bash
 npm install chromakit-react
 ```
 
-<br />
-
-**[See it in action →](https://www.chromakit.site)**
-
-<br />
-
-<img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/chromakit.png?v=0.2.3" alt="ChromaKit - Modern React color picker with OKLCH support" width="100%" />
-
-</div>
-
-<br />
-
-> **Full documentation lives on the web**, where every API is paired with a live,
-> interactive example: **[chromakit.site/docs →](https://www.chromakit.site/docs)**
-
-## Why Developers Choose ChromaKit
-
-**The only React color picker built for modern design systems.** While other pickers struggle with consistent color scales and muddy gradients, ChromaKit uses perceptually uniform color spaces (OKLCH, OKLAB) to deliver what designers expect and users see.
-
-```tsx
-// Get started in 30 seconds
-import { ColorPicker } from 'chromakit-react';
-import 'chromakit-react/chromakit.css';
-
-<ColorPicker onChange={(color) => console.log(color.oklch)} />;
-```
-
-### Perfect For
-
-- **Design System Engineers** — Generate consistent tonal scales with predictable lightness
-- **Accessibility Teams** — Built-in WCAG AA/AAA contrast checking
-- **App Developers** — Zero dependencies, ~10KB bundle, works everywhere
-- **UI Libraries** — Composable primitives, full TypeScript support
-
-### Comparison
-
-| Feature      | ChromaKit   | react-colorful | react-color |
-| ------------ | ----------- | -------------- | ----------- |
-| Bundle Size  | ~10KB       | ~3KB           | ~28KB       |
-| OKLCH/OKLAB  | ✅          | ❌             | ❌          |
-| Composable   | ✅          | Limited        | ❌          |
-| TypeScript   | ✅ Native   | ✅             | ⚠️ @types   |
-| Dark Mode    | ✅ Built-in | Manual         | Manual      |
-| Dependencies | 0           | 0              | Many        |
-
-**Choose ChromaKit for:** Design systems, OKLCH support, accessibility features, composability
-**Choose react-colorful for:** Minimal bundle size (<5KB), traditional RGB/HSL only
-
-[Migration Guide](./MIGRATION.md) available for switching from react-colorful or react-color.
-
----
-
-## Quick Start
-
-**Controlled Component** (recommended)
+Import both the component and its stylesheet:
 
 ```tsx
 import { useState } from 'react';
 import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
 
-function App() {
-  const [color, setColor] = useState('#6366F1');
+export function BrandColorField() {
+  const [color, setColor] = useState('#ddfe3f');
+
+  return <ColorPicker value={color} onChange={(next) => setColor(next.hex8)} />;
+}
+```
+
+`onChange` returns one `ColorValue` containing every supported representation, so application state can stay in the format that fits your system.
+
+## Color formats
+
+The picker, `parseColor`, and conversion utilities work with:
+
+| Family           | Input and output                                       |
+| ---------------- | ------------------------------------------------------ |
+| Hex              | `#rgb`, `#rrggbb`, `#rrggbbaa`                         |
+| RGB              | `rgb()`, `rgba()`                                      |
+| HSL              | `hsl()`, `hsla()`                                      |
+| HSV              | object and formatted utility output                    |
+| OKLab            | `oklab()`, alpha-aware objects                         |
+| OKLCH            | `oklch()`, alpha-aware objects                         |
+| Additional input | named colors, `transparent`, HWB, CIE Lab, and CIE LCH |
+
+Out-of-gamut OKLCH and OKLab values are mapped into sRGB by reducing chroma while preserving lightness and hue.
+
+## Controlled usage
+
+Use `value` with `onChange` when the picker participates in form state, design-token editing, undo/redo, or persistence. Use `defaultValue` when ChromaKit can own the local value.
+
+```tsx
+import type { ColorValue } from 'chromakit-react';
+
+function handleChange(next: ColorValue) {
+  saveToken({
+    hex: next.hex8,
+    oklch: next.oklch,
+    rgb: next.rgb,
+  });
+}
+
+<ColorPicker
+  value="oklch(72% 0.16 48)"
+  onChange={handleChange}
+  onChangeComplete={commitToken}
+  showAlpha
+/>;
+```
+
+The full component also supports custom formats, presets and preset groups, recent-color history, eyedropper progressive enhancement, and independent color-area height.
+
+[Read the complete `ColorPicker` prop reference](https://www.chromakit.site/docs/color-picker).
+
+## Theming
+
+The package skin is controlled by documented `--ck-*` custom properties. Add a class to the picker and override the values your design system owns:
+
+```css
+.brand-picker {
+  --ck-primary: #202516;
+  --ck-accent: #ddfe3f;
+  --ck-glass-bg: #f6f3e9;
+  --ck-text: #12140e;
+  --ck-radius: 2px;
+  --ck-radius-md: 2px;
+}
+```
+
+```tsx
+<ColorPicker className="brand-picker" defaultValue="#ddfe3f" />
+```
+
+[See every theme variable and a live comparison](https://www.chromakit.site/docs/theming).
+
+## Accessibility behavior
+
+ChromaKit provides multiple ways to reach the same color value:
+
+- The visual color plane is a labeled group with separate saturation and brightness sliders.
+- Hue, alpha, saturation, and brightness support arrow keys, Home/End, and larger keyboard steps.
+- Text and numeric fields provide non-drag alternatives for precise input.
+- Interactive targets are at least 44×44 CSS pixels, with visible focus treatment.
+- Copy actions expose text status instead of relying on color or icon changes alone.
+- WCAG contrast-ratio and readable-text helpers are exported for applications that build their own contrast interface.
+
+These behaviors support accessible product implementation; teams should still test the picker inside their own labels, forms, themes, and page structure.
+
+## Compose your own picker
+
+The complete picker is assembled from the same public pieces available to consumers:
+
+```tsx
+import {
+  AlphaSlider,
+  ColorArea,
+  HueSlider,
+  OKLCHInputs,
+  useColorState,
+} from 'chromakit-react';
+
+export function TokenEditor() {
+  const color = useColorState('#b7c0ff');
 
   return (
-    <ColorPicker
-      value={color}
-      onChange={(colorValue) => setColor(colorValue.hex)}
-    />
+    <div>
+      <ColorArea hsva={color.hsva} onChange={color.updateColor} />
+      <HueSlider hsva={color.hsva} onChange={color.updateColor} />
+      <AlphaSlider hsva={color.hsva} onChange={color.updateColor} />
+      <OKLCHInputs colorValue={color.colorValue} onChange={color.setFromString} />
+    </div>
   );
 }
 ```
 
-That's it — a fully-featured color picker with OKLCH support, color history, presets, and copy-to-clipboard, out of the box.
+[Browse components](https://www.chromakit.site/docs/components), [hooks](https://www.chromakit.site/docs/hooks), and [color utilities](https://www.chromakit.site/docs/utilities).
 
-> New to the library? The **[Getting Started guide](https://www.chromakit.site/docs/getting-started)** walks through installation, framework setup, and your first picker with live examples.
+## Platform support
 
----
+| Surface          | Support                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| React            | 18 and 19 peer dependencies                                                          |
+| Browsers         | Current Chrome, Edge, Firefox, and Safari                                            |
+| EyeDropper       | Rendered only when the browser exposes the API                                       |
+| Server rendering | ES module includes a `'use client'` directive; Pages Router can use a dynamic import |
+| Build tooling    | Node.js 20 or newer                                                                  |
 
-## Why OKLCH?
+ChromaKit computes OKLCH and OKLab in JavaScript. CSS `oklch()` support is needed only when an application renders that string directly.
 
-OKLCH is a **perceptually uniform** color space — equal numerical changes produce equal visual differences, which HSL cannot promise.
+## Documentation
 
-- **Predictable lightness** — a given L looks equally bright at every hue
-- **Smoother gradients** — no muddy middle tones
-- **Consistent scales** — generate tonal palettes with uniform visual weight
-- **Wider gamut** — reach more vivid colors on modern displays
+- [Getting started and framework setup](https://www.chromakit.site/docs/getting-started)
+- [`ColorPicker` API](https://www.chromakit.site/docs/color-picker)
+- [Composable components](https://www.chromakit.site/docs/components)
+- [Hooks and utilities](https://www.chromakit.site/docs/hooks)
+- [Troubleshooting and exported types](https://www.chromakit.site/docs/troubleshooting)
 
-```tsx
-// HSL: same lightness value, different perceived brightness
-hsl(240, 100%, 50%) // Blue  — looks dark
-hsl(60, 100%, 50%)  // Yellow — looks bright
+## Contributing
 
-// OKLCH: same lightness = same perceived brightness
-oklch(50% 0.2 240)  // Blue   at 50% brightness
-oklch(50% 0.2 60)   // Yellow at 50% brightness
+Issues and focused pull requests are welcome. Read the [contributing guide](https://github.com/garrettsiegel/chromakit/blob/main/CONTRIBUTING.md), then run the same checks used by CI:
+
+```bash
+npm ci
+npm run verify
+npm run test:ci
+npm run build
+npm run size
 ```
 
-[Read more about OKLCH →](https://www.chromakit.site/docs/getting-started#why-oklch)
-
----
-
-## Accepted Color Strings
-
-`parseColor`, the `value` prop, and the text field all accept:
-
-| Form          | Examples                                      |
-| ------------- | --------------------------------------------- |
-| Hex           | `#f00`, `#ff0000`, `#ff0000cc`                |
-| Keywords      | `red`, `rebeccapurple`, `transparent`         |
-| RGB / HSL     | `rgb(255, 0, 0)`, `hsla(0, 100%, 50%, 0.5)`   |
-| HWB           | `hwb(0 0% 0%)`, `hwb(0deg 0% 0% / 50%)`       |
-| CIE Lab / LCH | `lab(54% 80.8 69.9)`, `lch(54% 106.8 40.9)`   |
-| OKLab / OKLCH | `oklab(0.63 0.22 0.13)`, `oklch(63% 0.26 29)` |
-
-Colors outside the sRGB gamut are mapped by reducing chroma at constant lightness and hue, per CSS Color 4, so vivid inputs keep their hue.
-
----
-
-## Framework Setup
-
-**Next.js App Router** — works out of the box; the bundle ships its own `'use client'` directive, so no wrapper file is needed:
-
-```tsx
-import { ColorPicker } from 'chromakit-react';
-import 'chromakit-react/chromakit.css';
-```
-
-**Next.js Pages Router (SSR)** — load it dynamically:
-
-```tsx
-import dynamic from 'next/dynamic';
-
-const ColorPicker = dynamic(
-  () => import('chromakit-react').then((mod) => mod.ColorPicker),
-  { ssr: false }
-);
-```
-
-**Vite / CRA** — works out of the box.
-
-Full details: **[Framework setup docs →](https://www.chromakit.site/docs/getting-started#framework-setup)**
-
----
-
-## API Reference: `<ColorPicker />`
-
-The batteries-included component — color area, hue/alpha sliders, format-switchable inputs, presets, history, and copy.
-
-| Prop               | Type                                        | Default        | Description                                    |
-| ------------------ | ------------------------------------------- | -------------- | ---------------------------------------------- |
-| `value`            | `string`                                    | —              | Controlled color in any supported format       |
-| `defaultValue`     | `string`                                    | `'#6366F1'`    | Initial color for uncontrolled mode            |
-| `onChange`         | `(color: ColorValue) => void`               | —              | Fires on every change (drag, typing)           |
-| `onChangeComplete` | `(color: ColorValue) => void`               | —              | Fires when a change settles (pointer up)       |
-| `formats`          | `ColorFormat[]`                             | all 11 formats | Which format tabs the inputs expose            |
-| `showAlpha`        | `boolean`                                   | `true`         | Show the alpha (transparency) slider           |
-| `showInputs`       | `boolean`                                   | `true`         | Show the numeric / text input fields           |
-| `showPreview`      | `boolean`                                   | `true`         | Show the color preview swatch                  |
-| `showPresets`      | `boolean`                                   | `true`         | Show the preset color swatches section         |
-| `showCopyButton`   | `boolean`                                   | `true`         | Show the copy-to-clipboard button              |
-| `presets`          | `string[]`                                  | built-in       | Custom preset colors                           |
-| `presetGroups`     | `PresetGroup[] \| Record<string, string[]>` | built-in       | Named preset groups selectable from a dropdown |
-| `enableHistory`    | `boolean`                                   | `true`         | Remember recent colors in `localStorage`       |
-| `historySize`      | `number`                                    | `10`           | Maximum number of colors kept in history       |
-| `width`            | `number`                                    | auto           | Picker width in pixels                         |
-| `height`           | `number`                                    | auto           | Color-area height in pixels                    |
-| `className`        | `string`                                    | —              | Extra classes on the root (the theming hook)   |
-
-`onChange` and `onChangeComplete` receive a **`ColorValue`** with every format pre-converted (`hex`, `hex8`, `rgb`, `rgba`, `hsl`, `hsla`, `hsv`, `hsva`, `oklab`, `oklch`, `oklcha`), so you never convert manually.
-
-**[Full ColorPicker reference, with live prop demos →](https://www.chromakit.site/docs/color-picker)**
-
----
-
-## Explore the docs
-
-Everything below has a dedicated page with **live, interactive examples** on the docs site:
-
-- **[Composable Components](https://www.chromakit.site/docs/components)** — build your own picker from `ColorArea`, `HueSlider`, `AlphaSlider`, the input groups, `ColorPreview`, `PresetColors`, `RecentColors`, and more.
-- **[Hooks](https://www.chromakit.site/docs/hooks)** — `useColorState`, `usePointerDrag`, `useDebounce`.
-- **[Color Utilities](https://www.chromakit.site/docs/utilities)** — ~24 conversion functions plus contrast checkers and harmony generators, with a live converter.
-- **[Theming](https://www.chromakit.site/docs/theming)** — reskin the picker by overriding `--ck-*` CSS variables on a class.
-- **[Troubleshooting](https://www.chromakit.site/docs/troubleshooting)** — common gotchas and the full list of type exports.
-
----
-
-## Browser Support
-
-| Environment           | Minimum version |
-| --------------------- | --------------- |
-| Chrome / Edge         | 88+             |
-| Firefox               | 87+             |
-| Safari                | 15+             |
-| Node.js (SSR / build) | 20+             |
-
-ChromaKit computes OKLCH/OKLAB in JavaScript, so it works even where the CSS `oklch()` syntax isn't yet supported — you only need `oklch()` support in your app if you render the string output.
-
----
-
-## TypeScript
-
-ChromaKit is written in TypeScript and ships complete declarations. Every public type is importable:
-
-```tsx
-import type {
-  RGB,
-  RGBA,
-  HSL,
-  HSLA,
-  HSV,
-  HSVA,
-  OKLAB,
-  OKLABA,
-  OKLCH,
-  OKLCHA,
-  ColorFormat,
-  ColorValue,
-  ColorPickerProps,
-  PresetGroup,
-  PresetGroupsInput,
-} from 'chromakit-react';
-```
-
-More at **[Troubleshooting → Type exports](https://www.chromakit.site/docs/troubleshooting#type-exports)**.
-
----
-
-## Resources
-
-- [Documentation](https://www.chromakit.site/docs) — full API with live examples
-- [Migration Guide](./MIGRATION.md) — switch from react-colorful / react-color
-- [Contributing Guide](./CONTRIBUTING.md) — help improve ChromaKit
-- [Changelog](./CHANGELOG.md) — release notes
-
-## Support
-
-- [Issues](https://github.com/garrettsiegel/chromakit/issues) — report bugs
-- [Discussions](https://github.com/garrettsiegel/chromakit/discussions) — ask questions
-- [Sponsor](https://github.com/sponsors/garrettsiegel) — support development
+Release notes live in the [changelog](https://github.com/garrettsiegel/chromakit/blob/main/CHANGELOG.md). Package publishing and version changes remain maintainer actions.
 
 ## License
 
 MIT © [Garrett Siegel](https://github.com/garrettsiegel)
-
-**Color science based on** the [OKLCH specification](https://www.w3.org/TR/css-color-4/#ok-lab) (W3C) and Björn Ottosson's [Oklab research](https://bottosson.github.io/posts/oklab/).
-
----
-
-<div align="center">
-
-**[chromakit.site](https://www.chromakit.site)** • **[Star on GitHub](https://github.com/garrettsiegel/chromakit)** • **[Try the Live Demo](https://www.chromakit.site)**
-
-</div>

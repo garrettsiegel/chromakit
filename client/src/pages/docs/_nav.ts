@@ -36,7 +36,7 @@ export const DOCS_NAV: DocNavEntry[] = [
     slug: 'utilities',
     title: 'Color Utilities',
     description:
-      'Conversion functions, contrast checkers, and color-harmony generators with a live converter.',
+      'Conversion functions, WCAG contrast helpers, and color-harmony generators with a live converter.',
   },
   {
     slug: 'theming',

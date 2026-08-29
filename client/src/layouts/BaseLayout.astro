@@ -25,24 +25,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-8KHB47TJSP"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-8KHB47TJSP');
-    </script>
-
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Apply the saved theme before first paint to avoid a flash of the wrong theme -->
     <script is:inline>
@@ -69,7 +53,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       content="react color picker, oklch color picker, oklab, react color picker component, typescript color picker, modern color picker react, customizable color picker, react color picker library, accessible color picker, react component, npm package, color converter, color palette"
     />
     <meta name="author" content="Garrett Siegel" />
-    <meta name="theme-color" content="#1a8cff" />
+    <meta name="theme-color" content="#f6f3e9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#202516" media="(prefers-color-scheme: dark)" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -77,18 +62,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1731" />
-    <meta property="og:image:height" content="909" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ChromaKit color workbench with a live picker, format values, and segmented color-space mark" />
     <meta property="og:site_name" content="ChromaKit" />
 
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/anybody-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/geist-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     {
@@ -117,6 +113,32 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     }
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <slot />
+    <script is:inline>
+      (() => {
+        let started = false;
+        const startAnalytics = () => {
+          if (started) return;
+          started = true;
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            window.dataLayer.push(arguments);
+          };
+          window.gtag('js', new Date());
+          window.gtag('config', 'G-8KHB47TJSP');
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-8KHB47TJSP';
+          document.head.appendChild(script);
+          ['pointerdown', 'keydown', 'touchstart'].forEach((eventName) => {
+            window.removeEventListener(eventName, startAnalytics);
+          });
+        };
+        ['pointerdown', 'keydown', 'touchstart'].forEach((eventName) => {
+          window.addEventListener(eventName, startAnalytics, { once: true, passive: true });
+        });
+      })();
+    </script>
   </body>
 </html>

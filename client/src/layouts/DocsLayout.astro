@@ -11,59 +11,58 @@ interface Props {
 }
 
 const { slug, title, description } = Astro.props;
-
-const sideLink = (active: boolean) =>
-  active
-    ? 'block rounded-lg px-3 py-2 text-sm bg-muted font-medium text-foreground'
-    : 'block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors';
-
-const pillLink = (active: boolean) =>
-  active
-    ? 'whitespace-nowrap rounded-full px-3 py-1.5 text-sm bg-primary text-primary-foreground'
-    : 'whitespace-nowrap rounded-full px-3 py-1.5 text-sm bg-muted text-muted-foreground';
+const activePage = DOCS_NAV.find((doc) => doc.slug === slug);
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="min-h-screen bg-background">
-    <SiteHeader />
-    <div class="container mx-auto px-6 py-10">
-      <!-- Mobile nav -->
-      <nav
-        class="md:hidden sticky top-[73px] z-40 -mx-6 mb-6 flex gap-2 overflow-x-auto border-b border-border bg-background/80 px-6 py-3 backdrop-blur-xl"
-      >
+  <SiteHeader />
+  <details class="docs-mobile-nav">
+    <summary>
+      <span class="field-label">Documentation</span>
+      <span>{activePage?.title ?? 'Browse pages'}</span>
+    </summary>
+    <nav aria-label="Documentation pages">
+      <ul class="docs-nav-list">
         {
           DOCS_NAV.map((doc) => (
-            <a href={`/docs/${doc.slug}`} class={pillLink(doc.slug === slug)}>
-              {doc.title}
-            </a>
+            <li>
+              <a
+                href={`/docs/${doc.slug}`}
+                class="docs-nav-link"
+                aria-current={doc.slug === slug ? 'page' : undefined}
+              >
+                {doc.title}
+              </a>
+            </li>
           ))
         }
-      </nav>
-      <div class="flex gap-10">
-        <aside class="hidden md:block w-56 shrink-0">
-          <nav class="sticky top-24 space-y-1">
-            <p
-              class="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-            >
-              Documentation
-            </p>
-            {
-              DOCS_NAV.map((doc) => (
+      </ul>
+    </nav>
+  </details>
+  <div class="docs-shell">
+    <aside class="docs-rail">
+      <nav aria-label="Documentation pages">
+        <p class="field-label">Documentation / v{__PKG_VERSION__}</p>
+        <ul class="docs-nav-list">
+          {
+            DOCS_NAV.map((doc) => (
+              <li>
                 <a
                   href={`/docs/${doc.slug}`}
-                  class={sideLink(doc.slug === slug)}
+                  class="docs-nav-link"
+                  aria-current={doc.slug === slug ? 'page' : undefined}
                 >
                   {doc.title}
                 </a>
-              ))
-            }
-          </nav>
-        </aside>
-        <main class="min-w-0 flex-1 max-w-3xl space-y-16 pb-16">
-          <slot />
-        </main>
-      </div>
-    </div>
-    <SiteFooter />
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </aside>
+    <main id="main-content" class="docs-content">
+      <slot />
+    </main>
   </div>
+  <SiteFooter />
 </BaseLayout>
