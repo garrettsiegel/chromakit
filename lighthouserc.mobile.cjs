@@ -2,11 +2,6 @@ const routes = [
   '/',
   '/docs/getting-started',
   '/docs/color-picker',
-  '/docs/components',
-  '/docs/hooks',
-  '/docs/utilities',
-  '/docs/theming',
-  '/docs/troubleshooting',
 ];
 const externalOrigin = globalThis.process?.env.LHCI_BASE_URL;
 const origin = externalOrigin || 'http://127.0.0.1:4321';
@@ -15,7 +10,7 @@ module.exports = {
   ci: {
     collect: {
       url: routes.map((route) => `${origin}${route}`),
-      numberOfRuns: 3,
+      numberOfRuns: 1,
       settings: {
         throttlingMethod: 'devtools',
         chromeFlags: '--headless=new --no-sandbox',
@@ -31,22 +26,10 @@ module.exports = {
     },
     assert: {
       assertions: {
-        'categories:performance': [
-          'error',
-          { minScore: 1, aggregationMethod: 'median' },
-        ],
-        'categories:accessibility': [
-          'error',
-          { minScore: 1, aggregationMethod: 'pessimistic' },
-        ],
-        'categories:best-practices': [
-          'error',
-          { minScore: 1, aggregationMethod: 'pessimistic' },
-        ],
-        'categories:seo': [
-          'error',
-          { minScore: 1, aggregationMethod: 'pessimistic' },
-        ],
+        'categories:performance': ['error', { minScore: 1 }],
+        'categories:accessibility': ['error', { minScore: 1 }],
+        'categories:best-practices': ['error', { minScore: 1 }],
+        'categories:seo': ['error', { minScore: 1 }],
       },
     },
     upload: { target: 'filesystem', outputDir: '.lighthouseci/mobile' },

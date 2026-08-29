@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ChromaKit mark, self-hosted fonts, and new Open Graph, README, favicon, and
   manifest imagery.
 - Automated Playwright and axe checks for every indexable route in light and
-  dark modes, plus pinned mobile, desktop, and intentional-404 Lighthouse gates.
+  dark modes, plus representative mobile, desktop, and intentional-404
+  Lighthouse gates.
 - Independent saturation and brightness slider semantics for the two-axis color
   area, including keyboard, numeric-input, pointer, and drag alternatives.
 

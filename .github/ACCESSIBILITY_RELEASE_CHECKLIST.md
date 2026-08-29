@@ -11,8 +11,8 @@ technology.
   indexable route in light and dark modes at mobile and desktop sizes.
 - [x] The intentional 404 returns HTTP 404, includes `noindex`, and passes its
   Performance, Accessibility, and Best Practices Lighthouse assertions.
-- [x] Every indexable route passes the pinned mobile and desktop Lighthouse
-  assertions in `npm run test:lighthouse`.
+- [x] Representative homepage and core documentation routes pass the pinned
+  mobile and desktop Lighthouse assertions in `npm run test:lighthouse`.
 - [x] The homepage and representative docs page reflow without horizontal
   overflow at 320, 375, 414, and 768 CSS pixels.
 - [x] Keyboard regressions cover both color-area axes and alpha persistence.

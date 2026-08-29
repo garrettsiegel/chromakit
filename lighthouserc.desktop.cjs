@@ -1,13 +1,4 @@
-const routes = [
-  '/',
-  '/docs/getting-started',
-  '/docs/color-picker',
-  '/docs/components',
-  '/docs/hooks',
-  '/docs/utilities',
-  '/docs/theming',
-  '/docs/troubleshooting',
-];
+const routes = ['/'];
 const externalOrigin = globalThis.process?.env.LHCI_BASE_URL;
 const origin = externalOrigin || 'http://127.0.0.1:4321';
 

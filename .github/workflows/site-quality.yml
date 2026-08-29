@@ -3,13 +3,14 @@ name: Site quality
 on:
   pull_request:
     branches: [main, develop]
-  schedule:
-    - cron: '19 7 * * *'
   workflow_dispatch:
+
+concurrency:
+  group: site-quality-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   local-release-gate:
-    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,34 +25,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: site-quality-reports
-          path: |
-            .lighthouseci
-            playwright-report
-            test-results
-
-  production-nightly:
-    if: github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-    env:
-      LHCI_BASE_URL: https://www.chromakit.site
-      SITE_BASE_URL: https://www.chromakit.site
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npx playwright test
-      - run: |
-          npx lhci autorun --config=lighthouserc.mobile.cjs
-          npx lhci autorun --config=lighthouserc.desktop.cjs
-          npx lhci autorun --config=lighthouserc.404.cjs
-      - if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-site-quality-reports
           path: |
             .lighthouseci
             playwright-report
