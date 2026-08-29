@@ -5,8 +5,8 @@ import {
   type ColorValue,
   type PresetGroup,
 } from '@/lib/color-picker';
-import { CustomPickerDemo } from '@/components/demo/CustomPickerDemo';
-import { ColorFormatsDisplay } from '@/components/demo/ColorFormatsDisplay';
+import { CustomPickerDemo } from '@/components/demos/CustomPickerDemo';
+import { ColorFormatsDisplay } from '@/components/shared/ColorFormatsDisplay';
 
 // ============================================================
 // PRESET GROUPS

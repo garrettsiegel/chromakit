@@ -18,7 +18,7 @@ import {
   OKLCHInputs,
   useColorState,
 } from '@/lib/color-picker';
-import { ColorFormatsDisplay } from './ColorFormatsDisplay';
+import { ColorFormatsDisplay } from '@/components/shared/ColorFormatsDisplay';
 
 const COLOR_AREA_CONFIG = {
   width: 320,

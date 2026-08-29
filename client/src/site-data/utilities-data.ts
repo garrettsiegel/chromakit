@@ -1,4 +1,4 @@
-import type { PropRow } from '@/components/docs/PropsTable';
+import type { PropRow } from '@/components/docs/props-table-types';
 
 export interface UtilGroup {
   id: string;

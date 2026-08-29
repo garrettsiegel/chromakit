@@ -19,7 +19,7 @@ export function ColorSwatch({
   editing = false,
   className = '',
 }: ColorSwatchProps) {
-  const pressTimer = useRef<NodeJS.Timeout | null>(null);
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleMouseDown = () => {
     if (onLongPress) {

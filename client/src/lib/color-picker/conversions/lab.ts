@@ -1,5 +1,5 @@
 import type { RGB, LAB, LCH } from '../types';
-import { clamp } from './math';
+import { linearToSrgb } from './math';
 
 // CSS Color 4 defines lab()/lch() against the D50 white point, so the pipeline
 // is Lab -> XYZ(D50) -> linear sRGB -> sRGB. Constants and the transform matrix
@@ -11,11 +11,6 @@ const D50_WHITE: readonly [number, number, number] = [
   1,
   (1 - 0.3457 - 0.3585) / 0.3585,
 ];
-
-function linearToSrgb(c: number): number {
-  const v = c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
-  return Math.round(clamp(v * 255, 0, 255));
-}
 
 function labToXyz(lab: LAB): [number, number, number] {
   const f1 = (lab.L + 16) / 116;

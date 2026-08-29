@@ -1,11 +1,10 @@
 import type { ColorFormat, ColorValue } from '../types';
-import { formatColor } from '../conversions';
+import { ColorInputs } from './ColorInputs';
 import { RGBInputs } from './RGBInputs';
 import { HSLInputs } from './HSLInputs';
 import { HSVInputs } from './HSVInputs';
 import { OKLCHInputs } from './OKLCHInputs';
 import { OKLABInputs } from './OKLABInputs';
-import { CopyButton } from './CopyButton';
 
 export type InputMode = 'single' | 'rgb' | 'hsl' | 'hsv' | 'oklch' | 'oklab';
 
@@ -31,18 +30,15 @@ export function InputValuePanel({
   onCopy,
 }: InputValuePanelProps) {
   if (inputMode === 'single') {
-    const text = formatColor(colorValue, format);
     return (
-      <div className="ck-input-row">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setFromString(e.target.value)}
-          className="ck-input"
-          data-testid="color-input-text"
-        />
-        {showCopyButton && <CopyButton text={text} onCopy={onCopy} />}
-      </div>
+      <ColorInputs
+        colorValue={colorValue}
+        format={format}
+        onChange={setFromString}
+        showAlpha={showAlpha}
+        showCopyButton={showCopyButton}
+        onCopy={onCopy}
+      />
     );
   }
 

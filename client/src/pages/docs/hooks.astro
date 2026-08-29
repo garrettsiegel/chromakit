@@ -5,7 +5,7 @@ import StaticCode from '@/components/docs/StaticCode.astro';
 import PropsTable from '@/components/docs/PropsTable.astro';
 import { HookDemoCard } from '@/components/demos/HookDemoCard';
 import { DOCS_NAV } from './_nav';
-import type { PropRow } from '@/components/docs/PropsTable';
+import type { PropRow } from '@/components/docs/props-table-types';
 
 const meta = DOCS_NAV.find((d) => d.slug === 'hooks');
 const description = meta?.description ?? '';

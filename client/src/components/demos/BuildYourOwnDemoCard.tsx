@@ -1,5 +1,5 @@
 import { DemoCard } from '@/components/docs/DemoCard';
-import { CustomPickerDemo } from '@/components/demo/CustomPickerDemo';
+import { CustomPickerDemo } from '@/components/demos/CustomPickerDemo';
 
 const buildYourOwnCode = `import {
   ColorArea,

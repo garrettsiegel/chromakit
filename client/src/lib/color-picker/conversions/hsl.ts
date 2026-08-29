@@ -1,5 +1,5 @@
 import type { RGB, RGBA, HSL, HSLA } from '../types';
-import { round } from './math';
+import { round, rgbToHue } from './math';
 
 export function rgbToHsl(rgb: RGB): HSL {
   const r = rgb.r / 255;
@@ -17,20 +17,11 @@ export function rgbToHsl(rgb: RGB): HSL {
   const d = max - min;
   const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
-  let h = 0;
-  switch (max) {
-    case r:
-      h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-      break;
-    case g:
-      h = ((b - r) / d + 2) / 6;
-      break;
-    case b:
-      h = ((r - g) / d + 4) / 6;
-      break;
-  }
-
-  return { h: round(h * 360), s: round(s * 100), l: round(l * 100) };
+  return {
+    h: round(rgbToHue(r, g, b, max, d)),
+    s: round(s * 100),
+    l: round(l * 100),
+  };
 }
 
 export function rgbaToHsla(rgba: RGBA): HSLA {

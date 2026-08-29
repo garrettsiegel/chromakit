@@ -1,20 +1,11 @@
 import type { RGB, RGBA, OKLAB, OKLABA, OKLCH, OKLCHA } from '../types';
-import { clamp, round } from './math';
-
-function srgbToLinear(c: number): number {
-  const v = c / 255;
-  return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-}
-
-/** Encode a linear-light channel as an sRGB value, unclamped and unrounded. */
-function linearToSrgbChannel(c: number): number {
-  const v = c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
-  return v * 255;
-}
-
-function linearToSrgb(c: number): number {
-  return Math.round(clamp(linearToSrgbChannel(c), 0, 255));
-}
+import {
+  clamp,
+  round,
+  srgbToLinear,
+  linearToSrgbChannel,
+  linearToSrgb,
+} from './math';
 
 /** Linear-light sRGB channels for an OKLab color, before gamut mapping. */
 function oklabToLinearSrgb(oklab: OKLAB): [number, number, number] {
