@@ -9,6 +9,9 @@ export type {
   HSLA,
   HSV,
   HSVA,
+  HWB,
+  LAB,
+  LCH,
   OKLAB,
   OKLCH,
   OKLCHA,
@@ -43,6 +46,13 @@ export {
   oklchToOklab,
   oklchToRgb,
   oklchaToRgba,
+  labToRgb,
+  lchToLab,
+  lchToRgb,
+  hwbToRgb,
+  rgbToHwb,
+  getNamedColor,
+  getNamedColorNames,
   parseColor,
   rgbaToColorValue,
   formatColor,
@@ -60,6 +70,8 @@ export { RGBInputs } from './components/RGBInputs';
 export { HSLInputs } from './components/HSLInputs';
 export { HSVInputs } from './components/HSVInputs';
 export { OKLCHInputs } from './components/OKLCHInputs';
+export { OKLABInputs } from './components/OKLABInputs';
+export { EyeDropperButton } from './components/EyeDropperButton';
 export { ColorPreview } from './components/ColorPreview';
 export { ColorSwatch } from './components/ColorSwatch';
 export { PresetColors } from './components/PresetColors';
@@ -81,4 +93,6 @@ export {
   addToColorHistory,
   clearColorHistory,
   copyToClipboard,
+  isEyeDropperSupported,
+  openEyeDropper,
 } from './utils';

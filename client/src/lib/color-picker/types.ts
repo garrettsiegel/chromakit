@@ -34,6 +34,24 @@ export interface OKLAB {
   b: number; // roughly -0.4 to 0.4
 }
 
+export interface HWB {
+  h: number; // 0-360 (Hue)
+  w: number; // 0-100 (Whiteness)
+  b: number; // 0-100 (Blackness)
+}
+
+export interface LAB {
+  L: number; // 0-100 (Lightness, CIE Lab / D50)
+  a: number; // roughly -125 to 125
+  b: number; // roughly -125 to 125
+}
+
+export interface LCH {
+  L: number; // 0-100 (Lightness, CIE LCH / D50)
+  C: number; // 0-150 (Chroma)
+  h: number; // 0-360 (Hue)
+}
+
 export interface OKLCH {
   L: number; // 0-1 (Lightness)
   C: number; // 0-0.4 (Chroma)
@@ -62,6 +80,7 @@ export type ColorFormat =
   | 'hsv'
   | 'hsva'
   | 'oklab'
+  | 'oklaba'
   | 'oklch'
   | 'oklcha';
 
@@ -75,6 +94,7 @@ export interface ColorValue {
   hsv: HSV;
   hsva: HSVA;
   oklab: OKLAB;
+  oklaba: OKLABA;
   oklch: OKLCH;
   oklcha: OKLCHA;
 }
@@ -105,6 +125,11 @@ export interface ColorPickerProps {
   height?: number;
   /** Show copy button for quick color copying */
   showCopyButton?: boolean;
+  /**
+   * Show the screen color sampler (EyeDropper). The button renders only where
+   * the browser supports the API, so this has no effect in Firefox or Safari.
+   */
+  showEyeDropper?: boolean;
   /** Enable color history (stored in localStorage) */
   enableHistory?: boolean;
   /** Maximum number of colors to keep in history (default 10) */

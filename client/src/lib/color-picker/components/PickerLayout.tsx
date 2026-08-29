@@ -1,19 +1,15 @@
 import type { ColorFormat } from '../types';
 import type { useColorState } from '../hooks';
-import { formatColor } from '../conversions';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
-import { RGBInputs } from './RGBInputs';
-import { HSLInputs } from './HSLInputs';
-import { HSVInputs } from './HSVInputs';
-import { OKLCHInputs } from './OKLCHInputs';
 import { ColorPreview } from './ColorPreview';
 import { PresetColors } from './PresetColors';
-import { CopyButton } from './CopyButton';
 import { RecentColors } from './RecentColors';
+import { EyeDropperButton } from './EyeDropperButton';
+import { InputValuePanel, type InputMode } from './InputValuePanel';
 
-export type InputMode = 'single' | 'rgb' | 'hsl' | 'hsv' | 'oklch';
+export type { InputMode };
 
 interface PickerLayoutProps {
   className: string;
@@ -30,6 +26,7 @@ interface PickerLayoutProps {
   showInputs: boolean;
   showPreview: boolean;
   showCopyButton: boolean;
+  showEyeDropper: boolean;
   formats: ColorFormat[];
   validInputMode: InputMode;
   availableModes: InputMode[];
@@ -67,6 +64,7 @@ export function PickerLayout({
   showInputs,
   showPreview,
   showCopyButton,
+  showEyeDropper,
   formats,
   validInputMode,
   availableModes,
@@ -152,6 +150,7 @@ export function PickerLayout({
                 className="ck-preview-wide"
               />
               <div className="ck-action-buttons">
+                {showEyeDropper && <EyeDropperButton onPick={setFromString} />}
                 {validInputMode === 'single' && (
                   <select
                     value={validFormat}
@@ -172,51 +171,15 @@ export function PickerLayout({
 
           {showInputs && (
             <div className="ck-inputs-values">
-              {validInputMode === 'single' && (
-                <div className="ck-input-row">
-                  <input
-                    type="text"
-                    value={formatColor(colorValue, validFormat)}
-                    onChange={(e) => setFromString(e.target.value)}
-                    className="ck-input"
-                    data-testid="color-input-text"
-                  />
-                  {showCopyButton && (
-                    <CopyButton
-                      text={formatColor(colorValue, validFormat)}
-                      onCopy={handleCopy}
-                    />
-                  )}
-                </div>
-              )}
-              {validInputMode === 'rgb' && (
-                <RGBInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-              {validInputMode === 'hsl' && (
-                <HSLInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-              {validInputMode === 'hsv' && (
-                <HSVInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
-              {validInputMode === 'oklch' && (
-                <OKLCHInputs
-                  colorValue={colorValue}
-                  onChange={setFromString}
-                  showAlpha={showAlpha}
-                />
-              )}
+              <InputValuePanel
+                inputMode={validInputMode}
+                colorValue={colorValue}
+                format={validFormat}
+                setFromString={setFromString}
+                showAlpha={showAlpha}
+                showCopyButton={showCopyButton}
+                onCopy={handleCopy}
+              />
             </div>
           )}
 

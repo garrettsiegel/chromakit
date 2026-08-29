@@ -13,6 +13,12 @@ import {
   parseColor,
   rgbaToColorValue,
   formatColor,
+  labToRgb,
+  lchToRgb,
+  hwbToRgb,
+  rgbToHwb,
+  getNamedColor,
+  getNamedColorNames,
 } from './conversions';
 import type { RGB, ColorFormat } from './types';
 
@@ -293,7 +299,12 @@ describe('Color Conversions', () => {
   describe('parseColor', () => {
     it('parses hex, rgb, and hsl strings', () => {
       expect(parseColor('#ff0000')).toEqual({ r: 255, g: 0, b: 0, a: 1 });
-      expect(parseColor('rgb(0, 255, 0)')).toEqual({ r: 0, g: 255, b: 0, a: 1 });
+      expect(parseColor('rgb(0, 255, 0)')).toEqual({
+        r: 0,
+        g: 255,
+        b: 0,
+        a: 1,
+      });
       expect(parseColor('hsl(240, 100%, 50%)')).toEqual({
         r: 0,
         g: 0,
@@ -345,6 +356,185 @@ describe('Color Conversions', () => {
 
     it.each(expectations)('formats %s correctly', (format, pattern) => {
       expect(formatColor(color, format)).toMatch(pattern);
+    });
+  });
+
+  describe('Named colors', () => {
+    it('parses CSS color keywords', () => {
+      expect(parseColor('red')).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+      expect(parseColor('rebeccapurple')).toEqual({
+        r: 102,
+        g: 51,
+        b: 153,
+        a: 1,
+      });
+      expect(parseColor('  WHITE  ')).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+        a: 1,
+      });
+    });
+
+    it('treats transparent as fully clear', () => {
+      expect(parseColor('transparent')).toEqual({ r: 0, g: 0, b: 0, a: 0 });
+    });
+
+    it('accepts both gray and grey spellings', () => {
+      expect(parseColor('gray')).toEqual(parseColor('grey'));
+      expect(parseColor('darkgray')).toEqual(parseColor('darkgrey'));
+    });
+
+    it('returns null for words that are not colors', () => {
+      expect(parseColor('notacolor')).toBeNull();
+      expect(getNamedColor('notacolor')).toBeNull();
+    });
+
+    it('exposes the full CSS keyword list', () => {
+      const names = getNamedColorNames();
+      expect(names).toHaveLength(148);
+      expect(names).toContain('rebeccapurple');
+      expect(names).not.toContain('transparent');
+    });
+  });
+
+  describe('HWB', () => {
+    it('converts hwb to rgb', () => {
+      expect(hwbToRgb({ h: 0, w: 0, b: 0 })).toEqual({ r: 255, g: 0, b: 0 });
+      expect(hwbToRgb({ h: 120, w: 0, b: 0 })).toEqual({ r: 0, g: 255, b: 0 });
+    });
+
+    it('returns a gray when whiteness and blackness saturate', () => {
+      expect(hwbToRgb({ h: 200, w: 50, b: 50 })).toEqual({
+        r: 128,
+        g: 128,
+        b: 128,
+      });
+      expect(hwbToRgb({ h: 200, w: 100, b: 0 })).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+      });
+    });
+
+    it('round-trips through rgb', () => {
+      const original: RGB = { r: 120, g: 180, b: 60 };
+      const back = hwbToRgb(rgbToHwb(original));
+      expect(back.r).toBeCloseTo(original.r, -1);
+      expect(back.g).toBeCloseTo(original.g, -1);
+      expect(back.b).toBeCloseTo(original.b, -1);
+    });
+
+    it('parses hwb strings with optional alpha', () => {
+      expect(parseColor('hwb(0 0% 0%)')).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+      expect(parseColor('hwb(0deg 0% 0% / 50%)')?.a).toBe(0.5);
+    });
+  });
+
+  describe('CIE Lab and LCH', () => {
+    it('converts lab white and black correctly', () => {
+      expect(labToRgb({ L: 100, a: 0, b: 0 })).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+      });
+      expect(labToRgb({ L: 0, a: 0, b: 0 })).toEqual({ r: 0, g: 0, b: 0 });
+    });
+
+    it('parses lab strings, including percentages and negatives', () => {
+      const red = parseColor('lab(54.29% 80.8 69.89)');
+      expect(red?.r).toBeCloseTo(255, -1);
+      expect(red?.g).toBeCloseTo(0, -1);
+
+      const numeric = parseColor('lab(50 40 -30)');
+      const percent = parseColor('lab(50% 32% -24%)');
+      expect(numeric).toEqual(percent);
+    });
+
+    it('parses lch strings and agrees with the lab equivalent', () => {
+      const viaLch = parseColor('lch(54.29% 106.84 40.86)');
+      const viaLab = parseColor('lab(54.29% 80.8 69.89)');
+      expect(viaLch).not.toBeNull();
+      expect(viaLab).not.toBeNull();
+      expect(viaLch?.r).toBeCloseTo(viaLab?.r ?? -1, -1);
+      expect(viaLch?.g).toBeCloseTo(viaLab?.g ?? -1, -1);
+      expect(viaLch?.b).toBeCloseTo(viaLab?.b ?? -1, -1);
+    });
+
+    it('supports lch alpha and deg units', () => {
+      expect(parseColor('lch(50 40 120deg / 0.25)')?.a).toBe(0.25);
+    });
+
+    it('rejects malformed lab and lch', () => {
+      expect(parseColor('lab(50 40)')).toBeNull();
+      expect(parseColor('lch(50)')).toBeNull();
+    });
+
+    it('exposes lchToRgb directly', () => {
+      expect(lchToRgb({ L: 100, C: 0, h: 0 })).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+      });
+    });
+  });
+
+  describe('Gamut mapping', () => {
+    it('leaves in-gamut colors untouched', () => {
+      const original: RGB = { r: 200, g: 100, b: 50 };
+      expect(oklabToRgb(rgbToOklab(original))).toEqual(original);
+    });
+
+    it('preserves hue for out-of-gamut chroma instead of clipping', () => {
+      // A vivid green far outside sRGB. Per-channel clipping would drag the
+      // result toward a different hue; chroma reduction should not.
+      const requestedHue = rgbToOklch({ r: 0, g: 255, b: 0 }).h;
+      const mapped = oklabToRgb({ L: 0.87, a: -0.4, b: 0.3 });
+      const mappedHue = rgbToOklch(mapped).h;
+      expect(Math.abs(mappedHue - requestedHue)).toBeLessThan(12);
+    });
+
+    it('keeps every channel inside the sRGB range', () => {
+      const mapped = oklabToRgb({ L: 0.6, a: 0.5, b: -0.5 });
+      for (const channel of [mapped.r, mapped.g, mapped.b]) {
+        expect(channel).toBeGreaterThanOrEqual(0);
+        expect(channel).toBeLessThanOrEqual(255);
+      }
+    });
+
+    it('clamps lightness beyond the 0-1 range', () => {
+      expect(oklabToRgb({ L: 1.5, a: 0, b: 0 })).toEqual({
+        r: 255,
+        g: 255,
+        b: 255,
+      });
+      expect(oklabToRgb({ L: -0.5, a: 0, b: 0 })).toEqual({
+        r: 0,
+        g: 0,
+        b: 0,
+      });
+    });
+  });
+
+  describe('oklaba format', () => {
+    it('formats oklab with alpha', () => {
+      const color = rgbaToColorValue({ r: 255, g: 0, b: 0, a: 0.5 });
+      expect(formatColor(color, 'oklaba')).toMatch(
+        /^oklab\(-?\d+\.\d{2} -?\d+\.\d{2} -?\d+\.\d{2} \/ 0\.50\)$/
+      );
+    });
+
+    it('round-trips through parseColor', () => {
+      const color = rgbaToColorValue({ r: 12, g: 200, b: 90, a: 0.4 });
+      const parsed = parseColor(formatColor(color, 'oklaba'));
+      expect(parsed?.a).toBe(0.4);
+      expect(parsed?.g).toBeCloseTo(200, -2);
+    });
+
+    it('exposes oklaba on the color value', () => {
+      const color = rgbaToColorValue({ r: 255, g: 0, b: 0, a: 0.25 });
+      expect(color.oklaba.alpha).toBe(0.25);
+      expect(color.oklaba.L).toBe(color.oklab.L);
     });
   });
 });

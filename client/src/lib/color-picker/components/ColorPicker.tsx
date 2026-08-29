@@ -1,36 +1,9 @@
-import { useState, useCallback, useMemo, useReducer } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { ColorPickerProps, ColorFormat } from '../types';
 import { useColorState } from '../hooks';
-import { getColorHistory, addToColorHistory } from '../utils';
 import { PickerLayout, type InputMode } from './PickerLayout';
 import { DEFAULT_PRESETS, DEFAULT_PRESET_GROUPS } from './preset-data';
-
-type PresetAction =
-  | { type: 'reset'; presets: string[] }
-  | { type: 'set'; presets: string[] }
-  | { type: 'update'; index: number; color: string }
-  | { type: 'delete'; index: number }
-  | { type: 'add'; color: string; limit: number };
-
-function presetsReducer(state: string[], action: PresetAction): string[] {
-  switch (action.type) {
-    case 'reset':
-    case 'set':
-      return [...action.presets];
-    case 'update': {
-      if (action.index < 0 || action.index >= state.length) return state;
-      const next = [...state];
-      next[action.index] = action.color;
-      return next;
-    }
-    case 'delete':
-      return state.filter((_, i) => i !== action.index);
-    case 'add':
-      return state.length < action.limit ? [...state, action.color] : state;
-    default:
-      return state;
-  }
-}
+import { usePresets, useColorHistory } from './picker-state';
 
 const FORMAT_TO_MODE: Record<ColorFormat, InputMode> = {
   hex: 'single',
@@ -41,7 +14,8 @@ const FORMAT_TO_MODE: Record<ColorFormat, InputMode> = {
   hsla: 'hsl',
   hsv: 'hsv',
   hsva: 'hsv',
-  oklab: 'single',
+  oklab: 'oklab',
+  oklaba: 'oklab',
   oklch: 'oklch',
   oklcha: 'oklch',
 };
@@ -61,6 +35,7 @@ export function ColorPicker({
     'hsv',
     'hsva',
     'oklab',
+    'oklaba',
     'oklch',
     'oklcha',
   ],
@@ -73,34 +48,24 @@ export function ColorPicker({
   width,
   height,
   showCopyButton = true,
+  showEyeDropper = true,
   showPresets = true,
   enableHistory = true,
   historySize = 10,
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
 
-  const [customPresets, dispatchPresets] = useReducer(
-    presetsReducer,
-    presets,
-    (initialPresets) => [...initialPresets]
-  );
+  const {
+    customPresets,
+    normalizedPresetGroups,
+    selectedPresetGroup,
+    updatePreset,
+    deletePreset,
+    addPreset,
+    loadPresetGroup,
+  } = usePresets(presets, presetGroups);
 
-  const normalizedPresetGroups = useMemo(() => {
-    if (!presetGroups) return [];
-    if (Array.isArray(presetGroups)) return presetGroups;
-    return Object.entries(presetGroups).map(([name, colors]) => ({
-      name,
-      colors,
-    }));
-  }, [presetGroups]);
-
-  const [selectedPresetGroup, setSelectedPresetGroup] = useState<string | null>(
-    null
-  );
-
-  const [history, setHistory] = useState<string[]>(() =>
-    enableHistory ? getColorHistory().slice(0, historySize) : []
-  );
+  const { history, remember } = useColorHistory(enableHistory, historySize);
 
   const dimensions = useMemo(
     () => ({
@@ -141,47 +106,27 @@ export function ColorPicker({
       const newColorValue = setFromString(color);
       if (newColorValue) {
         onChangeComplete?.(newColorValue);
-        if (enableHistory) {
-          const updated = addToColorHistory(color, historySize);
-          setHistory(updated);
-        }
+        remember(color);
       }
     },
-    [setFromString, onChangeComplete, enableHistory, historySize]
+    [setFromString, onChangeComplete, remember]
   );
 
   const handleCopy = useCallback(
     (success: boolean) => {
-      if (success && enableHistory) {
-        const currentColor = colorValue.hex;
-        const updated = addToColorHistory(currentColor, historySize);
-        setHistory(updated);
-      }
+      if (success) remember(colorValue.hex);
     },
-    [colorValue, enableHistory, historySize]
+    [colorValue.hex, remember]
   );
 
-  const handleUpdatePreset = useCallback((index: number, color: string) => {
-    dispatchPresets({ type: 'update', index, color });
-  }, []);
+  const handleUpdatePreset = useCallback(
+    (index: number, color: string) => updatePreset(index, color),
+    [updatePreset]
+  );
 
-  const handleDeletePreset = useCallback((index: number) => {
-    dispatchPresets({ type: 'delete', index });
-  }, []);
-
-  const handleAddPreset = useCallback(() => {
-    dispatchPresets({ type: 'add', color: colorValue.hex, limit: 24 });
-  }, [colorValue.hex]);
-
-  const handleLoadPresetGroup = useCallback(
-    (groupName: string) => {
-      const group = normalizedPresetGroups.find((g) => g.name === groupName);
-      if (group) {
-        dispatchPresets({ type: 'set', presets: group.colors });
-        setSelectedPresetGroup(groupName);
-      }
-    },
-    [normalizedPresetGroups]
+  const handleAddPreset = useCallback(
+    () => addPreset(colorValue.hex),
+    [addPreset, colorValue.hex]
   );
 
   return (
@@ -197,6 +142,7 @@ export function ColorPicker({
       showInputs={showInputs}
       showPreview={showPreview}
       showCopyButton={showCopyButton}
+      showEyeDropper={showEyeDropper}
       formats={formats}
       validInputMode={validInputMode}
       availableModes={availableModes}
@@ -212,11 +158,11 @@ export function ColorPicker({
       showPresets={showPresets}
       customPresets={customPresets}
       handleUpdatePreset={handleUpdatePreset}
-      handleDeletePreset={handleDeletePreset}
+      handleDeletePreset={deletePreset}
       handleAddPreset={handleAddPreset}
       normalizedPresetGroups={normalizedPresetGroups}
       selectedPresetGroup={selectedPresetGroup}
-      handleLoadPresetGroup={handleLoadPresetGroup}
+      handleLoadPresetGroup={loadPresetGroup}
     />
   );
 }

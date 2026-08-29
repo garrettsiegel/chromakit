@@ -626,3 +626,64 @@ describe('useDebounce', () => {
     expect(result.current).toBe(obj2);
   });
 });
+
+describe('useColorState controlled hue stability', () => {
+  it('keeps the chosen hue when a controlled value turns black', () => {
+    let controlled = 'hsl(240, 100%, 50%)';
+    const { result, rerender } = renderHook(() =>
+      useColorState('#000000', undefined, undefined, controlled)
+    );
+
+    expect(result.current.hsva.h).toBe(240);
+
+    // Dragging value to zero makes the color black, which carries no hue in
+    // RGB. The picker must keep showing the hue the user selected.
+    controlled = 'hsl(240, 100%, 0%)';
+    rerender();
+
+    expect(result.current.hsva.h).toBe(240);
+    expect(result.current.hsva.v).toBe(0);
+  });
+
+  it('keeps the chosen hue when a controlled value turns white', () => {
+    let controlled = 'hsl(120, 100%, 50%)';
+    const { result, rerender } = renderHook(() =>
+      useColorState('#000000', undefined, undefined, controlled)
+    );
+
+    expect(result.current.hsva.h).toBe(120);
+
+    controlled = '#ffffff';
+    rerender();
+
+    expect(result.current.hsva.h).toBe(120);
+    expect(result.current.hsva.s).toBe(0);
+  });
+
+  it('restores saturation after passing through black', () => {
+    let controlled = 'hsl(300, 80%, 50%)';
+    const { result, rerender } = renderHook(() =>
+      useColorState('#000000', undefined, undefined, controlled)
+    );
+
+    const originalSaturation = result.current.hsva.s;
+
+    controlled = '#000000';
+    rerender();
+
+    expect(result.current.hsva.h).toBeCloseTo(300, 0);
+    expect(result.current.hsva.s).toBe(originalSaturation);
+  });
+
+  it('still follows genuine hue changes', () => {
+    let controlled = 'hsl(240, 100%, 50%)';
+    const { result, rerender } = renderHook(() =>
+      useColorState('#000000', undefined, undefined, controlled)
+    );
+
+    controlled = 'hsl(30, 100%, 50%)';
+    rerender();
+
+    expect(result.current.hsva.h).toBeCloseTo(30, 0);
+  });
+});

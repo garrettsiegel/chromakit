@@ -2,14 +2,32 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { HSVA, ColorValue } from './types';
 import { parseColor, rgbaToColorValue, hsvaToRgba } from './conversions';
 
+/**
+ * RGB cannot represent hue for black, white, or any gray, so a color round-
+ * tripped through RGB loses the hue the user picked and the ring snaps to 0.
+ * Carry the previous hue (and saturation) forward while those channels are
+ * degenerate, so dragging to an edge and back is lossless.
+ */
+function preserveHueAndSaturation(next: HSVA, previous: HSVA): HSVA {
+  return {
+    ...next,
+    h: next.s === 0 || next.v === 0 ? previous.h : next.h,
+    s: next.v === 0 ? previous.s : next.s,
+  };
+}
+
 export function useColorState(
   initialColor: string = '#000000',
   onChange?: (color: ColorValue) => void,
   onChangeComplete?: (color: ColorValue) => void,
   controlledColor?: string
 ) {
+  // Seed from the controlled value when there is one, so the very first render
+  // already remembers the caller's hue rather than the fallback's.
+  const seedColor = controlledColor || initialColor;
+
   const [internalHsva, setInternalHsva] = useState<HSVA>(() => {
-    const rgba = parseColor(initialColor);
+    const rgba = parseColor(seedColor);
     if (rgba) {
       const colorValue = rgbaToColorValue(rgba);
       return colorValue.hsva;
@@ -17,12 +35,14 @@ export function useColorState(
     return { h: 0, s: 100, v: 100, a: 1 };
   });
 
-  const [internalColorValue, setInternalColorValue] = useState<ColorValue>(() => {
-    const rgba = parseColor(initialColor);
-    return rgba
-      ? rgbaToColorValue(rgba)
-      : rgbaToColorValue({ r: 0, g: 0, b: 0, a: 1 });
-  });
+  const [internalColorValue, setInternalColorValue] = useState<ColorValue>(
+    () => {
+      const rgba = parseColor(initialColor);
+      return rgba
+        ? rgbaToColorValue(rgba)
+        : rgbaToColorValue({ r: 0, g: 0, b: 0, a: 1 });
+    }
+  );
 
   const controlledColorValue = useMemo(() => {
     if (!controlledColor) {
@@ -32,7 +52,16 @@ export function useColorState(
     return rgba ? rgbaToColorValue(rgba) : null;
   }, [controlledColor]);
 
-  const hsva = controlledColorValue?.hsva ?? internalHsva;
+  // internalHsva doubles as the record of what the user last steered directly,
+  // which is what keeps the hue ring stable through black, white, and gray.
+  const hsva = useMemo(
+    () =>
+      controlledColorValue
+        ? preserveHueAndSaturation(controlledColorValue.hsva, internalHsva)
+        : internalHsva,
+    [controlledColorValue, internalHsva]
+  );
+
   const colorValue = controlledColorValue ?? internalColorValue;
 
   const isDragging = useRef(false);
@@ -49,8 +78,10 @@ export function useColorState(
     (newHsva: HSVA) => {
       const rgba = hsvaToRgba(newHsva);
       const newColorValue = rgbaToColorValue(rgba);
+      // Tracked even while controlled: it is the memory the hue ring reads
+      // back when the color itself cannot carry a hue.
+      setInternalHsva((prev) => preserveHueAndSaturation(newHsva, prev));
       if (!controlledColorValue) {
-        setInternalHsva(newHsva);
         setInternalColorValue(newColorValue);
       }
       onChange?.(newColorValue);
@@ -63,9 +94,11 @@ export function useColorState(
       const rgba = parseColor(colorString);
       if (rgba) {
         const newColorValue = rgbaToColorValue(rgba);
+        setInternalHsva((prev) =>
+          preserveHueAndSaturation(newColorValue.hsva, prev)
+        );
         if (!controlledColorValue) {
           setInternalColorValue(newColorValue);
-          setInternalHsva(newColorValue.hsva);
         }
         onChange?.(newColorValue);
         return newColorValue;

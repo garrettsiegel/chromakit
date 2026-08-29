@@ -166,3 +166,43 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Screen color sampling via the browser EyeDropper API.
+ *
+ * Chromium-based browsers ship it; Firefox and Safari do not, so callers must
+ * check support before offering it. Typed locally because TypeScript's DOM
+ * library does not declare EyeDropper yet.
+ */
+interface EyeDropperInstance {
+  open: () => Promise<{ sRGBHex: string }>;
+}
+
+type EyeDropperConstructor = new () => EyeDropperInstance;
+
+function getEyeDropper(): EyeDropperConstructor | null {
+  if (typeof window === 'undefined') return null;
+  const ctor = (window as unknown as { EyeDropper?: EyeDropperConstructor })
+    .EyeDropper;
+  return typeof ctor === 'function' ? ctor : null;
+}
+
+/** Whether this browser can sample colors from the screen. */
+export function isEyeDropperSupported(): boolean {
+  return getEyeDropper() !== null;
+}
+
+/**
+ * Open the screen color sampler. Resolves to a hex string, or null when the
+ * API is unavailable or the user dismissed the picker.
+ */
+export async function openEyeDropper(): Promise<string | null> {
+  const EyeDropperCtor = getEyeDropper();
+  if (!EyeDropperCtor) return null;
+  try {
+    const result = await new EyeDropperCtor().open();
+    return result.sRGBHex;
+  } catch {
+    return null;
+  }
+}

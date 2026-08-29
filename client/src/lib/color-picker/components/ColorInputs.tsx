@@ -28,6 +28,7 @@ const ALL_FORMATS: {
   { value: 'oklch', label: 'OKLCH' },
   { value: 'oklcha', label: 'OKLCHA', needsAlpha: true },
   { value: 'oklab', label: 'OKLAB' },
+  { value: 'oklaba', label: 'OKLABA', needsAlpha: true },
 ];
 
 export function ColorInputs({

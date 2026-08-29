@@ -13,6 +13,9 @@ export {
   oklchToRgb,
   oklchaToRgba,
 } from './conversions/oklab';
+export { labToRgb, lchToLab, lchToRgb } from './conversions/lab';
+export { hwbToRgb, rgbToHwb } from './conversions/hwb';
+export { getNamedColor, getNamedColorNames } from './conversions/named-colors';
 export {
   parseColor,
   rgbaToColorValue,
