@@ -6,8 +6,9 @@
 <button
   type="button"
   data-theme-toggle
-  aria-label="Toggle color theme"
-  class="inline-flex items-center justify-center rounded-md min-h-[44px] min-w-[44px] hover:bg-muted transition-colors"
+  aria-label="Use dark theme"
+  aria-pressed="false"
+  class="theme-toggle"
 >
   <!-- Moon (shown in light mode) -->
   <svg
@@ -43,11 +44,20 @@
     <path d="m6.34 17.66-1.41 1.41"></path>
     <path d="m19.07 4.93-1.41 1.41"></path>
   </svg>
-  <span class="sr-only">Toggle color theme</span>
+  <span class="sr-only" data-theme-label>Use dark theme</span>
 </button>
 
 <script>
   document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+    const syncState = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      const label = isDark ? 'Use light theme' : 'Use dark theme';
+      btn.setAttribute('aria-pressed', String(isDark));
+      btn.setAttribute('aria-label', label);
+      const text = btn.querySelector('[data-theme-label]');
+      if (text) text.textContent = label;
+    };
+    syncState();
     btn.addEventListener('click', () => {
       const isDark = document.documentElement.classList.toggle('dark');
       try {
@@ -55,6 +65,7 @@
       } catch {
         /* ignore storage errors (private mode) */
       }
+      syncState();
     });
   });
 </script>

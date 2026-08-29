@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-08-29
+
+### Added
+
+- A live editorial color workbench, redesigned documentation shell, deterministic
+  ChromaKit mark, self-hosted fonts, and new Open Graph, README, favicon, and
+  manifest imagery.
+- Automated Playwright and axe checks for every indexable route in light and
+  dark modes, plus representative mobile, desktop, and intentional-404
+  Lighthouse gates.
+- Independent saturation and brightness slider semantics for the two-axis color
+  area, including keyboard, numeric-input, pointer, and drag alternatives.
+
+### Fixed
+
+- Controlled examples now retain alpha by storing `ColorValue.hex8` instead of
+  dropping transparency through six-digit hex state.
+- Derived alpha channel values in RGB, HSL, and HSV inputs are limited to two
+  decimal places instead of displaying floating-point tails.
+- Picker mode controls activate consistently with Enter and Space, focus-visible
+  controls no longer depend on hover, and narrow layouts reflow without
+  horizontal overflow under browser text-spacing overrides.
+
+### Changed
+
+- Reworked the marketing site and README around an editorial color-workbench
+  system with flat fields, stronger typography, real package facts, and concise
+  installation and API guidance.
+- Strengthened the picker and site toward WCAG 2.2 AA with selected AAA-level
+  safeguards for contrast, focus appearance, target size, zoom, reduced motion,
+  forced colors, and mobile disclosure navigation.
+- Updated the verified size figures to 12.44 kB ES, 13.05 kB UMD, and 3.29 kB
+  CSS, measured minified and gzipped with `size-limit`.
+
 ## [0.5.0] - 2026-08-28
 
 ### Added
@@ -215,7 +249,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS custom properties for theming
 - Efficient re-render optimization with React.memo and useMemo
 
-[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/garrettsiegel/chromakit/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/garrettsiegel/chromakit/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/garrettsiegel/chromakit/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/garrettsiegel/chromakit/compare/v0.2.3...v0.3.0
+[0.2.3]: https://github.com/garrettsiegel/chromakit/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/garrettsiegel/chromakit/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/garrettsiegel/chromakit/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/garrettsiegel/chromakit/compare/v0.1.16...v0.2.0

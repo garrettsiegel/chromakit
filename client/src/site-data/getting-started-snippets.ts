@@ -10,7 +10,7 @@ export function Example() {
   return (
     <ColorPicker
       value={color}
-      onChange={(c) => setColor(c.hex)}
+      onChange={(c) => setColor(c.hex8)}
     />
   );
 }`;
@@ -22,7 +22,7 @@ import 'chromakit-react/chromakit.css';
 
 export function MyColorPicker() {
   const [color, setColor] = useState('#6366F1');
-  return <ColorPicker value={color} onChange={(c) => setColor(c.hex)} />;
+  return <ColorPicker value={color} onChange={(c) => setColor(c.hex8)} />;
 }`;
 
 export const nextPagesCode = `import dynamic from 'next/dynamic';

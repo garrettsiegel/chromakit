@@ -5,6 +5,10 @@ node_modules/
 
 # Testing
 coverage/
+.hallmark/
+.lighthouseci/
+playwright-report/
+test-results/
 
 # Production
 dist/

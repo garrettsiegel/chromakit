@@ -10,7 +10,7 @@ export const BasicDemoCard = () => {
   const [color, setColor] = useState('#6366F1');
   return (
     <DemoCard code={basicUsageCode}>
-      <ColorPicker value={color} onChange={(c) => setColor(c.hex)} />
+      <ColorPicker value={color} onChange={(c) => setColor(c.hex8)} />
     </DemoCard>
   );
 };

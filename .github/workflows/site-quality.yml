@@ -1,0 +1,31 @@
+name: Site quality
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: site-quality-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  local-release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run quality:site
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-quality-reports
+          path: |
+            .lighthouseci
+            playwright-report
+            test-results

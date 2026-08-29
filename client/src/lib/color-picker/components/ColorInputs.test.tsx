@@ -292,6 +292,25 @@ describe('RGBInputs', () => {
     expect(bInput.value).toBe('0');
   });
 
+  it('should limit derived alpha values to two decimal places', () => {
+    const translucentColor = rgbaToColorValue({
+      r: 63,
+      g: 254,
+      b: 213,
+      a: 0.7686274509803922,
+    });
+    render(
+      <RGBInputs
+        colorValue={translucentColor}
+        onChange={vi.fn()}
+        showAlpha
+      />
+    );
+
+    const alphaInput = screen.getByTestId('rgb-input-a') as HTMLInputElement;
+    expect(alphaInput.value).toBe('0.77');
+  });
+
   it('should call onChange when RGB value changes', async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();

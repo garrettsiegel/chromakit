@@ -1,4 +1,10 @@
-import { useCallback, useMemo, useReducer, useState } from 'react';
+import {
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type { PresetGroup, PresetGroupsInput } from '../types';
 import { getColorHistory, addToColorHistory } from '../utils';
 
@@ -93,14 +99,34 @@ export function usePresets(
 
 /** Recently used colors, persisted to localStorage when enabled. */
 export function useColorHistory(enabled: boolean, size: number) {
-  const [history, setHistory] = useState<string[]>(() =>
-    enabled ? getColorHistory().slice(0, size) : []
+  const subscribe = useCallback((onStoreChange: () => void) => {
+    window.addEventListener('chromakit-history-change', onStoreChange);
+    window.addEventListener('storage', onStoreChange);
+    return () => {
+      window.removeEventListener('chromakit-history-change', onStoreChange);
+      window.removeEventListener('storage', onStoreChange);
+    };
+  }, []);
+
+  const getSnapshot = useCallback(
+    () => JSON.stringify(enabled ? getColorHistory().slice(0, size) : []),
+    [enabled, size]
+  );
+  const serializedHistory = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    () => '[]'
+  );
+  const history = useMemo(
+    () => JSON.parse(serializedHistory) as string[],
+    [serializedHistory]
   );
 
   const remember = useCallback(
     (color: string) => {
       if (!enabled) return;
-      setHistory(addToColorHistory(color, size));
+      addToColorHistory(color, size);
+      window.dispatchEvent(new Event('chromakit-history-change'));
     },
     [enabled, size]
   );

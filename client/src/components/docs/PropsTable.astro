@@ -14,10 +14,13 @@ const typeLabel = labels?.type ?? 'Type';
 const defaultLabel = labels?.default ?? 'Default';
 ---
 
-<div class="overflow-x-auto rounded-lg border border-border">
+<div
+  class="props-table-wrap"
+  tabindex="0"
+>
   <table class="w-full border-collapse text-sm">
     <thead>
-      <tr class="bg-muted/50 text-left">
+      <tr>
         <th class="px-4 py-2.5 font-semibold">{nameLabel}</th>
         {showType && <th class="px-4 py-2.5 font-semibold">{typeLabel}</th>}
         {showDefault && <th class="px-4 py-2.5 font-semibold">{defaultLabel}</th>}
@@ -27,7 +30,7 @@ const defaultLabel = labels?.default ?? 'Default';
     <tbody>
       {
         rows.map((row) => (
-          <tr class="border-t border-border align-top">
+          <tr class="align-top">
             <td class="px-4 py-2.5 whitespace-nowrap">
               <code class="font-mono text-xs text-primary">{row.name}</code>
               {row.required && (

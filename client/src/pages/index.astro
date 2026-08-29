@@ -8,19 +8,19 @@ import { DemoPlayground } from '@/components/home/DemoPlayground';
 import UsageSection from '@/components/home/UsageSection.astro';
 import FinalCTA from '@/components/home/FinalCTA.astro';
 
-const title = 'ChromaKit - Modern React Color Picker for Design Systems';
+const title = 'ChromaKit — React color picker and conversion toolkit';
 const description =
-  'Modern color spaces (OKLCH/OKLAB) • ~10KB gzipped • TypeScript-first • Built for design systems • Accessible by default';
+  'A zero-runtime-dependency React color picker and conversion toolkit with OKLCH, OKLAB, HSL, HSV, RGB, HEX, TypeScript, theming, and WCAG contrast helpers.';
 ---
 
 <BaseLayout title={title} description={description} jsonLd>
-  <div class="min-h-screen bg-background">
-    <SiteHeader />
+  <SiteHeader />
+  <main id="main-content" class="site-main">
     <HeroSection />
-    <FeaturesSection />
     <DemoPlayground client:visible />
+    <FeaturesSection />
     <UsageSection />
     <FinalCTA />
-    <SiteFooter />
-  </div>
+  </main>
+  <SiteFooter />
 </BaseLayout>

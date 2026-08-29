@@ -3,8 +3,7 @@
 // ============================================================
 // Displays a grid of recently used colors with click-to-select
 
-import { useMemo } from 'react';
-import { getColorHistory } from '../utils';
+import { useColorHistory } from './picker-state';
 
 export interface RecentColorsProps {
   onColorSelect: (color: string) => void;
@@ -22,10 +21,11 @@ export function RecentColors({
   className = '',
   colors,
 }: RecentColorsProps) {
-  // Fall back to localStorage only when no colors prop is supplied.
-  const fallbackColors = useMemo(
-    () => (colors === undefined ? getColorHistory() : []),
-    [colors]
+  // useSyncExternalStore gives server rendering a stable empty snapshot while
+  // preserving persisted history after hydration.
+  const { history: fallbackColors } = useColorHistory(
+    colors === undefined,
+    10
   );
   const recentColors = colors ?? fallbackColors;
 

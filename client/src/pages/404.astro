@@ -9,31 +9,20 @@ import SiteFooter from '@/components/layout/SiteFooter.astro';
   description="The page you're looking for doesn't exist."
   noindex
 >
-  <div class="min-h-screen bg-background flex flex-col">
-    <SiteHeader />
-    <main class="flex-1 flex items-center justify-center px-6 py-24">
-      <div class="max-w-md text-center space-y-6">
-        <p class="text-sm font-semibold text-primary">404</p>
-        <h1 class="text-3xl font-bold tracking-tight">Page not found</h1>
-        <p class="text-muted-foreground">
-          The page you're looking for doesn't exist or may have moved.
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-          <a
-            href="/"
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium min-h-10 px-6 h-11 bg-primary text-primary-foreground border border-primary-border"
-          >
-            Back to home
-          </a>
-          <a
-            href="/docs"
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium min-h-10 px-6 h-11 border [border-color:var(--button-outline)] shadow-xs"
-          >
-            Read the docs
-          </a>
+  <SiteHeader />
+  <main id="main-content" class="not-found">
+    <div class="container not-found__grid">
+      <p class="not-found__code" aria-hidden="true">404</p>
+      <div>
+        <p class="field-label">Outside the available gamut</p>
+        <h1>Page not found.</h1>
+        <p>The address does not map to a ChromaKit page.</p>
+        <div class="not-found__actions">
+          <a class="button-primary" href="/">Return to the workbench</a>
+          <a class="button-secondary" href="/docs/getting-started">Read the docs</a>
         </div>
       </div>
-    </main>
-    <SiteFooter />
-  </div>
+    </div>
+  </main>
+  <SiteFooter />
 </BaseLayout>

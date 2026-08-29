@@ -1,41 +1,30 @@
 ---
 import ThemeToggle from '@/components/ThemeToggle.astro';
-import { LOGO_DATA_URI } from '@/assets/logo-data-uri';
+import BrandMark from '@/components/BrandMark.astro';
 
 const version = __PKG_VERSION__;
-const navLinkClass =
-  'inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg hover:bg-muted transition-colors';
-const badgeClass =
-  'whitespace-nowrap items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-secondary text-secondary-foreground hidden sm:inline-flex';
+const isDocs = Astro.url.pathname.startsWith('/docs');
 ---
 
-<header
-  class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl"
->
-  <div
-    class="container mx-auto px-6 py-4 flex items-center justify-between gap-4"
-  >
-    <a href="/" class="flex items-center gap-3">
-      <img
-        src={LOGO_DATA_URI}
-        alt="ChromaKit logo"
-        width="32"
-        height="32"
-        class="w-8 h-8 rounded-lg"
-      />
-      <h1 class="text-xl font-bold">ChromaKit</h1>
-      <span class={badgeClass}>v{version}</span>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="brand-lockup" aria-label="ChromaKit home">
+      <BrandMark />
+      <span>ChromaKit</span>
+      <span class="brand-lockup__version" aria-label={`Version ${version}`}>
+        v{version}
+      </span>
     </a>
-    <div class="flex items-center gap-2">
-      <a href="/#demo" class={navLinkClass}>Demo</a>
-      <a href="/docs" class={navLinkClass}>Docs</a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="site-nav__link" href="/#workbench">Workbench</a>
       <a
-        href="https://github.com/garrettsiegel/chromakit"
-        target="_blank"
-        rel="noopener noreferrer"
-        class={navLinkClass}>GitHub</a
+        class="site-nav__link site-nav__link--primary"
+        href="/docs/getting-started"
+        aria-current={isDocs ? 'page' : undefined}
       >
+        Read docs <span aria-hidden="true">→</span>
+      </a>
       <ThemeToggle />
-    </div>
+    </nav>
   </div>
 </header>

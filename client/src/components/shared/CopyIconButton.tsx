@@ -7,8 +7,7 @@ interface CopyIconButtonProps {
   className?: string;
 }
 
-const BASE_CLASSES =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap h-9 w-9 rounded-md border border-transparent text-sm font-medium hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50';
+const BASE_CLASSES = 'copy-icon-button';
 
 export const CopyIconButton = memo(function CopyIconButton({
   text,
@@ -20,14 +19,15 @@ export const CopyIconButton = memo(function CopyIconButton({
     <button
       type="button"
       onClick={copy}
-      className={`${BASE_CLASSES} ${className} transition-transform active:scale-95`}
+      className={`${BASE_CLASSES} ${className}`}
       data-testid="button-copy"
       aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
+      aria-live="polite"
     >
       {copied ? (
-        <Check className="h-4 w-4 text-green-500" />
+        <Check className="h-4 w-4" aria-hidden="true" />
       ) : (
-        <Copy className="h-4 w-4" />
+        <Copy className="h-4 w-4" aria-hidden="true" />
       )}
       <span className="sr-only">
         {copied ? 'Copied!' : 'Copy to clipboard'}

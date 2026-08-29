@@ -1,15 +1,22 @@
 {
   "name": "ChromaKit",
   "short_name": "ChromaKit",
-  "description": "Modern React color picker with OKLCH support",
-  "theme_color": "#1a8cff",
-  "background_color": "#ffffff",
+  "description": "React color picker and conversion toolkit for modern color spaces",
+  "theme_color": "#202516",
+  "background_color": "#f6f3e9",
   "display": "standalone",
   "icons": [
     {
-      "src": "/favicon.png",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

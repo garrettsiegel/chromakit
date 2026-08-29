@@ -95,6 +95,7 @@ export function ColorInputs({
       <div className="ck-input-row">
         <input
           type="text"
+          aria-label={`Color value in ${format.toUpperCase()} format`}
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleBlur}
@@ -104,6 +105,7 @@ export function ColorInputs({
         />
         {onFormatChange && (
           <select
+            aria-label="Color format"
             value={format}
             onChange={(e) => onFormatChange(e.target.value as ColorFormat)}
             className="ck-select"

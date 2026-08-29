@@ -23,6 +23,11 @@ export default defineConfig({
   // Keep site output in dist/public. build:lib wipes all of dist/ (emptyOutDir),
   // which is what keeps site files out of the npm tarball (files: ["dist"]).
   outDir: './dist/public',
+  build: {
+    // The site stylesheet is small enough to inline. This removes two
+    // render-blocking round trips on throttled mobile connections.
+    inlineStylesheets: 'always',
+  },
   integrations: [react(), sitemap()],
   redirects: {
     '/docs': '/docs/getting-started',
