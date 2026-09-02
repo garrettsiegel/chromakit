@@ -94,7 +94,8 @@ export const colorPickerProps: PropRow[] = [
   {
     name: 'width',
     type: 'number | string',
-    description: 'Picker width, as pixels or any CSS width value. Values below ~520px render the stacked layout.',
+    description:
+      'Picker width, as pixels or any CSS width value. Values below ~520px render the stacked layout.',
   },
   {
     name: 'height',
