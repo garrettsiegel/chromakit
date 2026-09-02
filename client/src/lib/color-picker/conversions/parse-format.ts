@@ -144,6 +144,15 @@ export function rgbaToColorValue(rgba: RGBA): ColorValue {
   };
 }
 
+/**
+ * Integer values stay integers; non-integers keep one decimal. Keeps the
+ * picker's text fields round-trip-stable: a displayed 1-decimal value parses
+ * back far closer to the original color than a rounded integer.
+ */
+function percentPart(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
 export function formatColor(color: ColorValue, format: ColorFormat): string {
   switch (format) {
     case 'hex':
@@ -155,21 +164,21 @@ export function formatColor(color: ColorValue, format: ColorFormat): string {
     case 'rgba':
       return `rgba(${color.rgba.r}, ${color.rgba.g}, ${color.rgba.b}, ${color.rgba.a.toFixed(2)})`;
     case 'hsl':
-      return `hsl(${Math.round(color.hsl.h)}, ${Math.round(color.hsl.s)}%, ${Math.round(color.hsl.l)}%)`;
+      return `hsl(${percentPart(color.hsl.h)}, ${percentPart(color.hsl.s)}%, ${percentPart(color.hsl.l)}%)`;
     case 'hsla':
-      return `hsla(${Math.round(color.hsla.h)}, ${Math.round(color.hsla.s)}%, ${Math.round(color.hsla.l)}%, ${color.hsla.a.toFixed(2)})`;
+      return `hsla(${percentPart(color.hsla.h)}, ${percentPart(color.hsla.s)}%, ${percentPart(color.hsla.l)}%, ${color.hsla.a.toFixed(2)})`;
     case 'hsv':
-      return `hsv(${Math.round(color.hsv.h)}, ${Math.round(color.hsv.s)}%, ${Math.round(color.hsv.v)}%)`;
+      return `hsv(${percentPart(color.hsv.h)}, ${percentPart(color.hsv.s)}%, ${percentPart(color.hsv.v)}%)`;
     case 'hsva':
-      return `hsva(${Math.round(color.hsva.h)}, ${Math.round(color.hsva.s)}%, ${Math.round(color.hsva.v)}%, ${color.hsva.a.toFixed(2)})`;
+      return `hsva(${percentPart(color.hsva.h)}, ${percentPart(color.hsva.s)}%, ${percentPart(color.hsva.v)}%, ${color.hsva.a.toFixed(2)})`;
     case 'oklab':
       return `oklab(${color.oklab.L.toFixed(2)} ${color.oklab.a.toFixed(2)} ${color.oklab.b.toFixed(2)})`;
     case 'oklaba':
       return `oklab(${color.oklaba.L.toFixed(2)} ${color.oklaba.a.toFixed(2)} ${color.oklaba.b.toFixed(2)} / ${color.oklaba.alpha.toFixed(2)})`;
     case 'oklch':
-      return `oklch(${(color.oklch.L * 100).toFixed(0)}% ${color.oklch.C.toFixed(2)} ${Math.round(color.oklch.h)})`;
+      return `oklch(${(color.oklch.L * 100).toFixed(1)}% ${color.oklch.C.toFixed(3)} ${color.oklch.h.toFixed(1)})`;
     case 'oklcha':
-      return `oklch(${(color.oklcha.L * 100).toFixed(0)}% ${color.oklcha.C.toFixed(2)} ${Math.round(color.oklcha.h)} / ${color.oklcha.a.toFixed(2)})`;
+      return `oklch(${(color.oklcha.L * 100).toFixed(1)}% ${color.oklcha.C.toFixed(3)} ${color.oklcha.h.toFixed(1)} / ${color.oklcha.a.toFixed(2)})`;
     default:
       return color.hex;
   }

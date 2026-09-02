@@ -426,12 +426,40 @@ describe('Color Conversions', () => {
       ['hsv', /^hsv\(0, 100%, 100%\)$/],
       ['hsva', /^hsva\(0, 100%, 100%, 0\.50\)$/],
       ['oklab', /^oklab\(-?\d+\.\d{2} -?\d+\.\d{2} -?\d+\.\d{2}\)$/],
-      ['oklch', /^oklch\(\d+% \d+\.\d{2} \d+\)$/],
-      ['oklcha', /^oklch\(\d+% \d+\.\d{2} \d+ \/ 0\.50\)$/],
+      ['oklch', /^oklch\(\d+\.\d% \d+\.\d{3} \d+\.\d\)$/],
+      ['oklcha', /^oklch\(\d+\.\d% \d+\.\d{3} \d+\.\d \/ 0\.50\)$/],
     ];
 
     it.each(expectations)('formats %s correctly', (format, pattern) => {
       expect(formatColor(color, format)).toMatch(pattern);
+    });
+
+    it('keeps integer hsl/hsv parts integral', () => {
+      expect(formatColor(color, 'hsl')).toBe('hsl(0, 100%, 50%)');
+      expect(formatColor(color, 'hsv')).toBe('hsv(0, 100%, 100%)');
+    });
+
+    it('round-trips through text without visible drift', () => {
+      // The B3 complaint: editing the displayed HSL/OKLCH string re-parsed a
+      // rounded value and the color visibly drifted. One decimal on the
+      // fractional parts keeps every channel within 1/255 of the original.
+      const samples: RGB[] = [
+        { r: 221, g: 254, b: 63 },
+        { r: 12, g: 200, b: 130 },
+        { r: 187, g: 134, b: 252 },
+      ];
+      for (const rgb of samples) {
+        const value = rgbaToColorValue({ ...rgb, a: 1 });
+        for (const format of ['hsl', 'hsv', 'oklch'] as ColorFormat[]) {
+          const parsed = parseColor(formatColor(value, format));
+          if (!parsed) {
+            throw new Error(`${format} failed to parse its own output`);
+          }
+          expect(Math.abs(parsed.r - rgb.r), format).toBeLessThanOrEqual(1);
+          expect(Math.abs(parsed.g - rgb.g), format).toBeLessThanOrEqual(1);
+          expect(Math.abs(parsed.b - rgb.b), format).toBeLessThanOrEqual(1);
+        }
+      }
     });
   });
 

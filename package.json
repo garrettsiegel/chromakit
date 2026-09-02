@@ -110,11 +110,7 @@
       "client/src/lib/color-picker/index.ts"
     ],
     "project": [
-      "client/src/**/*.{ts,tsx,astro}"
-    ],
-    "ignore": [
-      "coverage/**",
-      "dist/**"
+      "client/src/**/*.{ts,tsx,astro,css}"
     ],
     "ignoreExportsUsedInFile": true
   },
@@ -136,7 +132,7 @@
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.62.1",
     "@radix-ui/react-tabs": "^1.1.13",
-    "@size-limit/preset-small-lib": "^12.0.0",
+    "@size-limit/preset-small-lib": "^13.0.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@testing-library/dom": "^10.4.0",
@@ -159,15 +155,15 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^30.0.1",
-    "knip": "^5.83.1",
+    "knip": "^6.34.0",
     "lucide-react": "^1.39.0",
     "prettier": "^3.8.1",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "rollup-plugin-visualizer": "^6.0.5",
-    "sharp": "^0.34.5",
-    "size-limit": "^12.0.0",
+    "rollup-plugin-visualizer": "^7.1.1",
+    "sharp": "^0.35.4",
+    "size-limit": "^13.0.3",
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3",
