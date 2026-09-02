@@ -31,7 +31,10 @@ export function ChannelInputs<K extends string>({
 
   const handleChange = (channel: ChannelConfig<K>, raw: string) => {
     setDraft({ key: channel.key, text: raw });
-    const parsed = parseFloat(raw) || 0;
+    // DON'T COMMIT WHILE THE FIELD IS EMPTY OR NON-NUMERIC — clearing a field
+    // to retype it must not repaint the picker with a 0.
+    const parsed = parseFloat(raw);
+    if (raw.trim() === '' || Number.isNaN(parsed)) return;
     const clamped = Math.max(channel.min, Math.min(channel.max, parsed));
     onChannelChange(channel.key, clamped);
   };

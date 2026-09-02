@@ -161,6 +161,11 @@ describe('Color History Utils', () => {
       const history = getColorHistory();
       expect(history).toEqual(['#00ff00', '#ff0000']);
     });
+
+    it('should ignore malformed localStorage contents', () => {
+      localStorage.setItem('chromakit-color-history', '{"not":"an array"}');
+      expect(getColorHistory()).toEqual([]);
+    });
   });
 
   describe('addToColorHistory', () => {

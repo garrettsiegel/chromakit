@@ -140,6 +140,25 @@ describe('ColorInputs', () => {
       expect(onChange).toHaveBeenCalled();
     });
 
+    it('accepts a full hsv() string when the format is hsv', async () => {
+      const onChange = vi.fn();
+      const user = userEvent.setup();
+
+      render(
+        <ColorInputs
+          colorValue={mockColorValue}
+          onChange={onChange}
+          format="hsv"
+        />
+      );
+
+      const input = screen.getByTestId('color-input-text');
+      await user.clear(input);
+      await user.type(input, 'hsv(120, 50%, 75%)');
+
+      expect(onChange).toHaveBeenCalledWith('hsv(120, 50%, 75%)');
+    });
+
     it('should call onFormatChange when format is changed', async () => {
       const onFormatChange = vi.fn();
       const user = userEvent.setup();
@@ -353,6 +372,20 @@ describe('RGBInputs', () => {
     expect(onChange).toHaveBeenCalledWith(
       expect.stringMatching(/rgba\([^)]+,\s*1\)/)
     );
+  });
+
+  it('should not commit a color while a field is being cleared', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+
+    render(<RGBInputs colorValue={mockColorValue} onChange={onChange} />);
+
+    const rInput = screen.getByTestId('rgb-input-r');
+    await user.clear(rInput);
+    expect(onChange).not.toHaveBeenCalled();
+
+    await user.type(rInput, '12');
+    expect(onChange).toHaveBeenCalled();
   });
 });
 

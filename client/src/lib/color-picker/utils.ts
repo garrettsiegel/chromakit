@@ -1,17 +1,16 @@
 import type { RGB } from './types';
 import { rgbToHsv, hsvToRgb } from './conversions';
+import { srgbToLinear } from './conversions/math';
 
 /**
  * Calculate relative luminance of a color
  * Used for WCAG contrast ratio calculations
  */
 export function getRelativeLuminance(rgb: RGB): number {
-  const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((channel) => {
-    const sRGB = channel / 255;
-    return sRGB <= 0.03928
-      ? sRGB / 12.92
-      : Math.pow((sRGB + 0.055) / 1.055, 2.4);
-  });
+  // srgbToLinear takes the 0-255 channel value.
+  const r = srgbToLinear(rgb.r);
+  const g = srgbToLinear(rgb.g);
+  const b = srgbToLinear(rgb.b);
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
@@ -101,7 +100,11 @@ export function getColorHistory(): string[] {
   }
   try {
     const history = localStorage.getItem(HISTORY_KEY);
-    return history ? JSON.parse(history) : [];
+    if (!history) return [];
+    const parsed: unknown = JSON.parse(history);
+    return Array.isArray(parsed)
+      ? parsed.filter((c): c is string => typeof c === 'string')
+      : [];
   } catch {
     return [];
   }

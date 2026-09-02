@@ -20,25 +20,29 @@ const FORMAT_TO_MODE: Record<ColorFormat, InputMode> = {
   oklcha: 'oklch',
 };
 
+// Stable module-level default so `availableModes` memoizes across renders
+// when the consumer omits `formats`.
+const ALL_COLOR_FORMATS: ColorFormat[] = [
+  'hex',
+  'hex8',
+  'rgb',
+  'rgba',
+  'hsl',
+  'hsla',
+  'hsv',
+  'hsva',
+  'oklab',
+  'oklaba',
+  'oklch',
+  'oklcha',
+];
+
 export function ColorPicker({
   value,
   defaultValue = '#6366F1',
   onChange,
   onChangeComplete,
-  formats = [
-    'hex',
-    'hex8',
-    'rgb',
-    'rgba',
-    'hsl',
-    'hsla',
-    'hsv',
-    'hsva',
-    'oklab',
-    'oklaba',
-    'oklch',
-    'oklcha',
-  ],
+  formats = ALL_COLOR_FORMATS,
   showAlpha = true,
   showInputs = true,
   showPreview = true,

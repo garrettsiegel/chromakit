@@ -329,12 +329,88 @@ describe('Color Conversions', () => {
       expect(numeric?.a).toBe(0.5);
     });
 
-    it.each(['notacolor', '#GGGGGG', '', 'oklab(0.5 0.1)'])(
-      'returns null for malformed input %j',
-      (input) => {
-        expect(parseColor(input)).toBeNull();
+    it('accepts CSS Color 4 space-separated rgb() syntax', () => {
+      expect(parseColor('rgb(255 0 0)')).toEqual({ r: 255, g: 0, b: 0, a: 1 });
+      expect(parseColor('rgb(100%, 0%, 0%)')).toEqual({
+        r: 255,
+        g: 0,
+        b: 0,
+        a: 1,
+      });
+      expect(parseColor('rgb(255 0 0 / 0.5)')?.a).toBe(0.5);
+      expect(parseColor('rgba(255, 0, 0, 50%)')?.a).toBe(0.5);
+      expect(parseColor('rgb(1.5, 2.5, 3)')).toEqual({
+        r: 2,
+        g: 3,
+        b: 3,
+        a: 1,
+      });
+    });
+
+    it('accepts deg units, negative hues, and space-separated hsl()', () => {
+      expect(parseColor('hsl(120deg, 100%, 50%)')).toEqual({
+        r: 0,
+        g: 255,
+        b: 0,
+        a: 1,
+      });
+      expect(parseColor('hsl(120 100% 50%)')).toEqual({
+        r: 0,
+        g: 255,
+        b: 0,
+        a: 1,
+      });
+      expect(parseColor('hsl(120 100% 50% / 0.5)')?.a).toBe(0.5);
+      expect(parseColor('hsl(-30, 100%, 50%)')).toEqual(
+        parseColor('hsl(330, 100%, 50%)')
+      );
+    });
+
+    it('accepts deg hues, negative hues, and percentage alpha in oklch()', () => {
+      expect(parseColor('oklch(50% 0.1 120deg)')).toEqual(
+        parseColor('oklch(0.5 0.1 120)')
+      );
+      expect(parseColor('oklch(0.5 0.1 -20)')).toEqual(
+        parseColor('oklch(0.5 0.1 340)')
+      );
+      expect(parseColor('oklch(0.5 0.1 120 / 50%)')?.a).toBe(0.5);
+    });
+
+    it('clamps oklch() alpha above 1', () => {
+      expect(parseColor('oklch(0.5 0.1 120 / 2)')?.a).toBe(1);
+    });
+
+    it('round-trips every ColorFormat through parseColor(formatColor(...))', () => {
+      const value = rgbaToColorValue({ r: 221, g: 254, b: 63, a: 0.5 });
+      const formats: ColorFormat[] = [
+        'hex',
+        'hex8',
+        'rgb',
+        'rgba',
+        'hsl',
+        'hsla',
+        'hsv',
+        'hsva',
+        'oklab',
+        'oklaba',
+        'oklch',
+        'oklcha',
+      ];
+      for (const format of formats) {
+        expect(parseColor(formatColor(value, format)), format).not.toBeNull();
       }
-    );
+    });
+
+    it.each([
+      'notacolor',
+      '#GGGGGG',
+      '',
+      'oklab(0.5 0.1)',
+      'rgb(255 0)',
+      'hsl(120, 100%)',
+    ])('returns null for malformed input %j', (input) => {
+      expect(parseColor(input)).toBeNull();
+    });
   });
 
   describe('formatColor', () => {

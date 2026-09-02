@@ -1,4 +1,3 @@
-import { hsvaToRgba } from '../conversions';
 import { createChannelEditor } from './create-channel-editor';
 
 export const HSVInputs = createChannelEditor({
@@ -17,9 +16,6 @@ export const HSVInputs = createChannelEditor({
     },
   ],
   select: (colorValue) => colorValue.hsva,
-  // Emitted as rgba() because `parseColor` has no hsv() syntax.
-  serialize: (hsva) => {
-    const { r, g, b, a } = hsvaToRgba(hsva);
-    return `rgba(${r}, ${g}, ${b}, ${a})`;
-  },
+  // Emitted in the space being edited; `parseColor` understands hsv()/hsva().
+  serialize: (hsva) => `hsva(${hsva.h}, ${hsva.s}%, ${hsva.v}%, ${hsva.a})`,
 });
