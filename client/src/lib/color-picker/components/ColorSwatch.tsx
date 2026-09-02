@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-interface ColorSwatchProps {
+export interface ColorSwatchProps {
   color: string;
   selected?: boolean;
   onClick?: () => void;

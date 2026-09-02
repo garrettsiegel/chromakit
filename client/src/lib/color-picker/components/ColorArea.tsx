@@ -3,7 +3,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 
-interface ColorAreaProps {
+export interface ColorAreaProps {
   hsva: HSVA;
   onChange: (hsva: HSVA) => void;
   onStart?: () => void;

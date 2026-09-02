@@ -3,7 +3,7 @@ import { isEyeDropperSupported, openEyeDropper } from '../utils';
 
 const subscribeToSupport = () => () => undefined;
 
-interface EyeDropperButtonProps {
+export interface EyeDropperButtonProps {
   onPick: (color: string) => void;
   label?: string;
   className?: string;

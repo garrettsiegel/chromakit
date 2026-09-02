@@ -4,7 +4,7 @@ import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 import { hsvToRgb } from '../conversions';
 
-interface AlphaSliderProps {
+export interface AlphaSliderProps {
   hsva: HSVA;
   onChange: (hsva: HSVA) => void;
   onStart?: () => void;

@@ -11,7 +11,7 @@ export interface ChannelConfig<K extends string = string> {
   format: (value: number) => string | number;
 }
 
-interface ChannelInputsProps<K extends string> {
+export interface ChannelInputsProps<K extends string> {
   channels: ChannelConfig<K>[];
   values: Record<K, number>;
   onChannelChange: (key: K, value: number) => void;

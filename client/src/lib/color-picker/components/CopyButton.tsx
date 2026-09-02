@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { copyToClipboard } from '../utils';
 
-interface CopyButtonProps {
+export interface CopyButtonProps {
   text: string;
   label?: string;
   className?: string;

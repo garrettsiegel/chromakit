@@ -3,7 +3,7 @@ import type { ColorValue, ColorFormat } from '../types';
 import { parseColor, formatColor } from '../conversions';
 import { CopyButton } from './CopyButton';
 
-interface ColorInputsProps {
+export interface ColorInputsProps {
   colorValue: ColorValue;
   onChange: (colorString: string) => void;
   format: ColorFormat;

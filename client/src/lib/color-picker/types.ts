@@ -120,7 +120,7 @@ export interface ColorPickerProps {
   className?: string;
   /** Show preset color swatches */
   showPresets?: boolean;
-  width?: number;
+  width?: number | string;
   /** Color area height in pixels. When omitted, the area stretches to match the controls. */
   height?: number;
   /** Show copy button for quick color copying */

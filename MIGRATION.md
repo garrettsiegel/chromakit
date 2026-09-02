@@ -400,7 +400,7 @@ import type { ColorValue, ColorFormat, RGB, HSL } from 'chromakit-react';
 const handleChange = (colorValue: ColorValue) => {
   console.log(colorValue.hex); // "#aabbcc"
   console.log(colorValue.rgb); // "rgb(170, 187, 204)"
-  console.log(colorValue.oklch); // "oklch(0.75 0.05 250)"
+  console.log(colorValue.oklch); // { L: 0.75, C: 0.05, h: 250 } — OKLCH object
 };
 
 // ChromaKit uses string-based colors by default

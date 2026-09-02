@@ -3,7 +3,7 @@ import type { PresetGroup } from '../types';
 import { ColorSwatch } from './ColorSwatch';
 import { MAX_CUSTOM_PRESETS } from './picker-state';
 
-interface PresetColorsProps {
+export interface PresetColorsProps {
   colors: string[];
   selectedColor?: string;
   onSelect: (color: string) => void;
