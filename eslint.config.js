@@ -4,7 +4,7 @@ import tsparser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-import comments from 'eslint-plugin-eslint-comments';
+import comments from '@eslint-community/eslint-plugin-eslint-comments';
 import astro from 'eslint-plugin-astro';
 import prettier from 'eslint-config-prettier';
 
