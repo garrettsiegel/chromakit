@@ -3,7 +3,7 @@ import { useCallback, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 
-interface HueSliderProps {
+export interface HueSliderProps {
   hsva: HSVA;
   onChange: (hsva: HSVA) => void;
   onStart?: () => void;

@@ -42,6 +42,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CopyButton` clears its pending reset timer when copied again and on
   unmount.
 
+### Added
+
+- Per-component prop types are now exported: `ColorAreaProps`,
+  `HueSliderProps`, `AlphaSliderProps`, `ColorInputsProps`,
+  `ColorPreviewProps`, `ColorSwatchProps`, `PresetColorsProps`,
+  `CopyButtonProps`, `RecentColorsProps`, `EyeDropperButtonProps`,
+  `ChannelEditorProps`, and `ChannelInputsProps`.
+
+### Changed
+
+- `ColorPickerProps.width` accepts a CSS width string in addition to a
+  pixel number.
+
 ## [0.5.1] - 2026-08-29
 
 ### Added

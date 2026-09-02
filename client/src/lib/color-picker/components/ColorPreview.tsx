@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { ColorValue } from '../types';
 
-interface ColorPreviewProps {
+export interface ColorPreviewProps {
   colorValue: ColorValue;
   showComparison?: boolean;
   originalColor?: string;
