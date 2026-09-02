@@ -188,7 +188,11 @@ export const componentGroups: ComponentGroup[] = [
             type: 'boolean',
             description: 'Show the active ring.',
           },
-          { name: 'onClick', type: '() => void', description: 'Click handler.' },
+          {
+            name: 'onClick',
+            type: '() => void',
+            description: 'Click handler.',
+          },
           {
             name: 'onLongPress',
             type: '() => void',

@@ -275,7 +275,7 @@ describe('usePointerDrag', () => {
 
     // Mock the ref
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     const mockEvent = {
@@ -297,7 +297,7 @@ describe('usePointerDrag', () => {
     const { result } = renderHook(() => usePointerDrag(onMove));
 
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     // Test position outside bounds
@@ -320,7 +320,7 @@ describe('usePointerDrag', () => {
     const { result } = renderHook(() => usePointerDrag(onMove, onStart));
 
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     const mockEvent = {
@@ -344,7 +344,7 @@ describe('usePointerDrag', () => {
     const { result } = renderHook(() => usePointerDrag(onMove));
 
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     const pointerDownEvent = {
@@ -375,7 +375,7 @@ describe('usePointerDrag', () => {
     );
 
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     const pointerDownEvent = {
@@ -400,7 +400,7 @@ describe('usePointerDrag', () => {
     const { result } = renderHook(() => usePointerDrag(onMove));
 
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener');
@@ -434,7 +434,7 @@ describe('usePointerDrag', () => {
     const { result, unmount } = renderHook(() => usePointerDrag(onMove));
 
     (
-      result.current.containerRef as React.MutableRefObject<HTMLElement | null>
+      result.current.containerRef as React.RefObject<HTMLElement | null>
     ).current = mockElement;
 
     const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener');
