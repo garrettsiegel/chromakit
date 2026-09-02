@@ -99,6 +99,7 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 - `npm run quality:site` — build + Playwright + all Lighthouse profiles in one go.
 - `npm run format` / `format:check` — Prettier (`format:check` runs in CI, not in `verify`).
 - `npm run size` — size-limit budgets (ES 13.5 KB / UMD 14 KB / CSS 3.75 KB, gzipped). `size:why` opens the bundle analysis.
+- `npm run brand:assets` — regenerates `client/public/og-image.png` and `client/public/brand/readme-hero.png` via `scripts/generate-brand-assets.mjs` (sharp).
 - `npm run ci` — the full gate GitHub Actions runs.
 
 ## Conventions
@@ -113,6 +114,7 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 ## Gotchas
 
 - **Container-query stacking (A4).** The picker stacks based on its OWN width via `@container` queries in `chromakit.css` — not the viewport. An explicit `width` prop lowers the 520 px content floor (PickerLayout writes both `width` and the `--ck-width` var); without it, the picker keeps the 520 px floor, so shrink-wrap parents (flex items, `w-fit`) still render a 520 px picker. Container queries measure the CONTENT box (520 border ≈ 506 content), hence the 505 px query threshold.
+- **`extract-zip` advisory is dev-only.** `npm audit --audit-level=moderate` reports 6 findings, all in the `@lhci/cli` → lighthouse → puppeteer-core → extract-zip chain. `extract-zip` has no fixed version (`npm audit fix --force` would downgrade `@lhci/cli` to 0.1.0 — don't). `tmp`/`uuid` are pinned via `overrides` in `package.json`. The published package has zero runtime dependencies (`npm audit --omit=dev` is clean); CI fails only on production advisories.
 - **`node_modules/` may be absent.** This repo isn't part of the pnpm workspace, so a monorepo-wide install won't populate it. Run `npm ci` in this dir.
 - **`npm run test` is watch mode** and will hang an automated run. Use `npm run test:ci`.
 - **`eslint-disable` comments are errors** (and CI greps for them). Fix the code or ask a human to extend the config's `allow` list.

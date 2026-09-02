@@ -336,10 +336,7 @@ describe('usePointerDrag', () => {
     expect(onStart).toHaveBeenCalled();
   });
 
-  it.skip('should handle pointer move during drag', () => {
-    // Note: This test is skipped because fireEvent doesn't fully simulate
-    // native pointer events in jsdom environment. The functionality works
-    // correctly in real browsers.
+  it('should handle pointer move during drag', () => {
     const onMove = vi.fn();
     const { result } = renderHook(() => usePointerDrag(onMove));
 
@@ -365,6 +362,16 @@ describe('usePointerDrag', () => {
     });
 
     expect(onMove).toHaveBeenCalledWith({ x: 0.75, y: 0.75 });
+
+    act(() => {
+      fireEvent.pointerUp(document);
+    });
+
+    onMove.mockClear();
+    act(() => {
+      fireEvent.pointerMove(document, { clientX: 10, clientY: 10 });
+    });
+    expect(onMove).not.toHaveBeenCalled();
   });
 
   it('should call onEnd when drag completes', () => {
