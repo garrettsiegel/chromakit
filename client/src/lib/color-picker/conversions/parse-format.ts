@@ -1,7 +1,6 @@
 import type {
   RGB,
   RGBA,
-  HSLA,
   OKLCHA,
   OKLABA,
   ColorValue,
@@ -9,31 +8,20 @@ import type {
 } from '../types';
 import { clamp } from './math';
 import { parseHex, rgbaToHex, rgbaToHex8 } from './hex';
-import { rgbToHsl, hslaToRgba } from './hsl';
+import { rgbToHsl } from './hsl';
 import { rgbToHsv } from './hsv';
 import { rgbToOklab, rgbToOklch, oklchaToRgba, oklabaToRgba } from './oklab';
 import { labToRgb, lchToRgb } from './lab';
 import { hwbToRgb } from './hwb';
 import { getNamedColor } from './named-colors';
-
-/**
- * Resolve one numeric component that may be written as a number or a
- * percentage. `percentReference` is the value 100% stands for.
- */
-function component(
-  value: string,
-  isPercent: string,
-  percentReference: number
-): number {
-  const n = parseFloat(value);
-  return isPercent ? (n / 100) * percentReference : n;
-}
-
-/** Resolve an optional `/ alpha` component, defaulting to fully opaque. */
-function alphaComponent(value?: string, isPercent?: string): number {
-  if (value === undefined) return 1;
-  return clamp(component(value, isPercent ?? '', 1), 0, 1);
-}
+import {
+  component,
+  alphaComponent,
+  hueComponent,
+  parseRgbFunction,
+  parseHslFunction,
+  parseHsvFunction,
+} from './parse-css-functions';
 
 export function parseColor(color: string): RGBA | null {
   const trimmed = color.trim().toLowerCase();
@@ -48,30 +36,14 @@ export function parseColor(color: string): RGBA | null {
     return named ? parseHex(named) : null;
   }
 
-  const rgbMatch = trimmed.match(
-    /^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/
-  );
-  if (rgbMatch) {
-    return {
-      r: clamp(parseInt(rgbMatch[1]), 0, 255),
-      g: clamp(parseInt(rgbMatch[2]), 0, 255),
-      b: clamp(parseInt(rgbMatch[3]), 0, 255),
-      a: rgbMatch[4] !== undefined ? clamp(parseFloat(rgbMatch[4]), 0, 1) : 1,
-    };
-  }
+  const rgbParsed = parseRgbFunction(trimmed);
+  if (rgbParsed) return rgbParsed;
 
-  const hslMatch = trimmed.match(
-    /^hsla?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?\s*(?:,\s*([\d.]+))?\s*\)$/
-  );
-  if (hslMatch) {
-    const hsla: HSLA = {
-      h: parseFloat(hslMatch[1]) % 360,
-      s: clamp(parseFloat(hslMatch[2]), 0, 100),
-      l: clamp(parseFloat(hslMatch[3]), 0, 100),
-      a: hslMatch[4] !== undefined ? clamp(parseFloat(hslMatch[4]), 0, 1) : 1,
-    };
-    return hslaToRgba(hsla);
-  }
+  const hslParsed = parseHslFunction(trimmed);
+  if (hslParsed) return hslParsed;
+
+  const hsvParsed = parseHsvFunction(trimmed);
+  if (hsvParsed) return hsvParsed;
 
   // ACCEPTS hwb(H W% B% / A)
   const hwbMatch = trimmed.match(
@@ -112,17 +84,18 @@ export function parseColor(color: string): RGBA | null {
     return { ...rgb, a: alphaComponent(lchMatch[6], lchMatch[7]) };
   }
 
-  // ACCEPTS oklch(L% C h / a) AND oklch(L C h / a)
+  // ACCEPTS oklch(L% C h / a) AND oklch(L C h / a); hue may be negative or
+  // carry a `deg` suffix, alpha may be a percentage.
   const oklchMatch = trimmed.match(
-    /^oklch\s*\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\s*\)$/
+    /^oklch\s*\(\s*(-?[\d.]+)%?\s+([\d.]+)\s+(-?[\d.]+)(?:deg)?(?:\s*\/\s*(-?[\d.]+)(%?))?\s*\)$/
   );
   if (oklchMatch) {
     const L = parseFloat(oklchMatch[1]);
     const oklcha: OKLCHA = {
-      L: L > 1 ? L / 100 : L,
+      L: clamp(L > 1 ? L / 100 : L, 0, 1),
       C: parseFloat(oklchMatch[2]),
-      h: parseFloat(oklchMatch[3]),
-      a: oklchMatch[4] !== undefined ? parseFloat(oklchMatch[4]) : 1,
+      h: hueComponent(oklchMatch[3]),
+      a: alphaComponent(oklchMatch[4], oklchMatch[5]),
     };
     return oklchaToRgba(oklcha);
   }

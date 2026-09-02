@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `parseColor` accepts CSS Color 4 space-separated `rgb()`/`hsl()`, percentage
+  channels, `deg` hues, negative hues, and percentage alpha.
+- `oklch()` alpha is clamped to [0, 1] like every other format.
+- HSV/HSVA text fields now commit: `parseColor` understands the `hsv()`/`hsva()`
+  strings the picker itself emits, so typing in HSV mode round-trips.
+- Clearing a channel field no longer commits a 0 mid-edit; the color only
+  updates once the field holds a number.
+- `getColorHistory` ignores malformed localStorage contents instead of
+  returning them.
+- `getRelativeLuminance` uses the current WCAG 2.x sRGB transfer function
+  (0.04045 threshold) shared with the conversion math.
+
 ## [0.5.1] - 2026-08-29
 
 ### Added
