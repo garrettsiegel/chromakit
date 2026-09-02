@@ -67,7 +67,14 @@ export function PickerLayout({
   return (
     <div
       className={`ck-color-picker ${className}`.trim()}
-      style={width ? { width } : undefined}
+      style={
+        width
+          ? ({
+              width,
+              '--ck-width': typeof width === 'number' ? `${width}px` : width,
+            } as React.CSSProperties)
+          : undefined
+      }
       data-testid="color-picker"
     >
       <div className="ck-picker-main">

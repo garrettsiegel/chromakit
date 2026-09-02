@@ -184,7 +184,7 @@
     {
       "name": "CSS (gzip)",
       "path": "dist/chromakit.css",
-      "limit": "3.5 KB",
+      "limit": "3.75 KB",
       "gzip": true
     }
   ]

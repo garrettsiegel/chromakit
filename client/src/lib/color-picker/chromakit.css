@@ -77,9 +77,14 @@
     sans-serif;
   color: var(--ck-text);
   box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  min-width: 520px;
+  width: var(--ck-width, 100%);
+  /* Without an explicit width the picker keeps its content floor (520px);
+     an explicit `width` prop lowers the floor, so `width={320}` is honored. */
+  min-width: min(520px, var(--ck-width, 520px));
+  /* Stacking is keyed off the picker's OWN width (container queries below),
+     not the viewport — a narrow picker inside a wide page still stacks. */
+  container-type: inline-size;
+  flex-wrap: wrap;
   position: relative;
   overflow: hidden;
 }
@@ -469,7 +474,9 @@
 /* Input mode tabs - glassmorphic segmented control */
 .ck-input-modes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  /* min-content (not 0): cramped pickers wrap buttons to a second row
+     instead of letting cells overlap the 24px hit targets. */
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
   gap: 4px;
   padding: 4px;
   background: var(--ck-glass-bg);
@@ -481,6 +488,9 @@
 
 .ck-input-mode-btn {
   padding: 4px 2px;
+  /* Keep the hit target at least 24x24 (WCAG 2.2 SC 2.5.8) even when the
+     picker renders below 520px and the mode row gets cramped. */
+  min-width: 24px;
   font-size: 10px;
   font-weight: 600;
   border: none;
@@ -493,7 +503,6 @@
   background: transparent;
   color: var(--ck-text-muted);
   white-space: nowrap;
-  min-width: 0;
   min-height: 44px;
   position: relative;
 }
@@ -1030,13 +1039,67 @@
 }
 
 /* ============================================================ */
-/* MOBILE OPTIMIZATIONS */
+/* NARROW-PICKER LAYOUT — container queries on the picker's own  */
+/* width (NOT the viewport), so `width={320}` stacks on desktop. */
 /* ============================================================ */
 
+@container (max-width: 505px) {
+  /* Content-box measure: a default picker is 520px border-box = 506px
+     content, so this only fires for explicitly narrowed pickers. */
+  .ck-picker-main {
+    flex-direction: column;
+    min-width: 100%;
+  }
+
+  .ck-picker-controls {
+    min-width: 100%;
+  }
+
+  .ck-action-buttons {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .ck-eyedropper-btn,
+  .ck-copy-btn {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .ck-recent-color-swatch {
+    min-height: 44px;
+  }
+
+  .ck-input-mode-btn {
+    padding: 10px;
+    font-size: 12px;
+    min-height: 44px;
+  }
+
+  .ck-swatch-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Very narrow picker (content-box: ~400px border-box) */
+@container (max-width: 385px) {
+  .ck-preset-colors {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Phones: the picker is full-bleed regardless of its own width, and the
+   layout stacks with the viewport (as it always has). The @container rules
+   above additionally handle narrow pickers on wide viewports. */
 @media (max-width: 640px) {
   .ck-color-picker {
     flex-direction: column;
-    min-width: 100%;
+    /* Full-bleed on phones, but an explicit `width` prop still wins if it
+       is narrower. (min(100%, 100%) = 100% when no width is set.) */
+    min-width: min(100%, var(--ck-width, 100%));
   }
 
   .ck-picker-main {
@@ -1076,7 +1139,6 @@
   }
 }
 
-/* Responsive adjustments for very small screens */
 @media (max-width: 480px) {
   .ck-color-picker {
     padding: 12px;
@@ -1085,4 +1147,59 @@
   .ck-preset-colors {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* ============================================================ */
+/* ACCESSIBILITY: MOTION + FORCED COLORS                         */
+/* ============================================================ */
+
+/* Respect users who opt out of animation; the transitions here are
+   decorative (color snap, hover glows), so near-zero duration is safe. */
+@media (prefers-reduced-motion: reduce) {
+  .ck-color-picker,
+  .ck-color-picker *,
+  .ck-color-picker *::before,
+  .ck-color-picker *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Under forced colors, color surfaces must keep rendering real color
+   (this is a color picker), while chrome/thumbnails get system hints. */
+@media (forced-colors: active) {
+  .ck-color-area-layer,
+  .ck-hue-slider-track,
+  .ck-alpha-slider-track,
+  .ck-preview-color,
+  .ck-swatch-color,
+  .ck-recent-color-swatch,
+  .ck-checkerboard {
+    forced-color-adjust: none;
+  }
+
+  .ck-slider-thumb,
+  .ck-color-area-thumb,
+  .ck-swatch-btn.selected {
+    outline: 2px solid CanvasText;
+  }
+
+  .ck-input-mode-btn[aria-pressed='true'] {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .ck-color-picker :focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* WCAG 2.2 SC 2.5.8: the delete control is visually 14px, but its hit
+   area is expanded to 24x24 via the ::before overlay. */
+.ck-swatch-delete-btn::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
 }

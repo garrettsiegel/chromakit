@@ -21,9 +21,9 @@ Current production budgets, measured with `size-limit` for v0.5.1:
 
 | Asset      | Gzipped size |
 | ---------- | -----------: |
-| ES module  |      12.4 kB |
-| UMD module |      13.0 kB |
-| CSS        |       3.3 kB |
+| ES module  |      12.7 kB |
+| UMD module |      13.3 kB |
+| CSS        |       3.5 kB |
 
 ## Install
 
@@ -118,7 +118,9 @@ ChromaKit provides multiple ways to reach the same color value:
 - The visual color plane is a labeled group with separate saturation and brightness sliders.
 - Hue, alpha, saturation, and brightness support arrow keys, Home/End, and larger keyboard steps.
 - Text and numeric fields provide non-drag alternatives for precise input.
-- Interactive targets are at least 44×44 CSS pixels, with visible focus treatment.
+- Primary interactive targets are at least 44×44 CSS pixels; auxiliary
+  targets (like the preset delete control) have a hit area of at least
+  24×24 CSS pixels. All interactive elements have visible focus treatment.
 - Copy actions expose text status instead of relying on color or icon changes alone.
 - WCAG contrast-ratio and readable-text helpers are exported for applications that build their own contrast interface.
 

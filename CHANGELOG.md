@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The `width` prop is honored below 520 px: the picker stacks based on its
+  own width (CSS container queries) instead of the viewport. The default
+  content-sized floor of 520 px is unchanged; a narrower parent still can't
+  shrink an un-widthed picker. Requires browsers with container-query
+  support (Chrome 105+, Safari 16+, Firefox 110+ — all in the platform
+  support table).
+- Reduced-motion and forced-colors rules now ship in the library
+  `chromakit.css`, not only on the demo site. Color surfaces opt out of
+  forced-color adjustment (a color picker must render real color) while
+  thumbs and active states get visible system outlines.
+- The preset delete control's hit area is at least 24×24 CSS pixels
+  (WCAG 2.2 SC 2.5.8); its visual size is unchanged.
+- Mode buttons keep a 24×24 hit target and wrap instead of overlapping when
+  a narrow picker crowds the format switcher.
 - `parseColor` accepts CSS Color 4 space-separated `rgb()`/`hsl()`, percentage
   channels, `deg` hues, negative hues, and percentage alpha.
 - `oklch()` alpha is clamped to [0, 1] like every other format.
