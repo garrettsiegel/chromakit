@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   returning them.
 - `getRelativeLuminance` uses the current WCAG 2.x sRGB transfer function
   (0.04045 threshold) shared with the conversion math.
+- A cancelled pointer drag (`pointercancel`) now ends the drag and detaches
+  its listeners instead of leaving them attached until the next `pointerup`.
+- `ColorSwatch` long-press no longer double-fires on touch devices (single
+  pointer-based timer) and the click after a long press no longer also
+  selects the swatch.
+- `CopyButton` clears its pending reset timer when copied again and on
+  unmount.
 
 ## [0.5.1] - 2026-08-29
 

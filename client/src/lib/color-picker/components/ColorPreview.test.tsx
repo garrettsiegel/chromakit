@@ -68,9 +68,9 @@ describe('ColorSwatch', () => {
     );
 
     const swatch = screen.getByTestId('color-swatch');
-    fireEvent.mouseDown(swatch);
+    fireEvent.pointerDown(swatch);
     vi.advanceTimersByTime(500);
-    fireEvent.mouseUp(swatch);
+    fireEvent.pointerUp(swatch);
 
     expect(onLongPress).toHaveBeenCalledTimes(1);
     expect(onClick).not.toHaveBeenCalled();
@@ -88,9 +88,9 @@ describe('ColorSwatch', () => {
     );
 
     const swatch = screen.getByTestId('color-swatch');
-    fireEvent.mouseDown(swatch);
+    fireEvent.pointerDown(swatch);
     vi.advanceTimersByTime(200);
-    fireEvent.mouseUp(swatch);
+    fireEvent.pointerUp(swatch);
     fireEvent.click(swatch);
 
     expect(onLongPress).not.toHaveBeenCalled();

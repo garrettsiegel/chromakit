@@ -177,6 +177,7 @@ export function usePointerDrag(
       const cleanup = () => {
         document.removeEventListener('pointermove', handlePointerMove);
         document.removeEventListener('pointerup', handlePointerUp);
+        document.removeEventListener('pointercancel', handlePointerUp);
         cleanupRef.current = null;
       };
 
@@ -189,6 +190,9 @@ export function usePointerDrag(
       cleanupRef.current = cleanup;
       document.addEventListener('pointermove', handlePointerMove);
       document.addEventListener('pointerup', handlePointerUp);
+      // A cancelled drag (gesture takeover, palm rejection) must end the drag
+      // too, or the move listener sticks around and onEnd never fires.
+      document.addEventListener('pointercancel', handlePointerUp);
     },
     [getPosition, onStart]
   );

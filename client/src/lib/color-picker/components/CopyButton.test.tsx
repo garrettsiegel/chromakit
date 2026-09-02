@@ -76,4 +76,36 @@ describe('CopyButton', () => {
     expect(onCopy).toHaveBeenCalledWith(false);
     expect(button).toHaveAccessibleName('Copy');
   });
+
+  it('clears the pending reset when copied again mid-cycle', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    render(<CopyButton text="#ff0000" label="Copy" />);
+    const button = screen.getByRole('button');
+
+    await act(async () => {
+      fireEvent.click(button);
+    });
+
+    await act(async () => {
+      vi.advanceTimersByTime(1500);
+    });
+
+    await act(async () => {
+      fireEvent.click(button);
+    });
+
+    // Still within 2s of the second copy: only a stale (uncleared) timer
+    // would have flipped the state back by now.
+    await act(async () => {
+      vi.advanceTimersByTime(600);
+    });
+    expect(button).toHaveAccessibleName('Copied!');
+
+    await act(async () => {
+      vi.advanceTimersByTime(1500);
+    });
+    expect(button).toHaveAccessibleName('Copy');
+  });
 });

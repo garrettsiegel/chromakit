@@ -395,6 +395,40 @@ describe('usePointerDrag', () => {
     expect(onEnd).toHaveBeenCalled();
   });
 
+  it('should end the drag on pointercancel and detach listeners', () => {
+    const onMove = vi.fn();
+    const onEnd = vi.fn();
+    const { result } = renderHook(() =>
+      usePointerDrag(onMove, undefined, onEnd)
+    );
+
+    (
+      result.current.containerRef as React.RefObject<HTMLElement | null>
+    ).current = mockElement;
+
+    const pointerDownEvent = {
+      preventDefault: vi.fn(),
+      clientX: 50,
+      clientY: 50,
+    } as unknown as React.PointerEvent;
+
+    act(() => {
+      result.current.handlePointerDown(pointerDownEvent);
+    });
+
+    act(() => {
+      fireEvent.pointerCancel(document);
+    });
+
+    expect(onEnd).toHaveBeenCalledTimes(1);
+
+    onMove.mockClear();
+    act(() => {
+      fireEvent.pointerMove(document, { clientX: 90, clientY: 90 });
+    });
+    expect(onMove).not.toHaveBeenCalled();
+  });
+
   it('should clean up event listeners on pointer up', () => {
     const onMove = vi.fn();
     const { result } = renderHook(() => usePointerDrag(onMove));
