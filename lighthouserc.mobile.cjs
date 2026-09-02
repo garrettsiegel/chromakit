@@ -10,7 +10,7 @@ module.exports = {
   ci: {
     collect: {
       url: routes.map((route) => `${origin}${route}`),
-      numberOfRuns: 1,
+      numberOfRuns: 3,
       settings: {
         throttlingMethod: 'devtools',
         chromeFlags: '--headless=new --no-sandbox',

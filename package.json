@@ -14,7 +14,8 @@
       "require": "./dist/chromakit.umd.js"
     },
     "./chromakit.css": "./dist/chromakit.css",
-    "./dist/chromakit.css": "./dist/chromakit.css"
+    "./dist/chromakit.css": "./dist/chromakit.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
@@ -99,7 +100,7 @@
     "audit:fix": "npm audit fix",
     "size": "size-limit",
     "size:why": "size-limit --why",
-    "ci": "npm run type-check && npm run lint && npm run test:ci && npm run build && npm run size"
+    "ci": "npm run type-check && npm run lint && npm run format:check && npm run test:ci && npm run build && npm run size"
   },
   "knip": {
     "entry": [
@@ -126,8 +127,6 @@
     "@astrojs/sitemap": "^3.7.3",
     "@axe-core/playwright": "4.13.0",
     "@eslint/js": "^9.39.4",
-    "@fontsource-variable/anybody": "5.3.0",
-    "@fontsource-variable/geist": "5.3.0",
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.62.1",
     "@radix-ui/react-tabs": "^1.1.13",

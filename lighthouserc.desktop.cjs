@@ -6,7 +6,7 @@ module.exports = {
   ci: {
     collect: {
       url: routes.map((route) => `${origin}${route}`),
-      numberOfRuns: 1,
+      numberOfRuns: 3,
       settings: {
         preset: 'desktop',
         throttlingMethod: 'devtools',

@@ -145,7 +145,10 @@ export function TokenEditor() {
       <ColorArea hsva={color.hsva} onChange={color.updateColor} />
       <HueSlider hsva={color.hsva} onChange={color.updateColor} />
       <AlphaSlider hsva={color.hsva} onChange={color.updateColor} />
-      <OKLCHInputs colorValue={color.colorValue} onChange={color.setFromString} />
+      <OKLCHInputs
+        colorValue={color.colorValue}
+        onChange={color.setFromString}
+      />
     </div>
   );
 }

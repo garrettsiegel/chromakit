@@ -110,9 +110,7 @@ export function AlphaSlider({
       <div
         className="ck-slider-thumb"
         style={
-          vertical
-            ? { top: `${100 - hsva.a * 100}%` }
-            : { left: thumbPosition }
+          vertical ? { top: `${100 - hsva.a * 100}%` } : { left: thumbPosition }
         }
         data-testid="alpha-slider-thumb"
       >

@@ -10,7 +10,11 @@ interface DemoCardProps {
   children: ReactNode;
 }
 
-export const DemoCard = ({ code, language = 'tsx', children }: DemoCardProps) => {
+export const DemoCard = ({
+  code,
+  language = 'tsx',
+  children,
+}: DemoCardProps) => {
   return (
     <Card>
       <CardContent className="p-4 sm:p-6">

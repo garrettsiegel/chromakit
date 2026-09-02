@@ -39,7 +39,7 @@ export const NewComponent = () => {
 ## React Rules
 
 - No React default or namespace imports (`import React` / `import * as React`) — use the automatic JSX runtime and named imports (`forwardRef`, `type HTMLAttributes`, …). ESLint-enforced.
-- **No static inline styles** — constant values belong in CSS classes (`chromakit.css` for the library, `index.css`/Tailwind for the demo). *Exception:* runtime-computed values (live colors, thumb positions) may use `style` — this is a color picker; dynamic color must reach the DOM. This exception is why there is no ESLint rule for `style`; it is enforced by review, so keep every `style` prop dynamic-only.
+- **No static inline styles** — constant values belong in CSS classes (`chromakit.css` for the library, `index.css`/Tailwind for the demo). _Exception:_ runtime-computed values (live colors, thumb positions) may use `style` — this is a color picker; dynamic color must reach the DOM. This exception is why there is no ESLint rule for `style`; it is enforced by review, so keep every `style` prop dynamic-only.
 - No nested `function` declarations — use arrow consts or extract.
 - No deep relative imports (`../../…`) — use the `@/` alias. ESLint-enforced.
 
@@ -56,6 +56,6 @@ export const NewComponent = () => {
 
 The demo site (`client/src/pages/`, `layouts/`, and static `components/`) is built with **Astro** — static output with React islands for interactive pieces. `.astro` files follow the same contract above (no `eslint-disable`, ≤300 lines, `@/` alias) via `eslint-plugin-astro`. Two Astro-specific rules:
 
-- **A live/interactive demo needs a React wrapper component, mounted with a `client:*` directive** (see `components/demos/*.tsx`) — Astro renders framework-component *children* passed into a template as static HTML, so a demo nested inside another component's slot will not hydrate. Compose the demo and its interactivity inside one `.tsx` component, then mount that single component as the island.
+- **A live/interactive demo needs a React wrapper component, mounted with a `client:*` directive** (see `components/demos/*.tsx`) — Astro renders framework-component _children_ passed into a template as static HTML, so a demo nested inside another component's slot will not hydrate. Compose the demo and its interactivity inside one `.tsx` component, then mount that single component as the island.
 - **Prefer real `lucide-react` icons over hand-drawn SVGs**, even in static (non-interactive) `.astro` markup — importing a framework component without a `client:*` directive renders it to static HTML at build time and ships zero JS, so there's no cost to using the real icon.
 - `npm run verify` includes `astro check`; fix any errors it reports the same as ESLint/tsc.

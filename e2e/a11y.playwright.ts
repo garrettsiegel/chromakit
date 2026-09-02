@@ -137,9 +137,10 @@ test('homepage and docs reflow without horizontal overflow', async ({
       expect(dimensions.page, `${route} at ${width}px`).toBeLessThanOrEqual(
         dimensions.viewport
       );
-      expect(dimensions.body, `${route} body at ${width}px`).toBeLessThanOrEqual(
-        dimensions.viewport
-      );
+      expect(
+        dimensions.body,
+        `${route} body at ${width}px`
+      ).toBeLessThanOrEqual(dimensions.viewport);
     }
   }
 });
@@ -160,7 +161,8 @@ test('accessibility media preferences keep the homepage usable', async ({
   });
 
   const preferences = await page.evaluate(() => ({
-    reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)')
+      .matches,
     forcedColors: window.matchMedia('(forced-colors: active)').matches,
     contrast: window.matchMedia('(prefers-contrast: more)').matches,
     documentWidth: document.documentElement.scrollWidth,

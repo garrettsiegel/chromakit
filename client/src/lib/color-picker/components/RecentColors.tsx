@@ -23,10 +23,7 @@ export function RecentColors({
 }: RecentColorsProps) {
   // useSyncExternalStore gives server rendering a stable empty snapshot while
   // preserving persisted history after hydration.
-  const { history: fallbackColors } = useColorHistory(
-    colors === undefined,
-    10
-  );
+  const { history: fallbackColors } = useColorHistory(colors === undefined, 10);
   const recentColors = colors ?? fallbackColors;
 
   if (recentColors.length === 0) {

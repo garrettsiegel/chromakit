@@ -300,11 +300,7 @@ describe('RGBInputs', () => {
       a: 0.7686274509803922,
     });
     render(
-      <RGBInputs
-        colorValue={translucentColor}
-        onChange={vi.fn()}
-        showAlpha
-      />
+      <RGBInputs colorValue={translucentColor} onChange={vi.fn()} showAlpha />
     );
 
     const alphaInput = screen.getByTestId('rgb-input-a') as HTMLInputElement;

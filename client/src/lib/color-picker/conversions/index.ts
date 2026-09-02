@@ -16,8 +16,4 @@ export {
 export { labToRgb, lchToLab, lchToRgb } from './lab';
 export { hwbToRgb, rgbToHwb } from './hwb';
 export { getNamedColor, getNamedColorNames } from './named-colors';
-export {
-  parseColor,
-  rgbaToColorValue,
-  formatColor,
-} from './parse-format';
+export { parseColor, rgbaToColorValue, formatColor } from './parse-format';

@@ -5,7 +5,7 @@ module.exports = {
   ci: {
     collect: {
       url: [`${origin}/__lighthouse-404-check`],
-      numberOfRuns: 1,
+      numberOfRuns: 3,
       settings: {
         throttlingMethod: 'devtools',
         ignoreStatusCode: true,
