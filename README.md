@@ -175,6 +175,7 @@ ChromaKit computes OKLCH and OKLab in JavaScript. CSS `oklch()` support is neede
 - [Composable components](https://www.chromakit.site/docs/components)
 - [Hooks and utilities](https://www.chromakit.site/docs/hooks)
 - [Troubleshooting and exported types](https://www.chromakit.site/docs/troubleshooting)
+- [Migrating from react-colorful](./MIGRATION.md)
 
 ## Contributing
 

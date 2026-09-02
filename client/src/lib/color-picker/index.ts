@@ -1,4 +1,6 @@
-// Import CSS for bundling (consumers can import this file or the CSS separately)
+// Side-effect import so the site build and Vite lib build pick up the stylesheet.
+// The published JS does not import CSS; consumers import
+// `chromakit-react/chromakit.css` themselves (see `sideEffects` in package.json).
 import './chromakit.css';
 
 // Types

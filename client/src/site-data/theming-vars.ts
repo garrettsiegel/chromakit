@@ -54,9 +54,24 @@ export const themingVars: PropRow[] = [
     description: 'Panel shadow.',
   },
   {
+    name: '--ck-glass-bg-strong',
+    default: 'rgba(255,255,255,0.9)',
+    description: 'Stronger frosted panel fill.',
+  },
+  {
+    name: '--ck-glass-shadow-lg',
+    default: '0 12px 48px …',
+    description: 'Large panel shadow.',
+  },
+  {
     name: '--ck-blur',
     default: 'blur(20px)',
     description: 'Backdrop blur amount.',
+  },
+  {
+    name: '--ck-blur-strong',
+    default: 'blur(40px)',
+    description: 'Stronger backdrop blur amount.',
   },
   {
     name: '--ck-radius',
