@@ -80,6 +80,7 @@
     "build:site": "astro build",
     "build:lib": "vite build",
     "build:types": "tsc --project tsconfig.build.json",
+    "brand:assets": "node scripts/generate-brand-assets.mjs",
     "prepublishOnly": "npm run build",
     "preview": "astro preview",
     "type-check": "tsc --noEmit",
@@ -121,6 +122,10 @@
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
+  "overrides": {
+    "tmp": ">=0.2.6",
+    "uuid": ">=11.1.1"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@astrojs/react": "^6.0.1",
@@ -161,6 +166,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "rollup-plugin-visualizer": "^6.0.5",
+    "sharp": "^0.34.5",
     "size-limit": "^12.0.0",
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
