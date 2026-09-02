@@ -61,6 +61,13 @@ export const colorPickerProps: PropRow[] = [
     description: 'Show the copy-to-clipboard button.',
   },
   {
+    name: 'showEyeDropper',
+    type: 'boolean',
+    default: 'true',
+    description:
+      'Show the screen color sampler where the browser supports the EyeDropper API; hidden elsewhere.',
+  },
+  {
     name: 'presets',
     type: 'string[]',
     default: 'built-in',

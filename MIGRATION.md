@@ -4,15 +4,15 @@ ChromaKit provides a modern alternative to react-colorful with additional featur
 
 ## Quick Comparison
 
-| Feature       | react-colorful          | ChromaKit                            |
-| ------------- | ----------------------- | ------------------------------------ |
-| Bundle Size   | ~3KB                    | ~8KB                                 |
-| Color Formats | HEX, RGB, HSL, HSV      | HEX, RGB, HSL, HSV, **OKLCH, OKLAB** |
-| Components    | 12+ specialized pickers | Composable primitives + full picker  |
-| TypeScript    | ✅ Included             | ✅ Native                            |
-| Dependencies  | 0                       | 0                                    |
-| Dark Mode     | Manual CSS              | Built-in                             |
-| Accessibility | Basic                   | WCAG AA                              |
+| Feature       | react-colorful          | ChromaKit                                               |
+| ------------- | ----------------------- | ------------------------------------------------------- |
+| Bundle Size   | ~3KB                    | 12.4 kB gzipped ES module                               |
+| Color Formats | HEX, RGB, HSL, HSV      | HEX, RGB, HSL, HSV, **OKLCH, OKLAB**, plus HWB, Lab/LCH |
+| Components    | 12+ specialized pickers | Composable primitives + full picker                     |
+| TypeScript    | ✅ Included             | ✅ Native                                               |
+| Dependencies  | 0                       | 0                                                       |
+| Dark Mode     | Manual CSS              | Built-in                                                |
+| Accessibility | Basic                   | WCAG 2.2 AA (see README)                                |
 
 ## Installation
 
@@ -195,10 +195,10 @@ function CustomPicker() {
 ### ChromaKit
 
 ```css
-.chromakit-picker {
+.ck-color-picker {
   height: 240px;
 }
-.chromakit-color-area {
+.ck-color-area {
   border-radius: 4px;
 }
 ```
@@ -252,13 +252,12 @@ function MyComponent() {
 }
 ```
 
-````
-
 ## Popover Pattern
 
 **Before (react-colorful):**
+
 ```tsx
-import { HexColorPicker } from "react-colorful";
+import { HexColorPicker } from 'react-colorful';
 
 const [isOpen, setIsOpen] = useState(false);
 
@@ -273,22 +272,23 @@ const [isOpen, setIsOpen] = useState(false);
       <HexColorPicker color={color} onChange={setColor} />
     </div>
   )}
-</div>
-````
+</div>;
+```
 
 **After (ChromaKit):**
 
 ```tsx
-import { ColorPicker, ColorPreview } from 'chromakit-react';
+import { ColorPicker } from 'chromakit-react';
 import 'chromakit-react/chromakit.css';
 
 const [isOpen, setIsOpen] = useState(false);
 
 <div className="picker-container">
-  <ColorPreview
-    colorValue={{ hex: color }}
+  <button
+    type="button"
+    className="swatch"
+    style={{ backgroundColor: color }}
     onClick={() => setIsOpen(!isOpen)}
-    className="cursor-pointer"
   />
   {isOpen && (
     <div className="popover">
@@ -394,7 +394,7 @@ import type { RgbColor, HslColor } from 'react-colorful';
 
 ```tsx
 import { ColorPicker } from 'chromakit-react';
-import type { ColorValue, ColorFormat } from 'chromakit-react';
+import type { ColorValue, ColorFormat, RGB, HSL } from 'chromakit-react';
 
 // ChromaKit uses ColorValue objects
 const handleChange = (colorValue: ColorValue) => {
@@ -407,8 +407,8 @@ const handleChange = (colorValue: ColorValue) => {
 const color: string = 'rgb(170, 187, 204)';
 
 // But also exports object types for conversions
-const rgbObj: RgbColor = { r: 170, g: 187, b: 204 };
-const hslObj: HslColor = { h: 200, s: 50, l: 28 };
+const rgbObj: RGB = { r: 170, g: 187, b: 204 };
+const hslObj: HSL = { h: 200, s: 50, l: 28 };
 ```
 
 ## Why Migrate?
@@ -424,7 +424,7 @@ const hslObj: HslColor = { h: 200, s: 50, l: 28 };
 
 ### Tradeoffs:
 
-- **Slightly Larger**: 8KB vs 3KB (still very small)
+- **Slightly Larger**: 12.4 kB vs 3KB (still very small)
 - **String-based API**: Different from react-colorful's object-based colors
 - **Different CSS Classes**: Need to update custom styles
 

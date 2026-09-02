@@ -25,18 +25,20 @@ Thank you for your interest in contributing to ChromaKit! We welcome contributio
 
 ```
 chromakit/
-├── client/src/lib/color-picker/  # Library source code
+├── client/src/lib/color-picker/  # Library source code (ships to npm)
 │   ├── components/               # React components
 │   │   └── *.test.tsx            # Component tests (colocated)
-│   ├── conversions.ts           # Color space conversions
+│   ├── conversions/              # Color space conversions (barrel: conversions/index.ts)
 │   ├── conversions.test.ts       # Unit tests (colocated)
-│   ├── hooks.ts                 # React hooks
-│   ├── hooks.test.ts            # Unit tests (colocated)
-│   ├── types.ts                 # TypeScript types
-│   └── index.ts                 # Public API
-├── client/src/pages/            # Demo website
-├── client/src/components/       # Demo components
-└── vitest.config.ts             # Test configuration
+│   ├── hooks.ts / hooks.test.ts  # React hooks + tests
+│   ├── types.ts                  # TypeScript types
+│   ├── utils.ts / utils.test.ts  # Helpers + tests
+│   └── index.ts                  # Public API
+├── client/src/pages/             # Demo/docs website (Astro routes)
+├── client/src/components/        # Demo/docs components
+├── client/src/site-data/         # Reference data imported by docs pages
+├── e2e/                          # Playwright accessibility tests
+└── vitest.config.ts              # Test configuration
 ```
 
 ### Making Changes
@@ -54,8 +56,11 @@ chromakit/
 3. **Run tests** to ensure everything works:
 
    ```bash
-   npm test
+   npm run test:ci
    ```
+
+   Note: `npm test` is Vitest watch mode — it hangs automation. Always use
+   `npm run test:ci`.
 
 4. **Build the library** to check for errors:
 
@@ -70,10 +75,15 @@ chromakit/
 
 ### Code Style
 
-- **TypeScript**: All code must be written in TypeScript with proper types
-- **ESLint**: Follow the existing code style
-- **Formatting**: Use consistent formatting (2-space indentation)
-- **Naming**: Use descriptive variable and function names
+Run these before submitting a PR:
+
+```bash
+npm run verify      # lint (zero warnings) + type-check + astro check
+npm run test:ci     # tests + coverage thresholds (NOT npm test — watch mode)
+npm run build       # library bundle + type declarations
+npm run size        # size-limit budgets
+npm run format      # prettier (format:check runs in CI)
+```
 
 ### Testing
 
@@ -81,7 +91,7 @@ chromakit/
 - Ensure all tests pass before submitting a PR
 - Run tests with:
   ```bash
-  npm test
+  npm run test:ci
   ```
 - Check coverage with:
   ```bash
@@ -133,7 +143,7 @@ We welcome feature requests! Please:
 
 ## Questions?
 
-Feel free to open a [discussion](https://github.com/garrettsiegel/chromakit/discussions) or reach out to [@garrettsiegel](https://github.com/garrettsiegel).
+Feel free to reach out to [@garrettsiegel](https://github.com/garrettsiegel).
 
 ## License
 

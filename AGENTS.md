@@ -28,43 +28,57 @@ vite.config.ts                   # LIBRARY BUILD ONLY (no site branching); injec
                                   # is defined in astro.config.mjs's vite.define for the site
 tailwind.config.ts               # loaded by the site via @config; library does not use Tailwind
 tsconfig.build.json              # declaration-only type build, scoped to the library
+playwright.config.ts             # a11y e2e config (e2e/a11y.playwright.ts, axe-core)
+lighthouserc.{mobile,desktop,404}.cjs  # Lighthouse CI profiles (minScore: 1)
 client/
-  public/                        # static assets: favicon.png, og-image.png, site.webmanifest, robots.txt
+  public/                        # static assets: favicon.png, og-image.png, site.webmanifest, robots.txt,
+                                 #   brand/ (color-study avif/webp/jpg, readme-hero.png, workbench-screenshot.png)
   src/
     lib/color-picker/            # ← THE PUBLISHED LIBRARY (the only code that ships to NPM)
       index.ts                   # public entry / export surface
       types.ts  hooks.ts  utils.ts
-      conversions.ts             # barrel over conversions/ (hex, hsl, hsv, oklab, parse-format, math)
+      picker-state.ts            # (components/) useColorState + usePresets reducers
+      conversions/index.ts       # barrel over conversions/ (hex, hsl, hsv, hwb, lab, oklab,
+                                 #   named-colors, parse-format, math)
       chromakit.css              # library styles (imported by index.ts, shipped as a side effect)
       components/                # one component per file:
-                                 #   ColorPicker (state) + PickerLayout (markup) + preset-data
+                                 #   ColorPicker (state) + PickerLayout (markup) + preset-data + picker-state
                                  #   ColorArea, HueSlider, AlphaSlider
-                                 #   ColorInputs (text) + ChannelInputs (shared grid) + RGB/HSL/HSV/OKLCHInputs
-                                 #   ColorPreview, ColorSwatch, PresetColors, CopyButton, RecentColors
+                                 #   ColorInputs (text) + ChannelInputs (shared grid) + create-channel-editor
+                                 #   RGB/HSL/HSV/OKLCH/OKLABInputs + InputValuePanel
+                                 #   ColorPreview, ColorSwatch, PresetColors, CopyButton, RecentColors,
+                                 #   EyeDropperButton
       *.test.ts(x)               # colocated tests
     layouts/                     # BaseLayout.astro (head/SEO/GA/theme-script), DocsLayout.astro (sidebar)
     pages/                       # Astro file-based routes — never shipped
       index.astro                # home page
       404.astro
-      docs/*.astro                # one file per docs page (getting-started, color-picker, components,
-                                  #   hooks, utilities, theming, troubleshooting)
-      docs/_nav.ts                # underscore-prefixed = excluded from routing; sidebar order + per-page SEO meta
-    site-data/                    # reference-data files (props tables, code snippets) imported by docs pages —
-                                  #   MUST live outside pages/ or Astro treats .ts files there as API endpoints
+      docs/*.astro               # one file per docs page (getting-started, color-picker, components,
+                                 #   hooks, utilities, theming, troubleshooting)
+      docs/_nav.ts               # underscore-prefixed = excluded from routing; sidebar order + per-page SEO meta
+    site-data/                   # reference-data files (props tables, code snippets) imported by docs pages —
+                                 #   MUST live outside pages/ or Astro treats .ts files there as API endpoints
     components/
-      demos/                      # React island wrappers, one per live demo (e.g. ConverterDemoCard.tsx) —
-                                  #   mounted with client:visible/client:load from .astro pages
-      docs/                       # DocSection.astro, PropsTable.astro (+ props-table-types.ts for the shared
-                                  #   PropRow type), StaticCode.astro (build-time shiki, zero JS), DemoCard.tsx
-                                  #   (the Preview/Code tab wrapper used inside demo islands)
-      home/                       # HeroSection/FeaturesSection/FinalCTA/UsageSection.astro (static) +
-                                  #   DemoPlayground.tsx (the one fully-interactive home island) +
-                                  #   InstallCommandBox.tsx
-      layout/                     # SiteHeader.astro, SiteFooter.astro
-      shared/                     # site-only primitives reused across demos/docs (CodeBlock,
-                                  #   CopyIconButton, ColorFormatsDisplay)
-      ui/                         # shadcn-style primitives kept by the site (card, tabs)
+      demos/                     # React island wrappers, one per live demo (e.g. ConverterDemoCard.tsx) —
+                                 #   mounted with client:visible/client:load from .astro pages
+      docs/                      # DocSection.astro, PropsTable.astro (+ props-table-types.ts for the shared
+                                 #   PropRow type), StaticCode.astro (build-time shiki, zero JS), DemoCard.tsx
+                                 #   (the Preview/Code tab wrapper used inside demo islands)
+      home/                      # HeroSection/FeaturesSection/FinalCTA/UsageSection.astro (static) +
+                                 #   DemoPlayground.tsx (the one fully-interactive home island) +
+                                 #   InstallCommandBox.tsx
+      layout/                    # SiteHeader.astro, SiteFooter.astro
+      shared/                    # site-only primitives reused across demos/docs (CodeBlock,
+                                 #   CopyIconButton, ColorFormatsDisplay)
+      ThemeToggle.astro          # dark-mode toggle (static astro islands)
+      BrandMark.astro            # logo lockup
+      ui/                        # shadcn-style primitives kept by the site (card, tabs)
+    types/globals.d.ts           # ambient declarations for the site build
     hooks/, index.css            # demo-site-only helpers and global styles
+tokens.css                       # site design tokens (imported by client/src/index.css)
+e2e/a11y.playwright.ts           # axe-core accessibility suite over built site pages
+scripts/generate-brand-assets.mjs # regenerates og-image.png + readme-hero.png (needs sharp)
+.github/ACCESSIBILITY_RELEASE_CHECKLIST.md  # manual a11y checks before release
 ```
 
 The published surface is **only** `client/src/lib/color-picker/`. Everything else under `client/src/` is demo/docs site — never shipped. `client/index.html` no longer exists; Astro generates HTML per-route from `.astro` files.
@@ -80,7 +94,11 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 - `npm run preview` — `astro preview`, serves the built `dist/public` (closest thing to prod locally).
 - `npm run test` — Vitest **watch mode** (interactive). For a one-shot run use `npm run test:ci`.
 - `npm run test:ci` — one-shot run with coverage (enforces thresholds).
-- `npm run size` — size-limit budgets (ES 12KB / UMD 10.5KB / CSS 3KB, gzipped).
+- `npm run test:a11y` — rebuilds the site then runs the Playwright/axe suite (`e2e/`). Playwright needs `npx playwright install --with-deps chromium` once.
+- `npm run test:lighthouse` — rebuilds the site then runs the three Lighthouse profiles (minScore: 1).
+- `npm run quality:site` — build + Playwright + all Lighthouse profiles in one go.
+- `npm run format` / `format:check` — Prettier (`format:check` runs in CI, not in `verify`).
+- `npm run size` — size-limit budgets (ES 13.5 KB / UMD 14 KB / CSS 3.5 KB, gzipped). `size:why` opens the bundle analysis.
 - `npm run ci` — the full gate GitHub Actions runs.
 
 ## Conventions
@@ -146,3 +164,4 @@ _Newest at the bottom._
   - **Barrels collapsed**: `conversions.ts` moved to `conversions/index.ts`, and `index.ts` now does `export *` for conversions, hooks, and utils instead of re-listing ~50 names by hand. Keep those three modules' exports intentional — everything they export is now public API.
   - **Preset cap is one constant** (`MAX_CUSTOM_PRESETS`, exported from `picker-state.ts`); the reducer's dead `'reset'` action is gone.
   - **Site**: `ui/button.tsx` (shadcn cva + radix Slot, one consumer) deleted along with the `--sidebar-*`/`--chart-*` tokens and the elevate CSS block, dropping the `@radix-ui/react-slot` and `class-variance-authority` devDeps; `components/demo/` merged into `shared/` + `demos/`; the site's `CopyButton` renamed `CopyIconButton` so it no longer collides with the library's; `lib/constants.ts` folded into its one consumer; `PropsTable.ts` renamed `props-table-types.ts`. ESLint now writes its cache to `node_modules/.cache/eslint/` so stray `.eslintcache` files stop appearing under `src/`.
+- **2026-08-29**: **v0.5.1 — editorial workbench redesign + a11y test gates.** Home page redesigned (workbench layout, self-hosted variable fonts in `client/public/fonts/` via `@font-face` — no fontsource packages). Added real accessibility CI: Playwright + axe (`e2e/a11y.playwright.ts`, `npm run test:a11y`) and Lighthouse CI with `minScore: 1` across mobile/desktop/404 profiles (`npm run test:lighthouse`). `.github/ACCESSIBILITY_RELEASE_CHECKLIST.md` tracks pre-release manual checks; two items remain deferred (native VoiceOver pass, macOS Increased Contrast pass).

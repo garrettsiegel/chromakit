@@ -46,14 +46,10 @@ ChromaKit does not use:
 - No third-party code in your bundle
 - Reduces supply chain attack surface
 - Regular security audits via npm audit
-- Automated dependency updates via Dependabot
 
 ## Supported Versions
 
-| Version | Supported |
-| ------- | --------- |
-| 0.1.x   | ✅ Yes    |
-| < 0.1   | ❌ No     |
+The latest published 0.x minor receives fixes.
 
 ## Best Practices for Consumers
 
@@ -63,11 +59,11 @@ When using with SSR frameworks like Next.js, use dynamic imports to avoid window
 
 ### Content Security Policy (CSP)
 
-ChromaKit is CSP-compatible. No inline styles are required. The library uses:
-
-- CSS classes for styling
-- CSS custom properties for theming
-- No inline style attributes with unsafe values
+Live colors and thumb positions are written as inline `style` attributes (gradients,
+swatch backgrounds, slider/area thumb offsets). Client-side updates go through the CSSOM
+and are not blocked by `style-src`. If you server-render the picker under a strict
+`style-src` without `'unsafe-inline'`, either allow it or render the picker client-only
+(`next/dynamic` with `ssr: false`).
 
 ### Sanitizing User-Generated Colors
 
