@@ -6,7 +6,7 @@ ChromaKit provides a modern alternative to react-colorful with additional featur
 
 | Feature       | react-colorful          | ChromaKit                                               |
 | ------------- | ----------------------- | ------------------------------------------------------- |
-| Bundle Size   | ~3KB                    | 12.4 kB gzipped ES module                               |
+| Bundle Size   | ~3KB                    | 12.7 kB gzipped ES module                               |
 | Color Formats | HEX, RGB, HSL, HSV      | HEX, RGB, HSL, HSV, **OKLCH, OKLAB**, plus HWB, Lab/LCH |
 | Components    | 12+ specialized pickers | Composable primitives + full picker                     |
 | TypeScript    | ✅ Included             | ✅ Native                                               |
@@ -424,7 +424,7 @@ const hslObj: HSL = { h: 200, s: 50, l: 28 };
 
 ### Tradeoffs:
 
-- **Slightly Larger**: 12.4 kB vs 3KB (still very small)
+- **Slightly Larger**: 12.7 kB vs 3KB (still very small)
 - **String-based API**: Different from react-colorful's object-based colors
 - **Different CSS Classes**: Need to update custom styles
 

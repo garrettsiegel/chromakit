@@ -98,7 +98,7 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 - `npm run test:lighthouse` — rebuilds the site then runs the three Lighthouse profiles (minScore: 1).
 - `npm run quality:site` — build + Playwright + all Lighthouse profiles in one go.
 - `npm run format` / `format:check` — Prettier (`format:check` runs in CI, not in `verify`).
-- `npm run size` — size-limit budgets (ES 13.5 KB / UMD 14 KB / CSS 3.5 KB, gzipped). `size:why` opens the bundle analysis.
+- `npm run size` — size-limit budgets (ES 13.5 KB / UMD 14 KB / CSS 3.75 KB, gzipped). `size:why` opens the bundle analysis.
 - `npm run ci` — the full gate GitHub Actions runs.
 
 ## Conventions
@@ -112,6 +112,7 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 
 ## Gotchas
 
+- **Container-query stacking (A4).** The picker stacks based on its OWN width via `@container` queries in `chromakit.css` — not the viewport. An explicit `width` prop lowers the 520 px content floor (PickerLayout writes both `width` and the `--ck-width` var); without it, the picker keeps the 520 px floor, so shrink-wrap parents (flex items, `w-fit`) still render a 520 px picker. Container queries measure the CONTENT box (520 border ≈ 506 content), hence the 505 px query threshold.
 - **`node_modules/` may be absent.** This repo isn't part of the pnpm workspace, so a monorepo-wide install won't populate it. Run `npm ci` in this dir.
 - **`npm run test` is watch mode** and will hang an automated run. Use `npm run test:ci`.
 - **`eslint-disable` comments are errors** (and CI greps for them). Fix the code or ask a human to extend the config's `allow` list.
