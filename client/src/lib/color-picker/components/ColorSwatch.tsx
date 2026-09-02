@@ -20,26 +20,32 @@ export function ColorSwatch({
   className = '',
 }: ColorSwatchProps) {
   const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressFired = useRef(false);
 
-  const handleMouseDown = () => {
+  const clearTimer = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  };
+
+  const handlePointerDown = () => {
+    longPressFired.current = false;
     if (onLongPress) {
       pressTimer.current = setTimeout(() => {
+        longPressFired.current = true;
         onLongPress();
       }, 500);
     }
   };
 
-  const handleMouseUp = () => {
-    if (pressTimer.current) {
-      clearTimeout(pressTimer.current);
-      pressTimer.current = null;
-    }
-  };
-
   const handleClick = () => {
-    if (pressTimer.current) {
-      clearTimeout(pressTimer.current);
-      pressTimer.current = null;
+    clearTimer();
+    // A long press already did its action; the trailing click must not also
+    // select the swatch.
+    if (longPressFired.current) {
+      longPressFired.current = false;
+      return;
     }
     onClick?.();
   };
@@ -49,11 +55,10 @@ export function ColorSwatch({
       <button
         type="button"
         onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleMouseDown}
-        onTouchEnd={handleMouseUp}
+        onPointerDown={handlePointerDown}
+        onPointerUp={clearTimer}
+        onPointerLeave={clearTimer}
+        onPointerCancel={clearTimer}
         className={`ck-swatch-btn ${selected ? 'selected' : ''} ${editing ? 'ck-swatch-editing' : ''} ${className}`}
         data-testid="color-swatch"
         title={
