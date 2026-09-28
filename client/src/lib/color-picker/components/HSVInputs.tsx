@@ -16,6 +16,5 @@ export const HSVInputs = createChannelEditor({
     },
   ],
   select: (colorValue) => colorValue.hsva,
-  // Emitted in the space being edited; `parseColor` understands hsv()/hsva().
   serialize: (hsva) => `hsva(${hsva.h}, ${hsva.s}%, ${hsva.v}%, ${hsva.a})`,
 });

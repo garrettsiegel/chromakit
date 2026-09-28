@@ -1,0 +1,472 @@
+.hero {
+  --ck-text: var(--color-fg);
+  --ck-text-muted: var(--color-muted-fg);
+  --ck-glass-bg: var(--color-bg);
+  --ck-glass-bg-strong: var(--color-bg);
+  --ck-glass-border: var(--color-hairline);
+  --ck-radius: 0;
+  --ck-radius-sm: 0;
+  --ck-radius-md: 0;
+  --ck-blur: none;
+  --ck-primary: var(--color-fg);
+  height: 200svh;
+}
+
+/* CONTAINER UNITS LET THE WORDMARK SIZE ITSELF TO THE STAGE */
+.hero-stage {
+  --progress: 0;
+  --chrome: 0;
+  position: sticky;
+  top: var(--header-height);
+  width: min(100% - 2 * var(--gutter), var(--content-max));
+  height: calc(100svh - var(--header-height));
+  min-height: 580px;
+  margin-inline: auto;
+  overflow: clip;
+  container-type: size;
+}
+
+.hero-stage::after {
+  content: '';
+  position: absolute;
+  inset: calc(31% - 14px) calc(18% - 14px) calc(23% - 14px);
+  border: var(--rule-strong);
+  pointer-events: none;
+  /* ONLY ONCE THE PARTS HAVE LANDED; OPACITY CLAMPS BELOW 0 */
+  opacity: calc((var(--progress) - 0.94) * 16.7);
+}
+
+.hero-bar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 5;
+  display: flex;
+  height: max(8%, var(--hit-min));
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-block-end: var(--rule);
+  color: var(--color-subtle-fg);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+}
+
+.hero-bar button {
+  display: inline-flex;
+  min-height: var(--hit-min);
+  align-items: center;
+  color: var(--color-fg);
+  font-size: var(--text-ui);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.hero-bar button:hover {
+  text-decoration: underline;
+}
+
+.hero [data-ready='true'] .hero-bar button {
+  visibility: hidden;
+}
+
+/* GEIST 750 AT -0.035EM: WORDMARK IS ~4.9EM WIDE, GLYPHS END 0.876EM DOWN */
+.hero-title {
+  position: absolute;
+  top: 9%;
+  left: 0;
+  width: 100%;
+  font-size: min(100cqi / 4.95, (33cqh - 16px) / 0.876);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  transform-origin: top left;
+  transform: translateY(calc(var(--progress) * -25px))
+    scale(calc(1 - var(--progress) * 0.08));
+  opacity: calc(1 - var(--progress) * 1.4);
+}
+
+.hero-ready-heading {
+  position: absolute;
+  top: 12%;
+  width: 100%;
+  text-align: center;
+  visibility: hidden;
+  opacity: var(--chrome);
+}
+
+.hero [data-ready='true'] .hero-ready-heading {
+  visibility: visible;
+}
+
+.hero-ready-heading p {
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+}
+
+.hero-ready-heading h2 {
+  margin-block: 10px;
+  font-size: clamp(2rem, 4vw, 4rem);
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.hero-source,
+.hero-target {
+  position: absolute;
+  display: grid;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.hero-source {
+  inset: 42% 0 13%;
+  grid-template-columns: 44fr 6fr 50fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+}
+
+.hero-target {
+  inset: 31% 18% 23%;
+  grid-template-columns: 48fr 5fr 47fr;
+  grid-template-rows: 2fr 1fr;
+  gap: 18px;
+}
+
+.slot-area {
+  grid-area: 1 / 1 / 3;
+}
+
+.slot-hue {
+  grid-area: 1 / 2 / 3;
+}
+
+.slot-values {
+  grid-area: 1 / 3;
+}
+
+.slot-swatches {
+  grid-area: 2 / 3;
+}
+
+.hero-part {
+  position: absolute;
+  min-width: 0;
+  transform-origin: top left;
+}
+
+/* PARTS GET INLINE GEOMETRY ONCE MEASURED; HIDE UNTIL THEN */
+.hero-part:not([style]) {
+  visibility: hidden;
+}
+
+.hero
+  :is(
+    .ck-color-area,
+    .ck-hue-slider--vertical,
+    .ck-hue-slider-track,
+    .ck-input,
+    .ck-channel-input,
+    .ck-copy-btn,
+    .ck-swatch-btn,
+    .ck-swatch-color
+  ) {
+  border-radius: 0;
+}
+
+/* COLORAREA WRITES AN INLINE WIDTH */
+.hero .ck-color-area {
+  width: 100% !important;
+  height: 100%;
+  min-height: 0;
+  box-shadow: none;
+}
+
+.hero .ck-color-area,
+.hero .ck-hue-slider--vertical {
+  overflow: visible;
+}
+
+.hero .ck-hue-slider--vertical {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  box-shadow: none;
+}
+
+.hero .ck-hue-slider--vertical .ck-hue-slider-track {
+  inset: 0;
+}
+
+.hero .ck-color-area-thumb,
+.hero .ck-slider-thumb {
+  width: 14px;
+  height: 14px;
+  filter: none;
+  opacity: var(--chrome);
+}
+
+/* WHITE RING + DARK HAIRLINE READS ON EVERY HUE */
+.hero .ck-color-area-thumb-inner,
+.hero .ck-slider-thumb-inner {
+  border: 0;
+  background: transparent;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 3px rgb(0 0 0 / 0.6);
+  backdrop-filter: none;
+}
+
+.hero-readings {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  opacity: calc(1 - var(--chrome) * 2);
+}
+
+.hero-readings > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  border-inline-start: var(--rule);
+}
+
+.hero-readings strong,
+.hero-readings span {
+  transform: scaleY(var(--text-correction, 1));
+}
+
+.hero-readings strong {
+  font-size: clamp(1.125rem, 2.4vw, 2.375rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.hero-readings span {
+  font-size: var(--text-xs);
+}
+
+.hero-editors {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  opacity: calc(var(--chrome) * 2 - 1);
+}
+
+.hero-label {
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+}
+
+.hero .ck-input,
+.hero .ck-channel-input {
+  min-width: 0;
+  min-height: 36px;
+  padding: 5px;
+  box-shadow: none;
+  font-size: var(--text-ui);
+}
+
+.hero .ck-channel {
+  min-width: 0;
+}
+
+.hero .ck-channel-grid {
+  gap: 5px;
+}
+
+.hero .ck-input-row {
+  gap: 4px;
+}
+
+.hero .ck-inputs {
+  margin: 0;
+}
+
+.hero .ck-copy-btn {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+}
+
+.hero .ck-copy-btn,
+.hero .ck-copy-btn:hover {
+  background: var(--color-bg);
+  box-shadow: none;
+  transform: none;
+}
+
+.hero-part-swatches {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* THE SLOT SETS THE SIZE; THE LIBRARY'S 44PX PHONE FLOOR WOULD OVERFLOW */
+.hero .ck-swatch-wrapper,
+.hero .ck-swatch-wrapper .ck-swatch-btn {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.hero .ck-swatch-btn {
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.hero .ck-swatch-btn.selected {
+  outline: none;
+}
+
+.hero [data-ready='true'] .ck-swatch-btn.selected {
+  outline: var(--rule-strong);
+  outline-offset: 3px;
+}
+
+.hero-caption {
+  position: absolute;
+  bottom: 7%;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 20px;
+  border-block-start: var(--rule-strong);
+  padding-block-start: 14px;
+  font-size: var(--text-xs);
+  opacity: calc(1 - var(--chrome));
+  pointer-events: none;
+}
+
+.hero-install {
+  position: absolute;
+  bottom: 10%;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  visibility: hidden;
+  opacity: var(--chrome);
+}
+
+.hero [data-ready='true'] .hero-install {
+  visibility: visible;
+}
+
+.hero-install a {
+  margin-inline-start: var(--space-5);
+}
+
+@media (max-width: 900px) {
+  .hero-stage {
+    min-height: 500px;
+  }
+
+  .hero-stage::after {
+    inset: calc(29% - 10px) 0 calc(24% - 10px);
+  }
+
+  .hero-title {
+    top: 13%;
+    font-size: min(100cqi / 4.95, (15cqh - 16px) / 0.876);
+  }
+
+  .hero-source,
+  .hero-target {
+    grid-template-columns: 1fr 24px;
+    gap: 10px;
+  }
+
+  .hero-source {
+    inset: 28% 0 16%;
+    grid-template-rows: 3fr 1fr 1fr;
+  }
+
+  .hero-target {
+    inset: 29% 10px 24%;
+    grid-template-rows: 2.2fr 2.4fr 0.8fr;
+  }
+
+  .slot-area {
+    grid-area: 1 / 1;
+  }
+
+  .slot-hue {
+    grid-area: 1 / 2;
+  }
+
+  .slot-values {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+
+  .slot-swatches {
+    grid-area: 3 / 1 / 4 / 3;
+  }
+
+  .hero-readings > div {
+    gap: 0;
+  }
+
+  .hero-readings strong {
+    font-size: 25px;
+  }
+
+  .hero-editors {
+    gap: 3px;
+  }
+
+  .hero-label {
+    display: none;
+  }
+
+  .hero-caption {
+    bottom: 4%;
+  }
+
+  .hero-install {
+    bottom: 3%;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .hero-install a {
+    flex-basis: 100%;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-formats,
+  .hero-caption > span:first-child {
+    display: none;
+  }
+
+  .hero-bar,
+  .hero-caption {
+    justify-content: flex-end;
+  }
+}
+
+/* KEEP IN SYNC WITH THE MATCHMEDIA QUERY IN HeroPicker.tsx */
+@media (prefers-reduced-motion: reduce), (max-height: 499px) {
+  .hero {
+    height: auto;
+  }
+
+  .hero-stage {
+    --progress: 1;
+    --chrome: 1;
+    position: relative;
+    top: 0;
+  }
+}

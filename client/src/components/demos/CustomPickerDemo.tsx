@@ -1,12 +1,4 @@
-import { memo } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import * as Tabs from '@radix-ui/react-tabs';
 import {
   ColorArea,
   HueSlider,
@@ -20,82 +12,52 @@ import {
 } from '@/lib/color-picker';
 import { ColorFormatsDisplay } from '@/components/shared/ColorFormatsDisplay';
 
-const COLOR_AREA_CONFIG = {
-  width: 320,
-  height: 160,
-} as const;
+const EDITORS = [
+  { value: 'rgb', label: 'RGB', Inputs: RGBInputs },
+  { value: 'hsl', label: 'HSL', Inputs: HSLInputs },
+  { value: 'hsv', label: 'HSV', Inputs: HSVInputs },
+  { value: 'oklch', label: 'OKLCH', Inputs: OKLCHInputs },
+];
 
-export const CustomPickerDemo = memo(function CustomPickerDemo() {
+export const CustomPickerDemo = () => {
   const { hsva, colorValue, updateColor, setFromString, startDrag, endDrag } =
     useColorState('#6366F1');
+  const drag = { onStart: startDrag, onEnd: endDrag };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Build Your Own Picker</CardTitle>
-        <CardDescription>
-          Compose individual components to create a custom color picker
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex flex-col gap-4">
-          <ColorArea
-            hsva={hsva}
-            onChange={updateColor}
-            onStart={startDrag}
-            onEnd={endDrag}
-            {...COLOR_AREA_CONFIG}
-          />
-          <div className="flex gap-4 items-start">
-            <ColorPreview colorValue={colorValue} size="lg" />
-            <div className="flex-1 space-y-3">
-              <HueSlider
-                hsva={hsva}
-                onChange={updateColor}
-                onStart={startDrag}
-                onEnd={endDrag}
-              />
-              <AlphaSlider
-                hsva={hsva}
-                onChange={updateColor}
-                onStart={startDrag}
-                onEnd={endDrag}
-              />
-            </div>
-          </div>
+    <div className="demo-stack demo-stack--md">
+      <ColorArea
+        hsva={hsva}
+        onChange={updateColor}
+        width={320}
+        height={160}
+        {...drag}
+      />
+      <div className="demo-row demo-row--top">
+        <ColorPreview colorValue={colorValue} size="lg" />
+        <div className="demo-stack demo-row__fill">
+          <HueSlider hsva={hsva} onChange={updateColor} {...drag} />
+          <AlphaSlider hsva={hsva} onChange={updateColor} {...drag} />
         </div>
-
-        <Tabs defaultValue="rgb" className="w-full">
-          <TabsList className="w-full">
-            <TabsTrigger value="rgb" className="flex-1">
-              RGB
-            </TabsTrigger>
-            <TabsTrigger value="hsl" className="flex-1">
-              HSL
-            </TabsTrigger>
-            <TabsTrigger value="hsv" className="flex-1">
-              HSV
-            </TabsTrigger>
-            <TabsTrigger value="oklch" className="flex-1">
-              OKLCH
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="rgb" className="mt-4">
-            <RGBInputs colorValue={colorValue} onChange={setFromString} />
-          </TabsContent>
-          <TabsContent value="hsl" className="mt-4">
-            <HSLInputs colorValue={colorValue} onChange={setFromString} />
-          </TabsContent>
-          <TabsContent value="hsv" className="mt-4">
-            <HSVInputs colorValue={colorValue} onChange={setFromString} />
-          </TabsContent>
-          <TabsContent value="oklch" className="mt-4">
-            <OKLCHInputs colorValue={colorValue} onChange={setFromString} />
-          </TabsContent>
-        </Tabs>
-
-        <ColorFormatsDisplay colorValue={colorValue} />
-      </CardContent>
-    </Card>
+      </div>
+      <Tabs.Root defaultValue="rgb">
+        <Tabs.List
+          className="tabs__list tabs__list--fill"
+          aria-label="Channel editor"
+        >
+          {EDITORS.map(({ value, label }) => (
+            <Tabs.Trigger key={value} className="tabs__trigger" value={value}>
+              {label}
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+        {EDITORS.map(({ value, Inputs }) => (
+          <Tabs.Content key={value} className="tabs__panel" value={value}>
+            <Inputs colorValue={colorValue} onChange={setFromString} />
+          </Tabs.Content>
+        ))}
+      </Tabs.Root>
+      <ColorFormatsDisplay colorValue={colorValue} />
+    </div>
   );
-});
+};

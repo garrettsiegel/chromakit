@@ -1,9 +1,6 @@
-// Side-effect import so the site build and Vite lib build pick up the stylesheet.
-// The published JS does not import CSS; consumers import
-// `chromakit-react/chromakit.css` themselves (see `sideEffects` in package.json).
+// SIDE-EFFECT IMPORT FOR THE SITE/LIB BUILDS; NPM CONSUMERS IMPORT chromakit-react/chromakit.css THEMSELVES
 import './chromakit.css';
 
-// Types
 export type {
   RGB,
   RGBA,
@@ -25,13 +22,10 @@ export type {
   ColorPickerProps,
 } from './types';
 
-// Conversion utilities
 export * from './conversions';
 
-// Hooks
 export * from './hooks';
 
-// Components
 export { ColorArea } from './components/ColorArea';
 export type { ColorAreaProps } from './components/ColorArea';
 export { HueSlider } from './components/HueSlider';
@@ -59,7 +53,5 @@ export type { CopyButtonProps } from './components/CopyButton';
 export { RecentColors } from './components/RecentColors';
 export type { RecentColorsProps } from './components/RecentColors';
 export type { ChannelEditorProps } from './components/create-channel-editor';
-export type { ChannelInputsProps } from './components/ChannelInputs';
 
-// Utility functions
 export * from './utils';

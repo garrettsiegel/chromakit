@@ -6,11 +6,14 @@ import PropsTable from '@/components/docs/PropsTable.astro';
 import { ControlledDemoCard } from '@/components/demos/ControlledDemoCard';
 import { PresetDemoCard } from '@/components/demos/PresetDemoCard';
 import { FormatDemoCard } from '@/components/demos/FormatDemoCard';
-import { DOCS_NAV } from './_nav';
+import { WideDemoCard } from '@/components/demos/WideDemoCard';
 import { colorPickerProps } from '@/site-data/color-picker-props';
-
-const meta = DOCS_NAV.find((d) => d.slug === 'color-picker');
-const description = meta?.description ?? '';
+import {
+  controlledCode,
+  presetCode,
+  formatCode,
+  wideCode,
+} from '@/site-data/demo-snippets';
 
 const colorValueCode = `interface ColorValue {
   hex: string;    // "#ff6b6b"
@@ -27,32 +30,28 @@ const colorValueCode = `interface ColorValue {
 }`;
 ---
 
-<DocsLayout
-  slug="color-picker"
-  title="ColorPicker · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">ColorPicker</h1>
-    <p class="text-lg text-muted-foreground">
-      The batteries-included component: color area, hue and alpha sliders,
-      format-switchable inputs, presets, history, and copy — all configurable
-      through props.
-    </p>
-  </div>
+<DocsLayout slug="color-picker">
+  <Fragment slot="lead">
+    The complete picker in one component: color area, hue and alpha sliders,
+    format-switchable inputs, presets, recent colors, eyedropper, and copy.
+    Turn each part on or off with props.
+  </Fragment>
 
   <DocSection
     id="controlled"
+    split
     title="Controlled vs. uncontrolled"
-    description="Pass value + onChange for a controlled picker, or defaultValue alone to let ChromaKit manage state. onChange fires continuously; onChangeComplete fires when the interaction settles."
+    description="Pass value and onChange for a controlled picker, or defaultValue alone to let ChromaKit manage state. onChange fires on every change; onChangeComplete fires once a drag ends or a swatch is picked."
   >
-    <ControlledDemoCard client:visible />
+    <ControlledDemoCard client:visible>
+      <StaticCode slot="code" code={controlledCode} />
+    </ControlledDemoCard>
   </DocSection>
 
   <DocSection
     id="props"
     title="Props"
-    description="Every ColorValue passed to onChange contains all formats pre-converted, so you never convert manually."
+    description="Every prop is optional. Callbacks receive a ColorValue with every format already converted."
   >
     <PropsTable rows={colorPickerProps} />
   </DocSection>
@@ -60,24 +59,40 @@ const colorValueCode = `interface ColorValue {
   <DocSection
     id="color-value"
     title="The ColorValue object"
-    description="onChange and onChangeComplete both receive this fully-converted object."
+    description="onChange and onChangeComplete both receive this object. Every format is computed up front."
   >
     <StaticCode code={colorValueCode} lang="typescript" />
   </DocSection>
 
   <DocSection
     id="presets"
+    split
     title="Custom presets"
-    description="Supply your own swatches with the presets array, or named groups via presetGroups."
+    description="Supply your own swatches with presets, or named groups with presetGroups."
   >
-    <PresetDemoCard client:visible />
+    <PresetDemoCard client:visible>
+      <StaticCode slot="code" code={presetCode} />
+    </PresetDemoCard>
+  </DocSection>
+
+  <DocSection
+    id="layouts"
+    title="Layouts"
+    description='The default compact layout is a 280px column. Pass layout="wide" for a 520px side-by-side version with the color area on the left and a preset-group menu.'
+  >
+    <WideDemoCard client:visible>
+      <StaticCode slot="code" code={wideCode} />
+    </WideDemoCard>
   </DocSection>
 
   <DocSection
     id="format-control"
+    split
     title="Format control"
-    description="Restrict the input tabs to the formats your app cares about."
+    description="Limit the format dropdown to the formats your app uses."
   >
-    <FormatDemoCard client:visible />
+    <FormatDemoCard client:visible>
+      <StaticCode slot="code" code={formatCode} />
+    </FormatDemoCard>
   </DocSection>
 </DocsLayout>

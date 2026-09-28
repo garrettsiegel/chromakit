@@ -1,7 +1,8 @@
-import type { KeyboardEvent } from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import type { CSSProperties, KeyboardEvent } from 'react';
+import { useCallback, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
+import { getSliderKeyValue } from './slider-keys';
 
 export interface ColorAreaProps {
   hsva: HSVA;
@@ -18,7 +19,7 @@ export function ColorArea({
   onChange,
   onStart,
   onEnd,
-  width = 256,
+  width,
   height,
   className = '',
 }: ColorAreaProps) {
@@ -45,57 +46,12 @@ export function ColorArea({
   const handleAxisKeyDown = useCallback(
     (axis: 's' | 'v', e: KeyboardEvent<HTMLDivElement>) => {
       const step = e.shiftKey ? 10 : 1;
-      let nextValue = hsva[axis];
-
-      switch (e.key) {
-        case 'ArrowLeft':
-        case 'ArrowDown':
-          e.preventDefault();
-          nextValue = Math.max(0, nextValue - step);
-          break;
-        case 'ArrowRight':
-        case 'ArrowUp':
-          e.preventDefault();
-          nextValue = Math.min(100, nextValue + step);
-          break;
-        case 'Home':
-          e.preventDefault();
-          nextValue = 0;
-          break;
-        case 'End':
-          e.preventDefault();
-          nextValue = 100;
-          break;
-        case 'PageUp':
-          e.preventDefault();
-          nextValue = Math.min(100, nextValue + 10);
-          break;
-        case 'PageDown':
-          e.preventDefault();
-          nextValue = Math.max(0, nextValue - 10);
-          break;
-        default:
-          return;
-      }
-
+      const nextValue = getSliderKeyValue(e.key, hsva[axis], step, 0, 100, 10);
+      if (nextValue === null) return;
+      e.preventDefault();
       onChange({ ...hsva, [axis]: nextValue });
     },
     [hsva, onChange]
-  );
-
-  const thumbStyle = useMemo(
-    () => ({
-      left: `${hsva.s}%`,
-      top: `${100 - hsva.v}%`,
-    }),
-    [hsva.s, hsva.v]
-  );
-
-  const backgroundStyle = useMemo(
-    () => ({
-      backgroundColor: `hsl(${hsva.h}, 100%, 50%)`,
-    }),
-    [hsva.h]
   );
 
   return (
@@ -103,12 +59,15 @@ export function ColorArea({
       ref={containerRef}
       role="group"
       aria-label="Saturation and brightness color area"
-      className={`ck-color-area ${className}`}
-      style={height != null ? { width, height } : { width }}
+      className={`ck-color-area ${className}`.trim()}
+      style={{ width, height }}
       onPointerDown={handlePointerDown}
       data-testid="color-area"
     >
-      <div className="ck-color-area-layer" style={backgroundStyle} />
+      <div
+        className="ck-color-area-layer"
+        style={{ backgroundColor: `hsl(${hsva.h}, 100%, 50%)` }}
+      />
       <div className="ck-color-area-layer ck-color-area-layer--saturation" />
       <div className="ck-color-area-layer ck-color-area-layer--brightness" />
       <div
@@ -147,7 +106,12 @@ export function ColorArea({
       </div>
       <div
         className="ck-color-area-thumb"
-        style={thumbStyle}
+        style={
+          {
+            '--ck-x': hsva.s / 100,
+            '--ck-y': 1 - hsva.v / 100,
+          } as CSSProperties
+        }
         data-testid="color-area-thumb"
       >
         <div className="ck-color-area-thumb-inner" />

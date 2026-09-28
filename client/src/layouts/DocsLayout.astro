@@ -2,67 +2,49 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SiteHeader from '@/components/layout/SiteHeader.astro';
 import SiteFooter from '@/components/layout/SiteFooter.astro';
+import DocsNavList from '@/components/docs/DocsNavList.astro';
 import { DOCS_NAV } from '@/pages/docs/_nav';
+import '@/layouts/docs.css';
 
 interface Props {
   slug: string;
-  title: string;
-  description: string;
 }
 
-const { slug, title, description } = Astro.props;
-const activePage = DOCS_NAV.find((doc) => doc.slug === slug);
+const { slug } = Astro.props;
+const page = DOCS_NAV.find((doc) => doc.slug === slug);
+if (!page) throw new Error(`Unknown docs slug: ${slug}`);
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={`${page.title} · ChromaKit Docs`}
+  description={page.description}
+>
   <SiteHeader />
-  <details class="docs-mobile-nav">
-    <summary>
-      <span class="field-label">Documentation</span>
-      <span>{activePage?.title ?? 'Browse pages'}</span>
-    </summary>
-    <nav aria-label="Documentation pages">
-      <ul class="docs-nav-list">
-        {
-          DOCS_NAV.map((doc) => (
-            <li>
-              <a
-                href={`/docs/${doc.slug}`}
-                class="docs-nav-link"
-                aria-current={doc.slug === slug ? 'page' : undefined}
-              >
-                {doc.title}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-  </details>
-  <div class="docs-shell">
-    <aside class="docs-rail">
+  <div class="container">
+    <details class="docs-mobile-nav">
+      <summary>
+        <span class="field-label">Documentation</span>
+        <span>{page.title}</span>
+      </summary>
       <nav aria-label="Documentation pages">
-        <p class="field-label">Documentation / v{__PKG_VERSION__}</p>
-        <ul class="docs-nav-list">
-          {
-            DOCS_NAV.map((doc) => (
-              <li>
-                <a
-                  href={`/docs/${doc.slug}`}
-                  class="docs-nav-link"
-                  aria-current={doc.slug === slug ? 'page' : undefined}
-                >
-                  {doc.title}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        <DocsNavList slug={slug} />
       </nav>
-    </aside>
-    <main id="main-content" class="docs-content">
-      <slot />
-    </main>
+    </details>
+    <div class="docs-shell">
+      <aside class="docs-rail">
+        <nav aria-label="Documentation pages">
+          <p class="field-label">Documentation / v{__PKG_VERSION__}</p>
+          <DocsNavList slug={slug} />
+        </nav>
+      </aside>
+      <main id="main-content" class="docs-content">
+        <header class="docs-intro">
+          <h1>{page.title}</h1>
+          <p class="docs-lead"><slot name="lead" /></p>
+        </header>
+        <slot />
+      </main>
+    </div>
   </div>
   <SiteFooter />
 </BaseLayout>

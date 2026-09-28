@@ -12,7 +12,6 @@ export default [
   {
     ignores: [
       'dist/**',
-      'coverage/**',
       'node_modules/**',
       '.vite/**',
       '.astro/**',
@@ -76,20 +75,8 @@ export default [
         React: 'readonly',
         JSX: 'readonly',
 
-        // Injected by vite.config.ts `define`
+        // INJECTED BY astro.config.mjs VITE `define`
         __PKG_VERSION__: 'readonly',
-
-        // Test globals
-        jest: 'readonly',
-        describe: 'readonly',
-        it: 'readonly',
-        expect: 'readonly',
-        test: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        beforeAll: 'readonly',
-        afterAll: 'readonly',
-        vi: 'readonly',
       },
     },
     plugins: {
@@ -174,7 +161,7 @@ export default [
       // Legitimate exceptions must be added to `allow` deliberately by a human.
       'eslint-comments/no-use': ['error', { allow: [] }],
 
-      // Size limits (tests exempted below)
+      // Size limits
       'max-lines': [
         'error',
         { max: 300, skipBlankLines: true, skipComments: true },
@@ -196,13 +183,6 @@ export default [
       },
     },
   },
-  {
-    files: ['**/*.test.{ts,tsx}', 'vitest.setup.ts'],
-    rules: {
-      'max-lines': 'off',
-      'max-lines-per-function': 'off',
-    },
-  },
   // Astro components: use the astro parser + recommended rules. The React/TS
   // block above is scoped to .{js,jsx,ts,tsx}, so it never touches .astro.
   ...astro.configs['flat/recommended'],
@@ -210,7 +190,7 @@ export default [
     files: ['**/*.astro'],
     languageOptions: {
       globals: {
-        // Injected by astro.config.mjs vite `define`.
+        // INJECTED BY astro.config.mjs VITE `define`
         __PKG_VERSION__: 'readonly',
       },
     },

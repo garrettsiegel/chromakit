@@ -1,13 +1,10 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import type { PointerEvent as ReactPointerEvent, RefObject } from 'react';
 import type { HSVA, ColorValue } from './types';
 import { parseColor, rgbaToColorValue, hsvaToRgba } from './conversions';
+import { clamp } from './conversions/math';
 
-/**
- * RGB cannot represent hue for black, white, or any gray, so a color round-
- * tripped through RGB loses the hue the user picked and the ring snaps to 0.
- * Carry the previous hue (and saturation) forward while those channels are
- * degenerate, so dragging to an edge and back is lossless.
- */
+// RGB LOSES HUE FOR BLACK/WHITE/GRAY, SO CARRY THE PREVIOUS HUE AND SATURATION FORWARD
 function preserveHueAndSaturation(next: HSVA, previous: HSVA): HSVA {
   return {
     ...next,
@@ -16,14 +13,24 @@ function preserveHueAndSaturation(next: HSVA, previous: HSVA): HSVA {
   };
 }
 
+export interface UseColorStateOptions {
+  /** Controlled color. When set, the hook reflects it instead of internal state. */
+  value?: string;
+  /** Fires on every change (drag, typing). */
+  onChange?: (color: ColorValue) => void;
+  /** Fires once a drag ends, with the final color. */
+  onChangeComplete?: (color: ColorValue) => void;
+}
+
 export function useColorState(
   initialColor: string = '#000000',
-  onChange?: (color: ColorValue) => void,
-  onChangeComplete?: (color: ColorValue) => void,
-  controlledColor?: string
+  {
+    value: controlledColor,
+    onChange,
+    onChangeComplete,
+  }: UseColorStateOptions = {}
 ) {
-  // Seed from the controlled value when there is one, so the very first render
-  // already remembers the caller's hue rather than the fallback's.
+  // SEED FROM THE CONTROLLED VALUE SO THE FIRST RENDER KEEPS THE CALLER'S HUE
   const seedColor = controlledColor || initialColor;
 
   const [internalHsva, setInternalHsva] = useState<HSVA>(() => {
@@ -52,8 +59,7 @@ export function useColorState(
     return rgba ? rgbaToColorValue(rgba) : null;
   }, [controlledColor]);
 
-  // internalHsva doubles as the record of what the user last steered directly,
-  // which is what keeps the hue ring stable through black, white, and gray.
+  // INTERNAL HSVA REMEMBERS THE LAST STEERED HUE, KEEPING THE RING STABLE THROUGH GRAYS
   const hsva = useMemo(
     () =>
       controlledColorValue
@@ -66,9 +72,7 @@ export function useColorState(
 
   const isDragging = useRef(false);
 
-  // Always holds the latest colorValue so endDrag reports the final color even
-  // when a stale endDrag reference is invoked (e.g. captured by a pointerup
-  // listener registered at drag start).
+  // LATEST COLOR FOR endDrag, WHICH MAY BE A STALE REFERENCE CAPTURED AT DRAG START
   const colorValueRef = useRef(colorValue);
   useEffect(() => {
     colorValueRef.current = colorValue;
@@ -78,8 +82,7 @@ export function useColorState(
     (newHsva: HSVA) => {
       const rgba = hsvaToRgba(newHsva);
       const newColorValue = rgbaToColorValue(rgba);
-      // Tracked even while controlled: it is the memory the hue ring reads
-      // back when the color itself cannot carry a hue.
+      // TRACKED EVEN WHILE CONTROLLED: THE HUE RING READS IT BACK FOR GRAYS
       setInternalHsva((prev) => preserveHueAndSaturation(newHsva, prev));
       if (!controlledColorValue) {
         setInternalColorValue(newColorValue);
@@ -126,7 +129,6 @@ export function useColorState(
     setFromString,
     startDrag,
     endDrag,
-    isDragging,
   };
 }
 
@@ -134,16 +136,14 @@ export function usePointerDrag(
   onMove: (position: { x: number; y: number }) => void,
   onStart?: () => void,
   onEnd?: () => void,
-  externalRef?: React.RefObject<HTMLDivElement | null>
+  externalRef?: RefObject<HTMLDivElement | null>
 ) {
   const internalRef = useRef<HTMLDivElement | null>(null);
   const containerRef = externalRef || internalRef;
   const isDragging = useRef(false);
-  // Removes the active document listeners; set while a drag is in progress.
   const cleanupRef = useRef<(() => void) | null>(null);
 
-  // Keep the latest callbacks in refs so document listeners registered at drag
-  // start always call the current versions (avoids stale-closure bugs).
+  // LATEST CALLBACKS IN REFS SO DOCUMENT LISTENERS NEVER CALL STALE CLOSURES
   const onMoveRef = useRef(onMove);
   const onEndRef = useRef(onEnd);
   useEffect(() => {
@@ -152,18 +152,29 @@ export function usePointerDrag(
   });
 
   const getPosition = useCallback(
-    (e: PointerEvent | React.PointerEvent) => {
-      if (!containerRef.current) return { x: 0, y: 0 };
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-      return { x, y };
+    (e: PointerEvent | ReactPointerEvent) => {
+      const el = containerRef.current;
+      if (!el) return { x: 0, y: 0 };
+      const rect = el.getBoundingClientRect();
+      // THUMBS STAY INSIDE THE ELEMENT, SO 0..1 SPANS THE INSET RANGE
+      const inset =
+        parseFloat(
+          window.getComputedStyle(el).getPropertyValue('--ck-thumb-inset')
+        ) || 0;
+      const axis = (offset: number, size: number) =>
+        size > inset * 2
+          ? clamp((offset - inset) / (size - inset * 2), 0, 1)
+          : clamp(offset / size, 0, 1);
+      return {
+        x: axis(e.clientX - rect.left, rect.width),
+        y: axis(e.clientY - rect.top, rect.height),
+      };
     },
     [containerRef]
   );
 
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
+    (e: ReactPointerEvent) => {
       e.preventDefault();
       isDragging.current = true;
       onStart?.();
@@ -190,14 +201,12 @@ export function usePointerDrag(
       cleanupRef.current = cleanup;
       document.addEventListener('pointermove', handlePointerMove);
       document.addEventListener('pointerup', handlePointerUp);
-      // A cancelled drag (gesture takeover, palm rejection) must end the drag
-      // too, or the move listener sticks around and onEnd never fires.
+      // A CANCELLED DRAG (GESTURE TAKEOVER, PALM REJECTION) MUST END THE DRAG TOO
       document.addEventListener('pointercancel', handlePointerUp);
     },
     [getPosition, onStart]
   );
 
-  // Remove any listeners still attached if the component unmounts mid-drag.
   useEffect(() => () => cleanupRef.current?.(), []);
 
   return {
@@ -206,6 +215,7 @@ export function usePointerDrag(
   };
 }
 
+/** @deprecated Will be removed in a future minor release. Debounce in your app instead. */
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 

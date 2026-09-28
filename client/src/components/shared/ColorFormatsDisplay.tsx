@@ -1,7 +1,6 @@
-import { memo } from 'react';
 import type { ColorFormat, ColorValue } from '@/lib/color-picker';
 import { formatColor } from '@/lib/color-picker';
-import { CopyIconButton } from './CopyIconButton';
+import { CopyIconButton } from '@/components/shared/CopyIconButton';
 
 const COLOR_FORMATS: ColorFormat[] = [
   'hex',
@@ -17,9 +16,9 @@ interface ColorFormatsDisplayProps {
   colorValue: ColorValue;
 }
 
-export const ColorFormatsDisplay = memo(function ColorFormatsDisplay({
+export const ColorFormatsDisplay = ({
   colorValue,
-}: ColorFormatsDisplayProps) {
+}: ColorFormatsDisplayProps) => {
   return (
     <div className="format-ledger">
       {COLOR_FORMATS.map((format) => {
@@ -34,4 +33,4 @@ export const ColorFormatsDisplay = memo(function ColorFormatsDisplay({
       })}
     </div>
   );
-});
+};

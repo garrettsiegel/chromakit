@@ -10,18 +10,13 @@ import SiteFooter from '@/components/layout/SiteFooter.astro';
   noindex
 >
   <SiteHeader />
-  <main id="main-content" class="not-found">
-    <div class="container not-found__grid">
-      <p class="not-found__code" aria-hidden="true">404</p>
-      <div>
-        <p class="field-label">Outside the available gamut</p>
-        <h1>Page not found.</h1>
-        <p>The address does not map to a ChromaKit page.</p>
-        <div class="not-found__actions">
-          <a class="button-primary" href="/">Return to the workbench</a>
-          <a class="button-secondary" href="/docs/getting-started">Read the docs</a>
-        </div>
-      </div>
+  <main id="main-content" class="container not-found">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1>Page not found.</h1>
+    <p>Nothing lives at this address. Check the URL, or start from the docs.</p>
+    <div class="not-found__actions">
+      <a href="/">Back to home <span aria-hidden="true">→</span></a>
+      <a href="/docs/getting-started">Read the docs <span aria-hidden="true">→</span></a>
     </div>
   </main>
   <SiteFooter />

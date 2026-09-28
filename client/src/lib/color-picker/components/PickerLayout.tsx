@@ -1,31 +1,39 @@
+import type { CSSProperties } from 'react';
 import type { ColorFormat } from '../types';
 import type { useColorState } from '../hooks';
 import type { usePresets } from './picker-state';
+import { formatColor } from '../conversions';
 import { ColorArea } from './ColorArea';
 import { HueSlider } from './HueSlider';
 import { AlphaSlider } from './AlphaSlider';
 import { ColorPreview } from './ColorPreview';
-import { PresetColors } from './PresetColors';
-import { RecentColors } from './RecentColors';
+import { CopyButton } from './CopyButton';
 import { EyeDropperButton } from './EyeDropperButton';
 import { InputValuePanel, type InputMode } from './InputValuePanel';
 
-export type { InputMode };
+const RECENT_LIMIT = 4;
 
-/** Width of the saturation/value area, in pixels. */
-const AREA_WIDTH = 160;
+export type PickerLayoutMode = 'compact' | 'wide';
+
+const CHANNEL_FORMATS: Record<
+  Exclude<InputMode, 'single'>,
+  [ColorFormat, ColorFormat]
+> = {
+  rgb: ['rgb', 'rgba'],
+  hsl: ['hsl', 'hsla'],
+  hsv: ['hsv', 'hsva'],
+  oklab: ['oklab', 'oklaba'],
+  oklch: ['oklch', 'oklcha'],
+};
 
 interface PickerLayoutProps {
+  layout: PickerLayoutMode;
   className: string;
   width?: number | string;
   areaHeight?: number;
-  /** The live color state, straight from `useColorState`. */
   color: ReturnType<typeof useColorState>;
-  /** The editable swatch state, straight from `usePresets`. */
   presets: ReturnType<typeof usePresets>;
-  formats: ColorFormat[];
   format: ColorFormat;
-  setFormat: (format: ColorFormat) => void;
   inputMode: InputMode;
   availableModes: InputMode[];
   setInputMode: (mode: InputMode) => void;
@@ -41,15 +49,14 @@ interface PickerLayoutProps {
   enableHistory: boolean;
 }
 
-export function PickerLayout({
+export const PickerLayout = ({
+  layout,
   className,
   width,
   areaHeight,
   color,
   presets,
-  formats,
   format,
-  setFormat,
   inputMode,
   availableModes,
   setInputMode,
@@ -63,138 +70,166 @@ export function PickerLayout({
   showEyeDropper,
   showPresets,
   enableHistory,
-}: PickerLayoutProps) {
+}: PickerLayoutProps) => {
+  const { colorValue } = color;
+  const withAlpha = showAlpha && colorValue.rgba.a < 1;
+  const copyFormat =
+    inputMode === 'single'
+      ? format
+      : CHANNEL_FORMATS[inputMode][withAlpha ? 1 : 0];
+  const current = colorValue.hex.toLowerCase();
+  const presetColors = showPresets ? presets.customPresets : [];
+  const showGroups =
+    layout === 'wide' &&
+    showPresets &&
+    presets.normalizedPresetGroups.length > 0;
+  const recentColors = enableHistory
+    ? history
+        .filter(
+          (c) => !presetColors.some((p) => p.toLowerCase() === c.toLowerCase())
+        )
+        .slice(0, RECENT_LIMIT)
+    : [];
+
+  const chip = (swatch: string) => (
+    <button
+      key={swatch}
+      type="button"
+      className="ck-picker-chip"
+      style={{ backgroundColor: swatch }}
+      title={swatch}
+      aria-label={`Select ${swatch}`}
+      aria-pressed={swatch.toLowerCase() === current}
+      onClick={() => onSelectColor(swatch)}
+    />
+  );
+
   return (
     <div
-      className={`ck-color-picker ${className}`.trim()}
+      className={`ck-color-picker${layout === 'wide' ? ' ck-color-picker--wide' : ''} ${className}`.trim()}
       style={
         width
           ? ({
-              width,
               '--ck-width': typeof width === 'number' ? `${width}px` : width,
-            } as React.CSSProperties)
+            } as CSSProperties)
           : undefined
       }
       data-testid="color-picker"
     >
-      <div className="ck-picker-main">
-        <ColorArea
-          hsva={color.hsva}
-          onChange={color.updateColor}
-          onStart={color.startDrag}
-          onEnd={color.endDrag}
-          width={AREA_WIDTH}
-          height={areaHeight}
-        />
+      <ColorArea
+        hsva={color.hsva}
+        onChange={color.updateColor}
+        onStart={color.startDrag}
+        onEnd={color.endDrag}
+        height={areaHeight}
+      />
 
-        <div className="ck-picker-controls">
-          <div className="ck-controls-row">
-            <div className="ck-sliders-group">
-              <HueSlider
-                hsva={color.hsva}
-                onChange={color.updateColor}
-                onStart={color.startDrag}
-                onEnd={color.endDrag}
-              />
-              {showAlpha && (
-                <AlphaSlider
-                  hsva={color.hsva}
-                  onChange={color.updateColor}
-                  onStart={color.startDrag}
-                  onEnd={color.endDrag}
-                />
-              )}
-            </div>
-          </div>
-
-          {showInputs && (
-            <div className="ck-inputs">
-              {availableModes.length > 1 && (
-                <div className="ck-input-modes">
-                  {availableModes.map((mode) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      aria-pressed={inputMode === mode}
-                      onClick={() => setInputMode(mode)}
-                      className={`ck-input-mode-btn ${inputMode === mode ? 'active' : ''}`}
-                      data-testid={`input-mode-${mode}`}
-                    >
-                      {mode === 'single' ? 'TEXT' : mode.toUpperCase()}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {showPreview && (
-            <div className="ck-action-buttons-row">
-              <ColorPreview
-                colorValue={color.colorValue}
-                size="lg"
-                className="ck-preview-wide"
-              />
-              <div className="ck-action-buttons">
-                {showEyeDropper && (
-                  <EyeDropperButton onPick={color.setFromString} />
-                )}
-                {inputMode === 'single' && (
-                  <select
-                    aria-label="Color format"
-                    value={format}
-                    onChange={(e) => setFormat(e.target.value as ColorFormat)}
-                    className="ck-select"
-                    data-testid="color-format-select"
-                  >
-                    {formats.map((f) => (
-                      <option key={f} value={f}>
-                        {f.toUpperCase()}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-            </div>
-          )}
-
-          {showInputs && (
-            <div className="ck-inputs-values">
-              <InputValuePanel
-                inputMode={inputMode}
-                colorValue={color.colorValue}
-                format={format}
-                setFromString={color.setFromString}
-                showAlpha={showAlpha}
-                showCopyButton={showCopyButton}
-                onCopy={onCopy}
-              />
-            </div>
-          )}
-
-          {enableHistory && history.length > 0 && (
-            <RecentColors colors={history} onColorSelect={onSelectColor} />
-          )}
-
-          {showPresets && presets.customPresets.length > 0 && (
-            <div className="ck-presets">
-              <PresetColors
-                colors={presets.customPresets}
-                selectedColor={color.colorValue.hex}
-                onSelect={onSelectColor}
-                onUpdatePreset={(index) =>
-                  presets.updatePreset(index, color.colorValue.hex)
-                }
-                onDeletePreset={presets.deletePreset}
-                onAddPreset={() => presets.addPreset(color.colorValue.hex)}
-                presetGroups={presets.normalizedPresetGroups}
-                selectedPresetGroup={presets.selectedPresetGroup}
-                onLoadPresetGroup={presets.loadPresetGroup}
-              />
-            </div>
+      <div
+        className={`ck-picker-sliders${showAlpha ? '' : ' ck-picker-sliders--hue-only'}${showPreview ? '' : ' ck-picker-sliders--no-preview'}`}
+      >
+        {showPreview && (
+          <ColorPreview
+            colorValue={colorValue}
+            className="ck-checkerboard ck-picker-preview"
+          />
+        )}
+        <div className="ck-picker-tracks">
+          <HueSlider
+            hsva={color.hsva}
+            onChange={color.updateColor}
+            onStart={color.startDrag}
+            onEnd={color.endDrag}
+          />
+          {showAlpha && (
+            <AlphaSlider
+              hsva={color.hsva}
+              onChange={color.updateColor}
+              onStart={color.startDrag}
+              onEnd={color.endDrag}
+            />
           )}
         </div>
       </div>
+
+      {showInputs && (
+        <div
+          className={`ck-picker-value${inputMode === 'single' ? '' : ' ck-picker-value--channels'}`}
+        >
+          {availableModes.length > 1 && (
+            <select
+              aria-label="Color format"
+              value={inputMode}
+              onChange={(e) => setInputMode(e.target.value as InputMode)}
+              className="ck-select"
+              data-testid="color-format-select"
+            >
+              {availableModes.map((mode) => (
+                <option key={mode} value={mode}>
+                  {(mode === 'single' ? format : mode).toUpperCase()}
+                </option>
+              ))}
+            </select>
+          )}
+          <InputValuePanel
+            inputMode={inputMode}
+            colorValue={colorValue}
+            format={format}
+            setFromString={color.setFromString}
+            showAlpha={showAlpha}
+            showCopyButton={false}
+            onCopy={onCopy}
+          />
+          {showCopyButton && (
+            <CopyButton
+              text={formatColor(colorValue, copyFormat)}
+              onCopy={onCopy}
+            />
+          )}
+          {showEyeDropper && <EyeDropperButton onPick={color.setFromString} />}
+        </div>
+      )}
+
+      {(presetColors.length > 0 || recentColors.length > 0 || showPresets) && (
+        <div className="ck-picker-swatches">
+          <div className="ck-picker-chips">
+            {presetColors.map(chip)}
+            {recentColors.length > 0 && presetColors.length > 0 && (
+              <span className="ck-picker-divider" aria-hidden="true" />
+            )}
+            {recentColors.map(chip)}
+          </div>
+          <div className="ck-picker-actions">
+            {showGroups && (
+              <select
+                aria-label="Preset group"
+                className="ck-picker-groups"
+                value={presets.selectedPresetGroup ?? ''}
+                onChange={(e) => presets.loadPresetGroup(e.target.value)}
+              >
+                <option value="" disabled>
+                  Presets
+                </option>
+                {presets.normalizedPresetGroups.map((group) => (
+                  <option key={group.name} value={group.name}>
+                    {group.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            {showPresets && (
+              <button
+                type="button"
+                className="ck-picker-add"
+                title="Save as preset"
+                aria-label="Save the current color as a preset"
+                onClick={() => presets.addPreset(colorValue.hex)}
+              >
+                +
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};

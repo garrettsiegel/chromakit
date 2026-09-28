@@ -1,17 +1,20 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { copyToClipboard } from '@/lib/color-picker';
 
-/**
- * Copies `text` to the clipboard and reports a "copied" state for 2s.
- * Shared by the demo's various copy-to-clipboard buttons.
- */
-export function useCopyToClipboard(text: string) {
+const RESET_MS = 2000;
+
+export const useCopyToClipboard = (text: string) => {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const copy = useCallback(async () => {
-    await navigator.clipboard.writeText(text);
+    if (!(await copyToClipboard(text))) return;
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setCopied(false), RESET_MS);
   }, [text]);
 
   return { copied, copy };
-}
+};

@@ -1,13 +1,13 @@
 import type { RGB } from './types';
 import { rgbToHsv, hsvToRgb } from './conversions';
 import { srgbToLinear } from './conversions/math';
+import { MAX_HISTORY_SIZE } from './constants';
 
 /**
  * Calculate relative luminance of a color
  * Used for WCAG contrast ratio calculations
  */
 export function getRelativeLuminance(rgb: RGB): number {
-  // srgbToLinear takes the 0-255 channel value.
   const r = srgbToLinear(rgb.r);
   const g = srgbToLinear(rgb.g);
   const b = srgbToLinear(rgb.b);
@@ -39,10 +39,6 @@ export function meetsContrastRatio(
   }
   return size === 'large' ? ratio >= 3 : ratio >= 4.5;
 }
-
-/**
- * Color harmony generators
- */
 
 export function getComplementaryColor(rgb: RGB): RGB {
   const hsv = rgbToHsv(rgb);
@@ -87,15 +83,13 @@ export function getTetradicColors(rgb: RGB, angle = 60): RGB[] {
   ];
 }
 
-/**
- * Color history management with localStorage
- */
-
 const HISTORY_KEY = 'chromakit-color-history';
-const MAX_HISTORY_SIZE = 10;
+
+const hasLocalStorage = (): boolean =>
+  typeof window !== 'undefined' && Boolean(window.localStorage);
 
 export function getColorHistory(): string[] {
-  if (typeof window === 'undefined' || !window.localStorage) {
+  if (!hasLocalStorage()) {
     return [];
   }
   try {
@@ -114,14 +108,12 @@ export function addToColorHistory(
   color: string,
   maxSize: number = MAX_HISTORY_SIZE
 ): string[] {
-  if (typeof window === 'undefined' || !window.localStorage) {
+  if (!hasLocalStorage()) {
     return [];
   }
   try {
     const history = getColorHistory();
-    // Remove if already exists
     const filtered = history.filter((c) => c !== color);
-    // Add to beginning
     const updated = [color, ...filtered].slice(0, Math.max(0, maxSize));
     localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
     return updated;
@@ -131,13 +123,13 @@ export function addToColorHistory(
 }
 
 export function clearColorHistory(): void {
-  if (typeof window === 'undefined' || !window.localStorage) {
+  if (!hasLocalStorage()) {
     return;
   }
   try {
     localStorage.removeItem(HISTORY_KEY);
   } catch {
-    // Ignore errors
+    // IGNORE STORAGE ERRORS
   }
 }
 
@@ -146,7 +138,7 @@ export function clearColorHistory(): void {
  */
 export async function copyToClipboard(text: string): Promise<boolean> {
   if (typeof navigator === 'undefined' || !navigator.clipboard) {
-    // Fallback for older browsers
+    // FALLBACK FOR BROWSERS WITHOUT THE ASYNC CLIPBOARD API
     try {
       const textarea = document.createElement('textarea');
       textarea.value = text;
@@ -170,13 +162,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
   }
 }
 
-/**
- * Screen color sampling via the browser EyeDropper API.
- *
- * Chromium-based browsers ship it; Firefox and Safari do not, so callers must
- * check support before offering it. Typed locally because TypeScript's DOM
- * library does not declare EyeDropper yet.
- */
+// TYPED LOCALLY: TYPESCRIPT'S DOM LIB DOES NOT DECLARE EYEDROPPER (CHROMIUM-ONLY) YET
 interface EyeDropperInstance {
   open: () => Promise<{ sRGBHex: string }>;
 }

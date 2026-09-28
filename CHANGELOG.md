@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.7.0] - 2026-09-28
+
+Redesigned picker. See the [0.6 → 0.7 upgrade guide](https://github.com/garrettsiegel/chromakit/blob/main/MIGRATION.md#upgrading-from-chromakit-react-06).
+
+### Changed (breaking)
+
+- `ColorPicker` has a new `layout` prop. The default `layout="compact"` is a
+  280px column: color area on top, a preview beside slim hue and alpha
+  sliders, one format dropdown (HEX shows a text field; RGB, HSL, HSV, OKLAB,
+  and OKLCH show per-channel fields), and one row of preset and recent swatches
+  with a `+` to save the current color. `layout="wide"` is the same design at
+  520px, side by side, with a preset-group menu. The format tabs and the preset
+  edit mode are gone, and the internal class names changed.
+- New default theme: flat white/black surfaces, hairline borders, square
+  corners, ring-style handles, and no blur, glow, or hover lift. Dark mode
+  inverts it. `className="ck-theme-glass"` restores the previous frosted-glass
+  palette, radii, blur, and shadows. New variables: `--ck-frame`,
+  `--ck-on-primary`, `--ck-track-radius`, `--ck-thumb-inset`.
+- `useColorState(initial, onChange, onChangeComplete, value)` now takes an
+  options object: `useColorState(initial, { value, onChange, onChangeComplete })`.
+  The new `UseColorStateOptions` type is exported. Calls with only an initial
+  color are unaffected.
+- `useColorState` no longer returns the internal `isDragging` ref.
+- `ChannelInputsProps` is no longer exported (it described an internal
+  component and could not be used).
+
+### Deprecated
+
+- `useDebounce` — unused by the library; it will be removed in a future minor
+  release.
+
+### Changed
+
+- Slider and color-area thumbs stay inside their tracks at the extremes, and
+  pointer positions map to the same inset range.
+- `ColorArea` without a `width` prop takes its 256px default from CSS, so a
+  stylesheet can size it.
+- Recent colors (`enableHistory`, on by default) are now visible; the old
+  stylesheet hid them.
+
+### Fixed
+
+- The add-preset button's hover border now shows (removed `!important`).
+- Recent-color swatches are `type="button"`, so they no longer submit an
+  enclosing form.
+- The alpha checkerboard follows OS dark mode even without a `.dark` class
+  (new `--ck-checker` variable).
+- `<AlphaSlider vertical>` now sizes like the vertical hue slider.
+
 ## [0.6.0] - 2026-09-02
 
 ### Fixed
@@ -297,7 +348,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS custom properties for theming
 - Efficient re-render optimization with React.memo and useMemo
 
-[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/garrettsiegel/chromakit/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/garrettsiegel/chromakit/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/garrettsiegel/chromakit/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/garrettsiegel/chromakit/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/garrettsiegel/chromakit/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/garrettsiegel/chromakit/compare/v0.3.0...v0.4.0

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { ColorValue } from '../types';
 
 export interface ColorPreviewProps {
@@ -18,16 +17,13 @@ export function ColorPreview({
 }: ColorPreviewProps) {
   const sizeClass = `ck-preview-${size}`;
 
-  const currentColorStyle = useMemo(
-    () => ({
-      backgroundColor: `rgba(${colorValue.rgba.r}, ${colorValue.rgba.g}, ${colorValue.rgba.b}, ${colorValue.rgba.a})`,
-    }),
-    [colorValue]
-  );
+  const currentColorStyle = {
+    backgroundColor: `rgba(${colorValue.rgba.r}, ${colorValue.rgba.g}, ${colorValue.rgba.b}, ${colorValue.rgba.a})`,
+  };
 
   if (showComparison && originalColor) {
     return (
-      <div className={`ck-preview ck-preview--comparison ${className}`}>
+      <div className={`ck-preview ck-preview--comparison ${className}`.trim()}>
         <div className={`${sizeClass} ck-checkerboard ck-preview-half`}>
           <div
             className="ck-preview-color"
@@ -43,7 +39,7 @@ export function ColorPreview({
 
   return (
     <div
-      className={`ck-preview ${sizeClass} ${className}`}
+      className={`ck-preview ${sizeClass} ${className}`.trim()}
       data-testid="color-preview"
     >
       <div className="ck-preview-color" style={currentColorStyle} />

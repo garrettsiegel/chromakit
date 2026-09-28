@@ -3,17 +3,35 @@ import DocsLayout from '@/layouts/DocsLayout.astro';
 import DocSection from '@/components/docs/DocSection.astro';
 import StaticCode from '@/components/docs/StaticCode.astro';
 import { BasicDemoCard } from '@/components/demos/BasicDemoCard';
-import { DOCS_NAV } from './_nav';
 import {
   installCode,
+  basicUsageCode,
   nextAppCode,
   nextPagesCode,
   viteCode,
   oklchCode,
 } from '@/site-data/getting-started-snippets';
 
-const meta = DOCS_NAV.find((d) => d.slug === 'getting-started');
-const description = meta?.description ?? '';
+const FRAMEWORKS = [
+  {
+    title: 'Next.js App Router',
+    note: "Mark the component with 'use client'.",
+    code: nextAppCode,
+  },
+  {
+    title: 'Next.js Pages Router (SSR)',
+    note: 'Load it dynamically with ssr: false.',
+    code: nextPagesCode,
+  },
+  { title: 'Vite / Create React App', note: 'No extra setup.', code: viteCode },
+];
+
+const OKLCH_BENEFITS = [
+  ['Predictable lightness', 'a given L looks equally bright at every hue.'],
+  ['Smoother gradients', 'no muddy middle tones between two colors.'],
+  ['Consistent scales', 'generate tonal palettes with uniform visual weight.'],
+  ['Beyond sRGB', 'CSS oklch() can describe wide-gamut colors; ChromaKit maps them into sRGB.'],
+];
 
 const BROWSERS = [
   ['Chrome / Edge', '88+'],
@@ -23,34 +41,30 @@ const BROWSERS = [
 ];
 ---
 
-<DocsLayout
-  slug="getting-started"
-  title="Getting Started · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">Getting Started</h1>
-    <p class="text-lg text-muted-foreground">
-      ChromaKit is a zero-dependency React color picker with first-class support
-      for OKLCH, OKLAB, and every traditional color space. Install it, import
-      the stylesheet, and render.
-    </p>
-  </div>
+<DocsLayout slug="getting-started">
+  <Fragment slot="lead">
+    ChromaKit is a React color picker and conversion toolkit with zero runtime
+    dependencies. It reads and writes OKLCH, OKLAB, HSL, HSV, RGB, and HEX.
+    Install the package, import the stylesheet, and render.
+  </Fragment>
 
   <DocSection
     id="installation"
     title="Installation"
-    description="ChromaKit ships as an ES module with bundled TypeScript types."
+    description="The package ships ES module and UMD builds with bundled TypeScript types. React and React DOM 18 or 19 are peer dependencies."
   >
     <StaticCode code={installCode} lang="bash" />
   </DocSection>
 
   <DocSection
     id="basic-usage"
+    split
     title="Basic usage"
     description="Import the component and its stylesheet, then wire it to state. onChange receives a ColorValue with every format pre-converted."
   >
-    <BasicDemoCard client:visible />
+    <BasicDemoCard client:visible>
+      <StaticCode slot="code" code={basicUsageCode} />
+    </BasicDemoCard>
   </DocSection>
 
   <DocSection
@@ -58,27 +72,15 @@ const BROWSERS = [
     title="Framework setup"
     description="ChromaKit works in any React app. It renders on the client, so server frameworks need the picker loaded client-side."
   >
-    <div class="space-y-6">
-      <div class="space-y-2">
-        <h3 class="text-lg font-semibold">Next.js App Router</h3>
-        <p class="text-sm text-muted-foreground">
-          Mark the component with <code>'use client'</code>.
-        </p>
-        <StaticCode code={nextAppCode} />
-      </div>
-      <div class="space-y-2">
-        <h3 class="text-lg font-semibold">Next.js Pages Router (SSR)</h3>
-        <p class="text-sm text-muted-foreground">
-          Load it dynamically with <code>ssr: false</code>.
-        </p>
-        <StaticCode code={nextPagesCode} />
-      </div>
-      <div class="space-y-2">
-        <h3 class="text-lg font-semibold">Vite / Create React App</h3>
-        <p class="text-sm text-muted-foreground">Works out of the box.</p>
-        <StaticCode code={viteCode} />
-      </div>
-    </div>
+    {
+      FRAMEWORKS.map(({ title, note, code }) => (
+        <div class="docs-block">
+          <h3>{title}</h3>
+          <p>{note}</p>
+          <StaticCode code={code} />
+        </div>
+      ))
+    }
   </DocSection>
 
   <DocSection
@@ -86,23 +88,14 @@ const BROWSERS = [
     title="Why OKLCH?"
     description="OKLCH is perceptually uniform — equal numeric changes produce equal visual differences, which HSL cannot promise."
   >
-    <ul class="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
-      <li>
-        <strong class="text-foreground">Predictable lightness</strong> — a given
-        L looks equally bright at every hue.
-      </li>
-      <li>
-        <strong class="text-foreground">Smoother gradients</strong> — no muddy
-        middle tones between two colors.
-      </li>
-      <li>
-        <strong class="text-foreground">Consistent scales</strong> — generate
-        tonal palettes with uniform visual weight.
-      </li>
-      <li>
-        <strong class="text-foreground">Wider gamut</strong> — reach more vivid
-        colors on modern displays.
-      </li>
+    <ul class="docs-list">
+      {
+        OKLCH_BENEFITS.map(([term, detail]) => (
+          <li>
+            <strong>{term}</strong> — {detail}
+          </li>
+        ))
+      }
     </ul>
     <StaticCode code={oklchCode} lang="tsx" />
   </DocSection>
@@ -110,25 +103,17 @@ const BROWSERS = [
   <DocSection
     id="browser-support"
     title="Browser support"
-    description="ChromaKit runs everywhere modern React runs. CSS oklch() output is only needed by your app if you render the string — the picker computes OKLCH in JS regardless."
+    description="ChromaKit computes OKLCH in JavaScript, so the browser needs CSS oklch() support only if your app renders that string."
   >
-    <div class="overflow-x-auto rounded-lg border border-border">
-      <table class="w-full border-collapse text-sm">
+    <div class="props-table-wrap" tabindex="0" role="region" aria-label="Browser support">
+      <table>
         <thead>
-          <tr class="bg-muted/50 text-left">
-            <th class="px-4 py-2.5 font-semibold">Environment</th>
-            <th class="px-4 py-2.5 font-semibold">Minimum version</th>
-          </tr>
+          <tr><th>Environment</th><th>Minimum version</th></tr>
         </thead>
         <tbody>
-          {
-            BROWSERS.map(([name, version]) => (
-              <tr class="border-t border-border">
-                <td class="px-4 py-2.5">{name}</td>
-                <td class="px-4 py-2.5 text-muted-foreground">{version}</td>
-              </tr>
-            ))
-          }
+          {BROWSERS.map(([name, version]) => (
+            <tr><td>{name}</td><td>{version}</td></tr>
+          ))}
         </tbody>
       </table>
     </div>

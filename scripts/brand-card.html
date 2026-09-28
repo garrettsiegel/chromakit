@@ -1,0 +1,141 @@
+<!doctype html>
+<!--
+  SOCIAL CARD, RENDERED BY generate-brand-assets.mjs IN HEADLESS CHROMIUM.
+  SIZES ARE IN VW SO ONE LAYOUT SCALES FROM 1200×630 TO 1600×900. THE PICKER
+  IS THE REAL ColorPicker FROM dist/, SERVER-RENDERED AND ZOOMED TO FIT.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../dist/chromakit.css" />
+    <style>
+      @font-face {
+        font-family: 'Geist';
+        src: url('../client/public/fonts/geist-latin.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+
+      :root {
+        --fg: #111111;
+        --muted: #666666;
+        --hairline: #cccccc;
+        --pad: 5vw;
+        --rule: max(1px, calc(100vw / 1200));
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      html,
+      body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: #ffffff;
+        color: var(--fg);
+        font-family: 'Geist', sans-serif;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: var(--pad);
+        gap: 2.4vw;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 1.2vw;
+        padding-bottom: 1.6vw;
+        border-bottom: var(--rule) solid var(--fg);
+      }
+
+      .mark {
+        width: 2.4vw;
+        height: 2.4vw;
+      }
+
+      .label {
+        font-size: 1.2vw;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+      }
+
+      .body {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+        gap: 3vw;
+      }
+
+      .copy {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .wordmark {
+        font-size: 7.4vw;
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 0.9;
+        margin-left: -0.05em;
+      }
+
+      .tagline {
+        margin-top: 2.4vw;
+        font-size: 2.2vw;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      .formats {
+        margin-top: 0.8vw;
+        font-size: 1.35vw;
+        color: var(--muted);
+      }
+
+      .install {
+        padding: 1.1vw 1.3vw;
+        border: var(--rule) solid var(--fg);
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 1.4vw;
+      }
+
+      .install span {
+        color: var(--muted);
+      }
+
+      .picker {
+        flex: none;
+        align-self: flex-start;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <img class="mark" src="../client/public/favicon.svg" alt="" />
+        <span class="label">REACT COLOR PICKER · CONVERSION TOOLKIT</span>
+      </div>
+      <div class="body">
+        <div class="copy">
+          <div>
+            <h1 class="wordmark">ChromaKit</h1>
+            <p class="tagline">Pick. Convert. Build.</p>
+            <p class="formats">OKLCH · OKLAB · HSL · HSV · RGB · HEX</p>
+          </div>
+          <p class="install"><span>$ </span>npm install chromakit-react</p>
+        </div>
+        <div class="picker"></div>
+      </div>
+    </div>
+  </body>
+</html>

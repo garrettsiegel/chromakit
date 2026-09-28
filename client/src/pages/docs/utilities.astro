@@ -4,11 +4,8 @@ import DocSection from '@/components/docs/DocSection.astro';
 import StaticCode from '@/components/docs/StaticCode.astro';
 import PropsTable from '@/components/docs/PropsTable.astro';
 import { ConverterDemoCard } from '@/components/demos/ConverterDemoCard';
-import { DOCS_NAV } from './_nav';
 import { conversionGroups, helperRows } from '@/site-data/utilities-data';
-
-const meta = DOCS_NAV.find((d) => d.slug === 'utilities');
-const description = meta?.description ?? '';
+import { converterCode } from '@/site-data/demo-snippets';
 
 const labels = { name: 'Function', type: 'Signature' };
 
@@ -20,31 +17,32 @@ const ratio = getContrastRatio(fg, bg);          // 18.1
 const passes = meetsContrastRatio(ratio, 'AA');  // true`;
 ---
 
-<DocsLayout
-  slug="utilities"
-  title="Color Utilities · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">Color Utilities</h1>
-    <p class="text-lg text-muted-foreground">
-      Every conversion and helper the picker uses internally is exported, so
-      you can parse, convert, and analyze colors without rendering any UI.
-    </p>
-  </div>
+<DocsLayout slug="utilities">
+  <Fragment slot="lead">
+    Every conversion and helper the picker uses internally is exported, so
+    you can parse, convert, and analyze colors without rendering any UI.
+  </Fragment>
 
   <DocSection
     id="live-converter"
+    split
     title="Live converter"
-    description="parseColor accepts any format; rgbaToColorValue expands it into all of them. The demo below parses your input and shows formatColor output for each space."
+    description="parseColor reads any supported color string. rgbaToColorValue expands the result into every format, and formatColor turns each one back into CSS. Type a color below to try it."
   >
-    <ConverterDemoCard client:visible />
+    <ConverterDemoCard client:visible>
+      <StaticCode slot="code" code={converterCode} />
+    </ConverterDemoCard>
   </DocSection>
 
   {
     conversionGroups.map((group) => (
       <DocSection id={group.id} title={group.title} description={group.description}>
-        <PropsTable rows={group.rows} labels={labels} showDefault={false} />
+        <PropsTable
+          rows={group.rows}
+          labels={labels}
+          showDefault={false}
+          caption={group.title}
+        />
       </DocSection>
     ))
   }
@@ -54,7 +52,12 @@ const passes = meetsContrastRatio(ratio, 'AA');  // true`;
     title="Color helpers"
     description="WCAG contrast helpers and harmony generators built on the conversions above."
   >
-    <PropsTable rows={helperRows} labels={labels} showDefault={false} />
+    <PropsTable
+      rows={helperRows}
+      labels={labels}
+      showDefault={false}
+      caption="Color helpers"
+    />
     <StaticCode code={helpersCode} lang="typescript" />
   </DocSection>
 </DocsLayout>

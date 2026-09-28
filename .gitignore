@@ -1,59 +1,26 @@
 # Dependencies
 node_modules/
-.pnp
-.pnp.js
 
-# Testing
-coverage/
-.hallmark/
-.lighthouseci/
-playwright-report/
-test-results/
-
-# Production
+# Build output
 dist/
-build/
+.astro/
+.vite/
+.stats/
+*.tsbuildinfo
+*.tar.gz
 
-# Misc
-.DS_Store
+# Logs and caches
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+.eslintcache
 
 # Environment
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+.vercel
 
-# Editor
+# OS / editor
+.DS_Store
 .vscode/
 .idea/
 *.swp
-*.swo
 *~
-
-# TypeScript
-*.tsbuildinfo
-
-# Vite
-.vite/
-
-# Bundle analysis (rollup-plugin-visualizer)
-.stats/
-
-# Legacy
-server/public
-vite.config.ts.*
-*.tar.gz
-.vercel
-
-# ESLint
-.eslintcache
-
-# Astro generated types
-.astro/

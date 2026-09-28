@@ -2,10 +2,6 @@
 import DocsLayout from '@/layouts/DocsLayout.astro';
 import DocSection from '@/components/docs/DocSection.astro';
 import StaticCode from '@/components/docs/StaticCode.astro';
-import { DOCS_NAV } from './_nav';
-
-const meta = DOCS_NAV.find((d) => d.slug === 'troubleshooting');
-const description = meta?.description ?? '';
 
 const stylesCode = `import 'chromakit-react/chromakit.css';`;
 
@@ -57,32 +53,25 @@ const typeExportsCode = `import type {
   RecentColorsProps,
   EyeDropperButtonProps,
   ChannelEditorProps,
-  ChannelInputsProps,
+  UseColorStateOptions,
 } from 'chromakit-react';`;
 ---
 
-<DocsLayout
-  slug="troubleshooting"
-  title="Troubleshooting · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">Troubleshooting</h1>
-    <p class="text-lg text-muted-foreground">
-      The handful of gotchas people hit most often, and the exported types
-      for when you want full type safety.
-    </p>
-  </div>
+<DocsLayout slug="troubleshooting">
+  <Fragment slot="lead">
+    Fixes for the most common setup issues, plus every exported TypeScript
+    type.
+  </Fragment>
 
   <DocSection id="styles" title="The picker renders unstyled">
-    <p class="text-muted-foreground leading-relaxed">
+    <p>
       The stylesheet is a separate import. Add it once, anywhere in your app:
     </p>
     <StaticCode code={stylesCode} lang="tsx" />
   </DocSection>
 
   <DocSection id="ssr" title='Next.js: "window is not defined"'>
-    <p class="text-muted-foreground leading-relaxed">
+    <p>
       The picker is a client component. In the App Router add the "use
       client" directive; in the Pages Router load it dynamically with SSR
       disabled:
@@ -91,7 +80,7 @@ const typeExportsCode = `import type {
   </DocSection>
 
   <DocSection id="history" title="Recent colors are not persisting">
-    <p class="text-muted-foreground leading-relaxed">
+    <p>
       History is stored in <code>localStorage</code> under the key <code
         >chromakit-color-history</code
       >. It will not persist in private / incognito windows, and requires
@@ -101,7 +90,7 @@ const typeExportsCode = `import type {
   </DocSection>
 
   <DocSection id="types" title="TypeScript errors on the onChange color">
-    <p class="text-muted-foreground leading-relaxed">
+    <p>
       <code>onChange</code> and <code>onChangeComplete</code> receive a <code
         >ColorValue</code
       >, which carries every format at once — read the one you need:

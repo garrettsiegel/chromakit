@@ -9,40 +9,30 @@ interface Props {
 const { code, lang = 'tsx' } = Astro.props;
 ---
 
-<div class="code-field not-prose">
-  <div>
-    <Code code={code} lang={lang} theme="github-dark-high-contrast" />
-  </div>
-  <button
-    type="button"
-    class="code-copy"
-    data-code={code}
-    aria-label="Copy code"
-    aria-live="polite"
-  >
-    Copy
-  </button>
+<div class="code-field">
+  <Code
+    code={code}
+    lang={lang}
+    themes={{
+      light: 'github-light-high-contrast',
+      dark: 'github-dark-high-contrast',
+    }}
+  />
+  <button type="button" class="code-copy" data-copy-code={code}>Copy</button>
 </div>
 
 <script>
-  document.querySelectorAll('.ck-copy').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      const code = btn.getAttribute('data-code') || '';
-      try {
-        await navigator.clipboard.writeText(code);
-        btn.textContent = 'Copied';
-        btn.setAttribute('aria-label', 'Code copied');
-        window.setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.setAttribute('aria-label', 'Copy code');
-        }, 1500);
-      } catch {
-        btn.textContent = 'Select code';
-        btn.setAttribute(
-          'aria-label',
-          'Clipboard unavailable; select the code manually'
-        );
-      }
-    });
+  import { copyToClipboard } from '@/lib/color-picker';
+
+  // DELEGATED: CODE FIELDS ALSO RENDER LATER INSIDE HYDRATED DEMO TABS
+  document.addEventListener('click', async (event) => {
+    const button =
+      event.target instanceof Element
+        ? event.target.closest<HTMLButtonElement>('[data-copy-code]')
+        : null;
+    if (!button) return;
+    const copied = await copyToClipboard(button.dataset.copyCode ?? '');
+    button.textContent = copied ? 'Copied' : 'Select code';
+    window.setTimeout(() => (button.textContent = 'Copy'), 1500);
   });
 </script>

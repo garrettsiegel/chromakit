@@ -3,33 +3,27 @@ import DocsLayout from '@/layouts/DocsLayout.astro';
 import DocSection from '@/components/docs/DocSection.astro';
 import PropsTable from '@/components/docs/PropsTable.astro';
 import { BuildYourOwnDemoCard } from '@/components/demos/BuildYourOwnDemoCard';
-import { DOCS_NAV } from './_nav';
+import StaticCode from '@/components/docs/StaticCode.astro';
 import { componentGroups } from '@/site-data/components-data';
-
-const meta = DOCS_NAV.find((d) => d.slug === 'components');
-const description = meta?.description ?? '';
+import { buildYourOwnCode } from '@/site-data/demo-snippets';
 ---
 
-<DocsLayout
-  slug="components"
-  title="Composable Components · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">Composable Components</h1>
-    <p class="text-lg text-muted-foreground">
-      Prefer full control over layout? Drop the wrapper and assemble the
-      primitives yourself. They all share one state object from
-      <code>useColorState</code>, so wiring them together is trivial.
-    </p>
-  </div>
+<DocsLayout slug="components">
+  <Fragment slot="lead">
+    Need a different layout? Skip <code>ColorPicker</code> and assemble the
+    primitives yourself. They share one state object from
+    <code>useColorState</code>, so each control needs only two props.
+  </Fragment>
 
   <DocSection
     id="build-your-own"
+    split
     title="Build your own picker"
-    description="The color area, sliders, inputs, and preview below are all separate exports composed by hand around a single useColorState hook."
+    description="The color area, sliders, inputs, and preview below are separate exports, composed around one useColorState call."
   >
-    <BuildYourOwnDemoCard client:visible />
+    <BuildYourOwnDemoCard client:visible>
+      <StaticCode slot="code" code={buildYourOwnCode} />
+    </BuildYourOwnDemoCard>
   </DocSection>
 
   {
@@ -39,21 +33,17 @@ const description = meta?.description ?? '';
         title={group.title}
         description={group.description}
       >
-        <div class="space-y-8">
-          {group.components.map((component) => (
-            <div class="space-y-3">
-              <div class="space-y-1">
-                <h3 class="font-mono text-base font-semibold text-primary">
-                  {component.name}
-                </h3>
-                <p class="text-sm text-muted-foreground">
-                  {component.description}
-                </p>
-              </div>
-              <PropsTable rows={component.props} showDefault={false} />
-            </div>
-          ))}
-        </div>
+        {group.components.map((component) => (
+          <div class="docs-block">
+            <h3 class="docs-api-name">{component.name}</h3>
+            <p>{component.description}</p>
+            <PropsTable
+              rows={component.props}
+              showDefault={false}
+              caption={`${component.name} props`}
+            />
+          </div>
+        ))}
       </DocSection>
     ))
   }

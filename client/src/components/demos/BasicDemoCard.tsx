@@ -1,15 +1,11 @@
-import { useState } from 'react';
-import { DemoCard } from '@/components/docs/DemoCard';
+import { useState, type ReactNode } from 'react';
 import { ColorPicker } from '@/lib/color-picker';
-import { basicUsageCode } from '@/site-data/getting-started-snippets';
+import { DemoCard } from '@/components/docs/DemoCard';
 
-// One React island = one hydrated tree. Astro renders framework-component
-// children as static slots, so the live demo must live INSIDE the island
-// (here) rather than be passed as a child from the .astro page.
-export const BasicDemoCard = () => {
+export const BasicDemoCard = ({ code }: { code?: ReactNode }) => {
   const [color, setColor] = useState('#6366F1');
   return (
-    <DemoCard code={basicUsageCode}>
+    <DemoCard code={code}>
       <ColorPicker value={color} onChange={(c) => setColor(c.hex8)} />
     </DemoCard>
   );

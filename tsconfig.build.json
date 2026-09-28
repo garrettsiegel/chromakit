@@ -16,11 +16,5 @@
     "rootDir": "./client/src/lib/color-picker"
   },
   "include": ["client/src/lib/color-picker/**/*"],
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

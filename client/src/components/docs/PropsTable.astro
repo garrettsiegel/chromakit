@@ -6,60 +6,46 @@ interface Props {
   labels?: { name?: string; type?: string; default?: string };
   showType?: boolean;
   showDefault?: boolean;
+  caption?: string;
 }
 
-const { rows, labels, showType = true, showDefault = true } = Astro.props;
-const nameLabel = labels?.name ?? 'Prop';
-const typeLabel = labels?.type ?? 'Type';
-const defaultLabel = labels?.default ?? 'Default';
+const {
+  rows,
+  labels,
+  showType = true,
+  showDefault = true,
+  caption = 'Props',
+} = Astro.props;
+const empty = '—';
 ---
 
-<div
-  class="props-table-wrap"
-  tabindex="0"
->
-  <table class="w-full border-collapse text-sm">
+<div class="props-table-wrap" tabindex="0" role="region" aria-label={caption}>
+  <table>
     <thead>
       <tr>
-        <th class="px-4 py-2.5 font-semibold">{nameLabel}</th>
-        {showType && <th class="px-4 py-2.5 font-semibold">{typeLabel}</th>}
-        {showDefault && <th class="px-4 py-2.5 font-semibold">{defaultLabel}</th>}
-        <th class="px-4 py-2.5 font-semibold">Description</th>
+        <th>{labels?.name ?? 'Prop'}</th>
+        {showType && <th>{labels?.type ?? 'Type'}</th>}
+        {showDefault && <th>{labels?.default ?? 'Default'}</th>}
+        <th>Description</th>
       </tr>
     </thead>
     <tbody>
       {
         rows.map((row) => (
-          <tr class="align-top">
-            <td class="px-4 py-2.5 whitespace-nowrap">
-              <code class="font-mono text-xs text-primary">{row.name}</code>
+          <tr>
+            <td>
+              <code>{row.name}</code>
               {row.required && (
-                <span class="ml-1 text-xs text-destructive">*</span>
+                <span class="props-table__required">
+                  *<span class="sr-only"> required</span>
+                </span>
               )}
             </td>
-            {showType && (
-              <td class="px-4 py-2.5">
-                {row.type ? (
-                  <code class="font-mono text-xs text-muted-foreground break-words">
-                    {row.type}
-                  </code>
-                ) : (
-                  <span class="text-muted-foreground">—</span>
-                )}
-              </td>
-            )}
+            {showType && <td>{row.type ? <code>{row.type}</code> : empty}</td>}
             {showDefault && (
-              <td class="px-4 py-2.5">
-                {row.default ? (
-                  <code class="font-mono text-xs text-muted-foreground">
-                    {row.default}
-                  </code>
-                ) : (
-                  <span class="text-muted-foreground">—</span>
-                )}
-              </td>
+              <td>{row.default ? <code>{row.default}</code> : empty}</td>
             )}
-            <td class="px-4 py-2.5 text-muted-foreground">{row.description}</td>
+            <td>{row.description}</td>
           </tr>
         ))
       }

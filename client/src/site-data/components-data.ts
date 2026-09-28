@@ -58,11 +58,11 @@ export const componentGroups: ComponentGroup[] = [
     id: 'canvas-sliders',
     title: 'Canvas & sliders',
     description:
-      'The draggable surfaces. All three take the same drag interface, so they compose cleanly around a single useColorState.',
+      'The draggable surfaces. All three share one prop interface and read from the same useColorState.',
     components: [
       {
         name: 'ColorArea',
-        description: '2D saturation / value square.',
+        description: 'Two-dimensional saturation and brightness area.',
         props: [
           ...dragProps.slice(0, 4),
           { name: 'width', type: 'number', description: 'Width in pixels.' },
@@ -105,7 +105,7 @@ export const componentGroups: ComponentGroup[] = [
     id: 'inputs',
     title: 'Inputs',
     description:
-      'Text / numeric fields. ColorInputs switches formats itself; the per-space variants render a fixed set of channels.',
+      'Text and numeric fields. ColorInputs switches between formats; the per-format variants render a fixed set of channels.',
     components: [
       {
         name: 'ColorInputs',

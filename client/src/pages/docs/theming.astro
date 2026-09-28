@@ -4,11 +4,7 @@ import DocSection from '@/components/docs/DocSection.astro';
 import StaticCode from '@/components/docs/StaticCode.astro';
 import PropsTable from '@/components/docs/PropsTable.astro';
 import { ThemedDemoCard } from '@/components/demos/ThemedDemoCard';
-import { DOCS_NAV } from './_nav';
 import { themingVars } from '@/site-data/theming-vars';
-
-const meta = DOCS_NAV.find((d) => d.slug === 'theming');
-const description = meta?.description ?? '';
 
 const overrideCode = `/* your stylesheet */
 .brand-picker {
@@ -21,26 +17,21 @@ const overrideCode = `/* your stylesheet */
 }`;
 
 const applyCode = `<ColorPicker className="brand-picker" />`;
+
+const glassCode = `<ColorPicker className="ck-theme-glass" />`;
 ---
 
-<DocsLayout
-  slug="theming"
-  title="Theming · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">Theming</h1>
-    <p class="text-lg text-muted-foreground">
-      ChromaKit is styled entirely with CSS custom properties. Override them
-      on a wrapping class (passed via <code>className</code>) to reskin the
-      picker — no build config, no props drilling.
-    </p>
-  </div>
+<DocsLayout slug="theming">
+  <Fragment slot="lead">
+    ChromaKit is styled with <code>--ck-*</code> CSS custom properties. Set
+    them on a class and pass that class through <code>className</code>. No
+    build step, no theme prop.
+  </Fragment>
 
   <DocSection
     id="how-it-works"
     title="Override variables on a class"
-    description="Define the --ck-* variables you want to change on a class, then pass that class to the picker. Light and dark themes are handled automatically; you only override what differs."
+    description="Define the variables you want to change on a class, then pass that class to the picker. It follows the OS color scheme or a .dark class, so override only what differs."
   >
     <StaticCode code={overrideCode} lang="css" />
     <StaticCode code={applyCode} lang="tsx" />
@@ -49,9 +40,17 @@ const applyCode = `<ColorPicker className="brand-picker" />`;
   <DocSection
     id="live"
     title="Live comparison"
-    description="The right-hand picker uses the exact override shown above — sharper corners and a pink accent — while the left stays default."
+    description="The first picker uses the default theme. The second uses the override above: a pink accent and tighter corners."
   >
     <ThemedDemoCard client:visible />
+  </DocSection>
+
+  <DocSection
+    id="glass"
+    title="Glass theme"
+    description="Earlier versions shipped a frosted-glass look. Add the ck-theme-glass class to bring back its palette, radii, blur, and shadows."
+  >
+    <StaticCode code={glassCode} lang="tsx" />
   </DocSection>
 
   <DocSection
@@ -63,6 +62,7 @@ const applyCode = `<ColorPicker className="brand-picker" />`;
       rows={themingVars}
       showType={false}
       labels={{ name: 'Variable', default: 'Default (light)' }}
+      caption="Theme variables"
     />
   </DocSection>
 </DocsLayout>

@@ -1,2 +1,2 @@
-// INJECTED AT BUILD TIME BY vite.config.ts (define)
+// INJECTED AT BUILD TIME BY astro.config.mjs (VITE define)
 declare const __PKG_VERSION__: string;

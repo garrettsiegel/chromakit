@@ -45,14 +45,13 @@ export function createChannelEditor<
   });
   const opaqueChannels = allChannels.slice(0, -1);
 
-  function ChannelEditor({
+  const ChannelEditor = ({
     colorValue,
     onChange,
     showAlpha = true,
     className = '',
-  }: ChannelEditorProps) {
-    // Each `ColorValue` field is a stable object per color, so this is a
-    // stable dependency for the change handler below.
+  }: ChannelEditorProps) => {
+    // EACH ColorValue FIELD IS A STABLE OBJECT PER COLOR, SO values IS A STABLE DEPENDENCY
     const values = select(colorValue);
 
     const handleChannelChange = useCallback(
@@ -70,7 +69,7 @@ export function createChannelEditor<
         className={className}
       />
     );
-  }
+  };
 
   ChannelEditor.displayName = `${space.toUpperCase()}Inputs`;
   return ChannelEditor;
