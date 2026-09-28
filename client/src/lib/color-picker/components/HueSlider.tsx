@@ -81,7 +81,7 @@ export function HueSlider({
       role="slider"
       aria-label="Hue"
       aria-valuemin={0}
-      aria-valuemax={360}
+      aria-valuemax={359}
       aria-valuenow={hsva.h}
       aria-valuetext={`${hsva.h}°`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}

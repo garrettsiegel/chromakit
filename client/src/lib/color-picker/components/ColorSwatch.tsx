@@ -59,6 +59,8 @@ export function ColorSwatch({
         onPointerLeave={clearTimer}
         onPointerCancel={clearTimer}
         className={`ck-swatch-btn${selected ? ' selected' : ''}${editing ? ' ck-swatch-editing' : ''} ${className}`.trim()}
+        aria-label={`Select ${color}`}
+        aria-pressed={selected}
         data-testid="color-swatch"
         title={
           editing
@@ -79,6 +81,7 @@ export function ColorSwatch({
           aria-label="Delete preset"
         >
           <svg
+            aria-hidden="true"
             width="8"
             height="8"
             viewBox="0 0 24 24"

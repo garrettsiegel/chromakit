@@ -615,7 +615,7 @@
 
 .ck-presets-dropdown {
   padding: 2px 6px;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 600;
   background: var(--ck-glass-bg);
   backdrop-filter: var(--ck-blur);
@@ -822,7 +822,9 @@
 }
 
 .ck-eyedropper-btn:focus-visible,
-.ck-copy-btn:focus-visible {
+.ck-copy-btn:focus-visible,
+.ck-presets-dropdown:focus-visible,
+.ck-presets-edit-btn:focus-visible {
   outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:

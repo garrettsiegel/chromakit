@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-09-28
+
+### Fixed (accessibility)
+
+- Preset group dropdown and Edit button now show a visible keyboard focus ring.
+- `ColorSwatch` buttons announce their color (`Select #ff0000`) and selected state (`aria-pressed`).
+- The `+` add-preset button has an accessible name.
+- The Edit presets button keeps one label and reports edit mode with `aria-pressed`.
+- Decorative icons in the copy, delete, and edit buttons are hidden from screen readers.
+- Hue slider `aria-valuemax` is now 359, matching the End key.
+- Preset group dropdown text raised from 8px to 11px.
+
 ## [0.7.0] - 2026-09-28
 
 Redesigned picker. See the [0.6 → 0.7 upgrade guide](https://github.com/garrettsiegel/chromakit/blob/main/MIGRATION.md#upgrading-from-chromakit-react-06).

@@ -79,10 +79,12 @@ export function PresetColors({
               className="ck-presets-edit-btn"
               onClick={() => setIsEditing(!isEditing)}
               title={isEditing ? 'Done editing' : 'Edit presets'}
-              aria-label={isEditing ? 'Done editing' : 'Edit presets'}
+              aria-label="Edit presets"
+              aria-pressed={isEditing}
             >
               {isEditing ? (
                 <svg
+                  aria-hidden="true"
                   width="12"
                   height="12"
                   viewBox="0 0 24 24"
@@ -94,6 +96,7 @@ export function PresetColors({
                 </svg>
               ) : (
                 <svg
+                  aria-hidden="true"
                   width="12"
                   height="12"
                   viewBox="0 0 24 24"
@@ -138,6 +141,7 @@ export function PresetColors({
             className="ck-swatch-btn ck-swatch-add"
             onClick={onAddPreset}
             title="Add current color as preset"
+            aria-label="Add current color as preset"
           >
             <span className="ck-swatch-add-icon">+</span>
           </button>
