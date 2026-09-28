@@ -50,9 +50,4 @@ export default defineConfig({
     emptyOutDir: true,
     cssCodeSplit: false,
   },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'client', 'src'),
-    },
-  },
 });

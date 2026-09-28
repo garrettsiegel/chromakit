@@ -5,9 +5,7 @@ interface Props {
   title: string;
   description: string;
   ogImage?: string;
-  /** Emit the SoftwareApplication JSON-LD (home page only). */
   jsonLd?: boolean;
-  /** Keep the page out of search indexes (e.g. the 404). */
   noindex?: boolean;
 }
 
@@ -28,19 +26,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Apply the saved theme before first paint to avoid a flash of the wrong theme -->
+    <!-- APPLY THE SAVED THEME BEFORE FIRST PAINT -->
     <script is:inline>
       (function () {
         try {
           const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia(
-            '(prefers-color-scheme: dark)'
-          ).matches;
-          if (stored === 'dark' || (!stored && prefersDark)) {
-            document.documentElement.classList.add('dark');
-          }
+          // LIGHT BY DEFAULT; DARK ONLY WHEN CHOSEN
+          const isDark = stored === 'dark';
+          // .light STOPS THE PICKER CSS FOLLOWING A DARK OS SCHEME
+          document.documentElement.classList.add(isDark ? 'dark' : 'light');
         } catch {
-          /* ignore storage access errors (private mode) */
+          document.documentElement.classList.add('light');
         }
       })();
     </script>
@@ -53,10 +49,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       content="react color picker, oklch color picker, oklab, react color picker component, typescript color picker, modern color picker react, customizable color picker, react color picker library, accessible color picker, react component, npm package, color converter, color palette"
     />
     <meta name="author" content="Garrett Siegel" />
-    <meta name="theme-color" content="#f6f3e9" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#202516" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
@@ -64,7 +58,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="ChromaKit color workbench with a live picker, format values, and segmented color-space mark" />
+    <meta property="og:image:alt" content="The ChromaKit picker-glyph logo and wordmark beside a live OKLCH color picker" />
     <meta property="og:site_name" content="ChromaKit" />
 
     <link rel="canonical" href={canonical} />
@@ -72,13 +66,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link
-      rel="preload"
-      href="/fonts/anybody-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
     <link
       rel="preload"
       href="/fonts/geist-latin.woff2"
@@ -98,7 +85,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
             name: 'ChromaKit',
             applicationCategory: 'DeveloperApplication',
             description:
-              'Modern React color picker library with OKLCH, OKLAB, HSL, RGB, and HEX support. TypeScript-first, accessible, and built for design systems.',
+              'React color picker and conversion toolkit with OKLCH, OKLAB, HSL, HSV, RGB, and HEX. Zero runtime dependencies, TypeScript types, and WCAG contrast helpers.',
             operatingSystem: 'Web Browser',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
             author: { '@type': 'Person', name: 'Garrett Siegel' },

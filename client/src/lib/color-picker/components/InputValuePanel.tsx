@@ -18,8 +18,6 @@ interface InputValuePanelProps {
   onCopy: (success: boolean) => void;
 }
 
-// The per-mode channel editors. Split out of PickerLayout so each file stays
-// focused on one job: layout there, value editing here.
 export function InputValuePanel({
   inputMode,
   colorValue,

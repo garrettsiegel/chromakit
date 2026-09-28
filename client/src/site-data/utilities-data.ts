@@ -7,7 +7,7 @@ export interface UtilGroup {
   rows: PropRow[];
 }
 
-// All entries mirror the exports in lib/color-picker/index.ts.
+// MIRRORS THE EXPORTS IN lib/color-picker/index.ts
 export const conversionGroups: UtilGroup[] = [
   {
     id: 'parse-format',

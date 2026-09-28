@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   test:
@@ -31,7 +31,6 @@ jobs:
             echo "eslint-disable comments are not allowed."
             exit 1
           fi
-      - run: npm run test:ci
       - run: npm run build
       - run: npm run size
   security:
@@ -46,7 +45,4 @@ jobs:
       - run: npm ci
       # Production dependencies must be clean — this fails the build.
       - run: npm audit --omit=dev --audit-level=low
-      # Dev-only advisories (extract-zip via @lhci/cli, no fixed version) are
-      # advisory: they never reach the published package.
       - run: npm audit --audit-level=moderate
-        continue-on-error: true

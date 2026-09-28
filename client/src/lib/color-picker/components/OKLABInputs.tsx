@@ -1,7 +1,6 @@
 import { createChannelEditor } from './create-channel-editor';
 
-// The a/b axes run roughly -0.4 to 0.4; alpha is keyed `alpha` because OKLab
-// already uses `a` for its green-red axis.
+// ALPHA IS KEYED `alpha` BECAUSE OKLAB ALREADY USES `a` FOR ITS GREEN-RED AXIS
 export const OKLABInputs = createChannelEditor({
   space: 'oklab',
   channels: [

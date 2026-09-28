@@ -1,9 +1,7 @@
-// Single source of truth for docs sidebar order + per-page SEO meta.
-// Underscore-prefixed so Astro excludes it from routing.
+// UNDERSCORE PREFIX KEEPS THIS OUT OF ASTRO ROUTING
 export interface DocNavEntry {
   slug: string;
   title: string;
-  /** Used as the page's <title> suffix and meta description. */
   description: string;
 }
 
@@ -12,7 +10,7 @@ export const DOCS_NAV: DocNavEntry[] = [
     slug: 'getting-started',
     title: 'Getting Started',
     description:
-      'Install ChromaKit, wire up your first React color picker, and set it up in Next.js or Vite.',
+      'Install chromakit-react, render your first color picker, and set it up in Next.js or Vite.',
   },
   {
     slug: 'color-picker',
@@ -30,7 +28,7 @@ export const DOCS_NAV: DocNavEntry[] = [
     slug: 'hooks',
     title: 'Hooks',
     description:
-      'useColorState, usePointerDrag, and useDebounce — the hooks that power ChromaKit.',
+      'useColorState and usePointerDrag, the hooks behind every ChromaKit control. Also covers the deprecated useDebounce.',
   },
   {
     slug: 'utilities',

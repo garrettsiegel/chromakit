@@ -4,7 +4,8 @@ interface Props {
   class?: string;
 }
 
-const { size = 44, class: className } = Astro.props;
+const { size = 20, class: className } = Astro.props;
+const id = `ck-mark-${size}`;
 ---
 
 <svg
@@ -16,14 +17,28 @@ const { size = 44, class: className } = Astro.props;
   aria-hidden="true"
   focusable="false"
 >
-  <rect width="128" height="128" fill="var(--color-paper)"></rect>
-  <g fill="none" stroke-width="18" stroke-linecap="butt">
-    <path d="M100.77 29.23A52 52 0 0 0 27.23 29.23" stroke="var(--color-chartreuse)"></path>
-    <path d="M27.23 29.23A52 52 0 0 0 18.52 80" stroke="var(--color-periwinkle)"></path>
-    <path d="M18.52 80A52 52 0 0 0 50.54 113.22" stroke="var(--color-orange)"></path>
-    <path d="M50.54 113.22A52 52 0 0 0 100.77 98.77" stroke="var(--color-magenta)"></path>
-  </g>
-  <path d="M64 64 105 42" fill="none" stroke="var(--color-ink)" stroke-width="4"></path>
-  <circle cx="105" cy="42" r="7" fill="var(--color-ink)"></circle>
-  <circle cx="64" cy="64" r="5" fill="var(--color-ink)"></circle>
+  <defs>
+    <linearGradient id={`${id}-s`} x1="0" x2="1">
+      <stop offset="0" stop-color="#fff"></stop>
+      <stop offset="1" stop-color="#ff2d20"></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-v`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="#000"></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-h`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f00"></stop>
+      <stop offset=".17" stop-color="#ff0"></stop>
+      <stop offset=".33" stop-color="#0f0"></stop>
+      <stop offset=".5" stop-color="#0ff"></stop>
+      <stop offset=".67" stop-color="#00f"></stop>
+      <stop offset=".83" stop-color="#f0f"></stop>
+      <stop offset="1" stop-color="#f00"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="92" height="128" fill={`url(#${id}-s)`}></rect>
+  <rect width="92" height="128" fill={`url(#${id}-v)`}></rect>
+  <rect x="102" width="26" height="128" fill={`url(#${id}-h)`}></rect>
+  <circle cx="62" cy="34" r="12" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="10"></circle>
+  <circle cx="62" cy="34" r="12" fill="none" stroke="#fff" stroke-width="6"></circle>
 </svg>

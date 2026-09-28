@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
@@ -33,7 +32,6 @@ export default defineConfig({
     '/docs': '/docs/getting-started',
   },
   vite: {
-    plugins: [tailwindcss()],
     define: {
       __PKG_VERSION__: JSON.stringify(pkg.version),
     },
@@ -41,6 +39,10 @@ export default defineConfig({
       alias: {
         '@': path.resolve(__dirname, 'client', 'src'),
       },
+    },
+    // PRE-BUNDLE ISLAND DEPS AT STARTUP SO DEV NEVER RE-OPTIMIZES MID-SESSION (504s)
+    optimizeDeps: {
+      include: ['@radix-ui/react-tabs', 'lucide-react'],
     },
   },
 });

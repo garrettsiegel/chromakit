@@ -1,8 +1,4 @@
-// ============================================================
-// RECENT COLORS COMPONENT
-// ============================================================
-// Displays a grid of recently used colors with click-to-select
-
+import { MAX_HISTORY_SIZE } from '../constants';
 import { useColorHistory } from './picker-state';
 
 export interface RecentColorsProps {
@@ -10,8 +6,8 @@ export interface RecentColorsProps {
   className?: string;
   /**
    * Colors to display. When provided (e.g. by `ColorPicker`), this is the
-   * single source of truth and updates live. When omitted, the component reads
-   * the persisted history from localStorage once on mount.
+   * single source of truth. When omitted, the component shows the persisted
+   * history from localStorage and updates live as it changes.
    */
   colors?: string[];
 }
@@ -21,9 +17,10 @@ export function RecentColors({
   className = '',
   colors,
 }: RecentColorsProps) {
-  // useSyncExternalStore gives server rendering a stable empty snapshot while
-  // preserving persisted history after hydration.
-  const { history: fallbackColors } = useColorHistory(colors === undefined, 10);
+  const { history: fallbackColors } = useColorHistory(
+    colors === undefined,
+    MAX_HISTORY_SIZE
+  );
   const recentColors = colors ?? fallbackColors;
 
   if (recentColors.length === 0) {
@@ -31,12 +28,13 @@ export function RecentColors({
   }
 
   return (
-    <div className={`ck-recent-colors ${className}`}>
+    <div className={`ck-recent-colors ${className}`.trim()}>
       <div className="ck-recent-colors-label">Recent colors</div>
       <div className="ck-recent-colors-grid">
         {recentColors.map((color) => (
           <button
             key={color}
+            type="button"
             className="ck-recent-color-swatch"
             style={{ backgroundColor: color }}
             onClick={() => onColorSelect(color)}

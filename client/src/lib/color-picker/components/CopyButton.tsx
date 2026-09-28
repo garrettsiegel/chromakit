@@ -34,7 +34,7 @@ export function CopyButton({
     <button
       type="button"
       onClick={handleCopy}
-      className={`ck-copy-btn ${copied ? 'ck-copy-btn--copied' : ''} ${className}`}
+      className={`ck-copy-btn${copied ? ' ck-copy-btn--copied' : ''} ${className}`.trim()}
       aria-label={copied ? 'Copied!' : label}
       title={copied ? 'Copied!' : label}
     >

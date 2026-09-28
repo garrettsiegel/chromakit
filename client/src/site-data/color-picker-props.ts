@@ -1,12 +1,18 @@
 import type { PropRow } from '@/components/docs/props-table-types';
 
-// Sourced from ColorPickerProps in lib/color-picker/types.ts and the
-// default values in components/ColorPicker.tsx.
+// MIRRORS ColorPickerProps IN lib/color-picker/types.ts
 export const colorPickerProps: PropRow[] = [
   {
     name: 'value',
     type: 'string',
     description: 'Controlled color in any supported format (hex, rgb, oklch…).',
+  },
+  {
+    name: 'layout',
+    type: "'compact' | 'wide'",
+    default: "'compact'",
+    description:
+      'compact: a 280px column. wide: a 520px side-by-side layout with a preset-group menu.',
   },
   {
     name: 'defaultValue',
@@ -27,8 +33,8 @@ export const colorPickerProps: PropRow[] = [
   {
     name: 'formats',
     type: 'ColorFormat[]',
-    default: 'all 11 formats',
-    description: 'Which format tabs the inputs expose.',
+    default: 'all 12 formats',
+    description: 'Which formats the format dropdown offers.',
   },
   {
     name: 'showAlpha',

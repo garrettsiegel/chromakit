@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="12" fill="#f6f3e9"/>
-  <g fill="none" stroke-width="18">
-    <path d="M100.77 29.23A52 52 0 0 0 27.23 29.23" stroke="#ddfe3f"/>
-    <path d="M27.23 29.23A52 52 0 0 0 18.52 80" stroke="#b7c0ff"/>
-    <path d="M18.52 80A52 52 0 0 0 50.54 113.22" stroke="#ff784f"/>
-    <path d="M50.54 113.22A52 52 0 0 0 100.77 98.77" stroke="#ff68c8"/>
-  </g>
-  <path d="M64 64 105 42" stroke="#12140e" stroke-width="4"/>
-  <circle cx="105" cy="42" r="7" fill="#12140e"/>
-  <circle cx="64" cy="64" r="5" fill="#12140e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="s" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ff2d20"/></linearGradient>
+    <linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f00"/><stop offset=".17" stop-color="#ff0"/><stop offset=".33" stop-color="#0f0"/><stop offset=".5" stop-color="#0ff"/><stop offset=".67" stop-color="#00f"/><stop offset=".83" stop-color="#f0f"/><stop offset="1" stop-color="#f00"/></linearGradient>
+  </defs>
+  <rect width="92" height="128" fill="url(#s)"/>
+  <rect width="92" height="128" fill="url(#v)"/>
+  <rect x="102" width="26" height="128" fill="url(#h)"/>
+  <circle cx="62" cy="34" r="12" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="10"/>
+  <circle cx="62" cy="34" r="12" fill="none" stroke="#fff" stroke-width="6"/>
 </svg>

@@ -1,9 +1,12 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { ColorPickerProps, ColorFormat } from '../types';
 import { useColorState } from '../hooks';
-import { PickerLayout, type InputMode } from './PickerLayout';
+import { PickerLayout } from './PickerLayout';
+import type { InputMode } from './InputValuePanel';
 import { DEFAULT_PRESETS, DEFAULT_PRESET_GROUPS } from './preset-data';
 import { usePresets, useColorHistory } from './picker-state';
+import { COLOR_FORMATS } from './formats';
+import { MAX_HISTORY_SIZE } from '../constants';
 
 const FORMAT_TO_MODE: Record<ColorFormat, InputMode> = {
   hex: 'single',
@@ -20,29 +23,13 @@ const FORMAT_TO_MODE: Record<ColorFormat, InputMode> = {
   oklcha: 'oklch',
 };
 
-// Stable module-level default so `availableModes` memoizes across renders
-// when the consumer omits `formats`.
-const ALL_COLOR_FORMATS: ColorFormat[] = [
-  'hex',
-  'hex8',
-  'rgb',
-  'rgba',
-  'hsl',
-  'hsla',
-  'hsv',
-  'hsva',
-  'oklab',
-  'oklaba',
-  'oklch',
-  'oklcha',
-];
-
 export function ColorPicker({
   value,
+  layout = 'compact',
   defaultValue = '#6366F1',
   onChange,
   onChangeComplete,
-  formats = ALL_COLOR_FORMATS,
+  formats = COLOR_FORMATS,
   showAlpha = true,
   showInputs = true,
   showPreview = true,
@@ -55,7 +42,7 @@ export function ColorPicker({
   showEyeDropper = true,
   showPresets = true,
   enableHistory = true,
-  historySize = 10,
+  historySize = MAX_HISTORY_SIZE,
 }: ColorPickerProps) {
   const initialColor = value || defaultValue;
 
@@ -63,13 +50,15 @@ export function ColorPicker({
 
   const { history, remember } = useColorHistory(enableHistory, historySize);
 
-  const color = useColorState(initialColor, onChange, onChangeComplete, value);
-
-  const [format, setFormat] = useState<ColorFormat>(() => formats[0] || 'hex');
+  const color = useColorState(initialColor, {
+    value,
+    onChange,
+    onChangeComplete,
+  });
 
   const availableModes = useMemo(() => {
     const modes = new Set<InputMode>();
-    modes.add('single'); // ALWAYS INCLUDE TEXT INPUT
+    modes.add('single');
     for (const f of formats) {
       modes.add(FORMAT_TO_MODE[f]);
     }
@@ -79,14 +68,10 @@ export function ColorPicker({
   const [inputMode, setInputMode] = useState<InputMode>('single');
 
   const validInputMode = useMemo(() => {
-    return availableModes.includes(inputMode)
-      ? inputMode
-      : availableModes[0] || 'single';
+    return availableModes.includes(inputMode) ? inputMode : 'single';
   }, [availableModes, inputMode]);
 
-  const validFormat = useMemo(() => {
-    return formats.includes(format) ? format : formats[0] || 'hex';
-  }, [formats, format]);
+  const validFormat: ColorFormat = formats[0] || 'hex';
 
   const { setFromString } = color;
 
@@ -110,14 +95,13 @@ export function ColorPicker({
 
   return (
     <PickerLayout
+      layout={layout}
       className={className}
       width={width}
       areaHeight={height}
       color={color}
       presets={presetState}
-      formats={formats}
       format={validFormat}
-      setFormat={setFormat}
       inputMode={validInputMode}
       availableModes={availableModes}
       setInputMode={setInputMode}

@@ -1,8 +1,62 @@
-/* ChromaKit - Modern Glassmorphic Color Picker */
-/* Horizontal compact layout with frosted glass aesthetics */
-
-/* CSS Custom Properties for glassmorphic theming */
 :root {
+  --ck-glass-bg: #ffffff;
+  --ck-glass-bg-strong: #ffffff;
+  --ck-glass-border: #d4d4d4;
+  --ck-glass-shadow: none;
+  --ck-glass-shadow-lg: none;
+  --ck-bg: #ffffff;
+  --ck-bg-secondary: #f4f4f4;
+  --ck-text: #111111;
+  --ck-text-muted: #5c5c5c;
+  --ck-primary: #111111;
+  --ck-primary-glow: transparent;
+  --ck-accent: #111111;
+  --ck-on-primary: #ffffff;
+  --ck-frame: #111111;
+  --ck-radius: 0px;
+  --ck-radius-md: 0px;
+  --ck-radius-sm: 0px;
+  --ck-track-radius: 0px;
+  --ck-blur: none;
+  --ck-blur-strong: none;
+  --ck-checker: #ccc;
+}
+
+.dark,
+[data-theme='dark'] {
+  --ck-glass-bg: #0e0e0e;
+  --ck-glass-bg-strong: #0e0e0e;
+  --ck-glass-border: #3a3a3a;
+  --ck-bg: #0e0e0e;
+  --ck-bg-secondary: #1a1a1a;
+  --ck-text: #f2f2f2;
+  --ck-text-muted: #a3a3a3;
+  --ck-primary: #f2f2f2;
+  --ck-accent: #f2f2f2;
+  --ck-on-primary: #0e0e0e;
+  --ck-frame: #f2f2f2;
+  --ck-checker: #444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme='light']) {
+    --ck-glass-bg: #0e0e0e;
+    --ck-glass-bg-strong: #0e0e0e;
+    --ck-glass-border: #3a3a3a;
+    --ck-bg: #0e0e0e;
+    --ck-bg-secondary: #1a1a1a;
+    --ck-text: #f2f2f2;
+    --ck-text-muted: #a3a3a3;
+    --ck-primary: #f2f2f2;
+    --ck-accent: #f2f2f2;
+    --ck-on-primary: #0e0e0e;
+    --ck-frame: #f2f2f2;
+    --ck-checker: #444;
+  }
+}
+
+/* OPT-IN: THE PREVIOUS FROSTED-GLASS DEFAULT */
+.ck-theme-glass {
   --ck-glass-bg: rgba(255, 255, 255, 0.7);
   --ck-glass-bg-strong: rgba(255, 255, 255, 0.9);
   --ck-glass-border: rgba(255, 255, 255, 0.3);
@@ -15,16 +69,18 @@
   --ck-primary: #6366f1;
   --ck-primary-glow: rgba(99, 102, 241, 0.4);
   --ck-accent: #8b5cf6;
+  --ck-on-primary: #ffffff;
+  --ck-frame: rgba(255, 255, 255, 0.3);
   --ck-radius: 12px;
   --ck-radius-md: 8px;
   --ck-radius-sm: 6px;
+  --ck-track-radius: 9999px;
   --ck-blur: blur(20px);
   --ck-blur-strong: blur(40px);
 }
 
-/* Dark mode glassmorphic styling */
-.dark,
-[data-theme='dark'] {
+.dark .ck-theme-glass,
+[data-theme='dark'] .ck-theme-glass {
   --ck-glass-bg: rgba(26, 26, 30, 0.7);
   --ck-glass-bg-strong: rgba(26, 26, 30, 0.9);
   --ck-glass-border: rgba(255, 255, 255, 0.1);
@@ -37,10 +93,11 @@
   --ck-primary: #818cf8;
   --ck-primary-glow: rgba(129, 140, 248, 0.3);
   --ck-accent: #a78bfa;
+  --ck-frame: rgba(255, 255, 255, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not(.light):not([data-theme='light']) {
+  :root:not(.light):not([data-theme='light']) .ck-theme-glass {
     --ck-glass-bg: rgba(26, 26, 30, 0.7);
     --ck-glass-bg-strong: rgba(26, 26, 30, 0.9);
     --ck-glass-border: rgba(255, 255, 255, 0.1);
@@ -53,19 +110,25 @@
     --ck-primary: #818cf8;
     --ck-primary-glow: rgba(129, 140, 248, 0.3);
     --ck-accent: #a78bfa;
+    --ck-frame: rgba(255, 255, 255, 0.1);
   }
 }
 
-/* Main container - horizontal glassmorphic compact layout */
 .ck-color-picker {
+  position: relative;
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-  padding: 6px;
+  flex-direction: column;
+  gap: 8px;
+  width: var(--ck-width, 280px);
+  max-width: 100%;
+  padding: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+  container-type: inline-size;
   background: var(--ck-glass-bg);
   backdrop-filter: var(--ck-blur);
   -webkit-backdrop-filter: var(--ck-blur);
-  border: 1px solid var(--ck-glass-border);
+  border: 1px solid var(--ck-frame);
   border-radius: var(--ck-radius);
   box-shadow: var(--ck-glass-shadow-lg);
   font-family:
@@ -75,33 +138,8 @@
     'Segoe UI',
     Roboto,
     sans-serif;
+  font-size: 12px;
   color: var(--ck-text);
-  box-sizing: border-box;
-  width: var(--ck-width, 100%);
-  /* Without an explicit width the picker keeps its content floor (520px);
-     an explicit `width` prop lowers the floor, so `width={320}` is honored. */
-  min-width: min(520px, var(--ck-width, 520px));
-  /* Stacking is keyed off the picker's OWN width (container queries below),
-     not the viewport — a narrow picker inside a wide page still stacks. */
-  container-type: inline-size;
-  flex-wrap: wrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.ck-color-picker::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    var(--ck-primary-glow) 0%,
-    transparent 50%,
-    var(--ck-primary-glow) 100%
-  );
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: 0;
 }
 
 .ck-color-picker *,
@@ -110,33 +148,19 @@
   box-sizing: border-box;
 }
 
-/* Horizontal layout: color area on left, controls on right */
-.ck-picker-main {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  align-items: stretch;
-  position: relative;
-  z-index: 1;
-  min-height: 80px;
-  width: 100%;
+.ck-color-area,
+.ck-hue-slider,
+.ck-alpha-slider {
+  /* THUMBS STAY THIS FAR INSIDE THE EDGES; usePointerDrag READS IT TOO */
+  --ck-thumb-inset: 10px;
 }
 
-.ck-picker-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-
-/* Color Area - glassmorphic with subtle glow */
 .ck-color-area {
   position: relative;
+  width: 256px;
   cursor: crosshair;
   touch-action: none;
   border-radius: var(--ck-radius-md);
-  overflow: hidden;
   user-select: none;
   box-shadow:
     var(--ck-glass-shadow),
@@ -156,6 +180,7 @@
 .ck-color-area-layer {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
 }
 
 .ck-color-area-layer--saturation {
@@ -209,55 +234,37 @@
 
 .ck-color-area-thumb {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  left: calc(
+    var(--ck-thumb-inset) + var(--ck-x, 0) * (100% - 2 * var(--ck-thumb-inset))
+  );
+  top: calc(
+    var(--ck-thumb-inset) + var(--ck-y, 0) * (100% - 2 * var(--ck-thumb-inset))
+  );
+  width: 14px;
+  height: 14px;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 }
 
-.ck-color-area-thumb-inner {
+/* WHITE RING + DARK HAIRLINE READS ON EVERY COLOR */
+.ck-color-area-thumb-inner,
+.ck-slider-thumb-inner {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 3px solid white;
+  background: transparent;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.2);
+    0 0 0 2px #fff,
+    0 0 0 3px rgba(0, 0, 0, 0.6);
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--ck-glass-bg-strong);
-  backdrop-filter: var(--ck-blur);
-  -webkit-backdrop-filter: var(--ck-blur);
 }
 
 .ck-color-area:active .ck-color-area-thumb-inner {
   transform: scale(1.15);
 }
 
-/* Controls row - sliders + preview horizontal */
-.ck-controls-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.ck-sliders-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Action buttons row */
-.ck-action-buttons-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Sliders - glassmorphic with glow effects */
-.ck-hue-slider {
+.ck-hue-slider,
+.ck-alpha-slider {
   position: relative;
   height: 44px;
   width: 100%;
@@ -268,18 +275,21 @@
   transition: box-shadow 0.2s ease;
 }
 
-.ck-hue-slider:hover {
+.ck-hue-slider:hover,
+.ck-alpha-slider:hover {
   box-shadow:
     var(--ck-glass-shadow),
     0 0 0 2px var(--ck-primary-glow),
     inset 0 0 0 1px var(--ck-glass-border);
 }
 
-.ck-hue-slider:focus {
+.ck-hue-slider:focus,
+.ck-alpha-slider:focus {
   outline: none;
 }
 
-.ck-hue-slider:focus-visible {
+.ck-hue-slider:focus-visible,
+.ck-alpha-slider:focus-visible {
   outline: 3px solid var(--ck-primary);
   outline-offset: 3px;
   box-shadow:
@@ -287,11 +297,15 @@
     0 0 0 4px var(--ck-primary-glow);
 }
 
-.ck-hue-slider-track {
+.ck-hue-slider-track,
+.ck-alpha-slider-track {
   position: absolute;
   inset: 17px 0;
   border: 1px solid var(--ck-glass-border);
-  border-radius: 9999px;
+  border-radius: var(--ck-track-radius);
+}
+
+.ck-hue-slider-track {
   background: linear-gradient(
     to right,
     #ff0000,
@@ -331,17 +345,22 @@
 .ck-hue-slider--vertical .ck-slider-thumb,
 .ck-alpha-slider--vertical .ck-slider-thumb {
   left: 50%;
+  top: calc(
+    var(--ck-thumb-inset) + var(--ck-y, 0) * (100% - 2 * var(--ck-thumb-inset))
+  );
 }
 
 .ck-slider-thumb {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   top: 50%;
+  left: calc(
+    var(--ck-thumb-inset) + var(--ck-x, 0) * (100% - 2 * var(--ck-thumb-inset))
+  );
   transform: translate(-50%, -50%);
   pointer-events: none;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 }
 
 .ck-hue-slider:active .ck-slider-thumb,
@@ -349,62 +368,12 @@
   transform: translate(-50%, -50%) scale(1.15);
 }
 
-.ck-slider-thumb-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #1a1a1a;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-/* Alpha Slider - glassmorphic */
-.ck-alpha-slider {
-  position: relative;
-  height: 44px;
-  width: 100%;
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
-  border-radius: var(--ck-radius-sm);
-  transition: box-shadow 0.2s ease;
-}
-
-.ck-alpha-slider:hover {
-  box-shadow:
-    var(--ck-glass-shadow),
-    0 0 0 2px var(--ck-primary-glow),
-    inset 0 0 0 1px var(--ck-glass-border);
-}
-
-.ck-alpha-slider:focus {
-  outline: none;
-}
-
-.ck-alpha-slider:focus-visible {
-  outline: 3px solid var(--ck-primary);
-  outline-offset: 3px;
-  box-shadow:
-    var(--ck-glass-shadow),
-    0 0 0 4px var(--ck-primary-glow);
-}
-
-.ck-alpha-slider-track {
-  position: absolute;
-  inset: 17px 0;
-  border: 1px solid var(--ck-glass-border);
-  border-radius: 9999px;
-}
-
-/* Checkerboard pattern */
 .ck-checkerboard {
   background-image:
-    linear-gradient(45deg, #ccc 25%, transparent 25%),
-    linear-gradient(-45deg, #ccc 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #ccc 75%),
-    linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    linear-gradient(45deg, var(--ck-checker) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--ck-checker) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--ck-checker) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--ck-checker) 75%);
   background-size: 8px 8px;
   background-position:
     0 0,
@@ -413,16 +382,6 @@
     -4px 0px;
 }
 
-.dark .ck-checkerboard,
-[data-theme='dark'] .ck-checkerboard {
-  background-image:
-    linear-gradient(45deg, #444 25%, transparent 25%),
-    linear-gradient(-45deg, #444 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #444 75%),
-    linear-gradient(-45deg, transparent 75%, #444 75%);
-}
-
-/* Color Preview - glassmorphic with glow */
 .ck-preview {
   position: relative;
   border-radius: var(--ck-radius-sm);
@@ -449,14 +408,6 @@
   box-shadow: var(--ck-glass-shadow);
 }
 
-.ck-preview-wide {
-  flex: 1;
-  width: auto;
-  height: 24px;
-  min-width: 60px;
-  border-radius: var(--ck-radius-sm);
-}
-
 .ck-preview-color {
   position: absolute;
   inset: 0;
@@ -471,70 +422,18 @@
   position: relative;
 }
 
-/* Input mode tabs - glassmorphic segmented control */
-.ck-input-modes {
-  display: grid;
-  /* min-content (not 0): cramped pickers wrap buttons to a second row
-     instead of letting cells overlap the 24px hit targets. */
-  grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
-  gap: 4px;
-  padding: 4px;
-  background: var(--ck-glass-bg);
-  backdrop-filter: var(--ck-blur);
-  -webkit-backdrop-filter: var(--ck-blur);
-  border: 1px solid var(--ck-glass-border);
-  border-radius: var(--ck-radius-sm);
-}
-
-.ck-input-mode-btn {
-  padding: 4px 2px;
-  /* Keep the hit target at least 24x24 (WCAG 2.2 SC 2.5.8) even when the
-     picker renders below 520px and the mode row gets cramped. */
-  min-width: 24px;
-  font-size: 10px;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition:
-    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: transparent;
-  color: var(--ck-text-muted);
-  white-space: nowrap;
-  min-height: 44px;
-  position: relative;
-}
-
-.ck-input-mode-btn:hover {
-  color: var(--ck-text);
-  background: var(--ck-bg-secondary);
-}
-
-.ck-input-mode-btn.active {
-  background: var(--ck-glass-bg-strong);
-  color: var(--ck-primary);
-  box-shadow:
-    var(--ck-glass-shadow),
-    0 0 0 1px var(--ck-glass-border);
-}
-
-/* Input container */
 .ck-inputs {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-/* Text input row */
 .ck-input-row {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-/* Text input - glassmorphic */
 .ck-input {
   flex: 1;
   min-width: 0;
@@ -557,7 +456,6 @@
 }
 
 .ck-input:hover {
-  border-color: var(--ck-glass-border);
   background: var(--ck-glass-bg-strong);
 }
 
@@ -567,7 +465,6 @@
   background: var(--ck-glass-bg-strong);
 }
 
-/* Format select - glassmorphic */
 .ck-select {
   padding: 5px 7px;
   min-height: 44px;
@@ -591,7 +488,6 @@
 }
 
 .ck-select:hover {
-  border-color: var(--ck-glass-border);
   background: var(--ck-glass-bg-strong);
 }
 
@@ -600,7 +496,6 @@
   box-shadow: 0 0 0 3px var(--ck-primary-glow);
 }
 
-/* Channel inputs grid */
 .ck-channel-grid {
   display: grid;
   gap: 3px;
@@ -658,7 +553,6 @@
   background: var(--ck-glass-bg-strong);
 }
 
-/* Remove number input spinners */
 .ck-channel-input::-webkit-outer-spin-button,
 .ck-channel-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -669,7 +563,6 @@
   -moz-appearance: textfield;
 }
 
-/* Presets section - glassmorphic */
 .ck-presets {
   border-top: 1px solid var(--ck-glass-border);
   padding-top: 3px;
@@ -704,7 +597,7 @@
   backdrop-filter: var(--ck-blur);
   -webkit-backdrop-filter: var(--ck-blur);
   border: 1px solid var(--ck-glass-border);
-  border-radius: 4px;
+  border-radius: var(--ck-radius-sm);
   color: var(--ck-primary);
   cursor: pointer;
   min-width: 44px;
@@ -728,7 +621,7 @@
   backdrop-filter: var(--ck-blur);
   -webkit-backdrop-filter: var(--ck-blur);
   border: 1px solid var(--ck-glass-border);
-  border-radius: 4px;
+  border-radius: var(--ck-radius-sm);
   color: var(--ck-text);
   cursor: pointer;
   outline: none;
@@ -744,14 +637,12 @@
   box-shadow: var(--ck-glass-shadow);
 }
 
-/* Preset swatches - glassmorphic grid */
 .ck-preset-colors {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 3px;
 }
 
-/* Color swatch button - glassmorphic */
 .ck-swatch-wrapper {
   position: relative;
   aspect-ratio: 1;
@@ -767,7 +658,6 @@
 .ck-swatch-btn {
   aspect-ratio: 1;
   min-height: 44px;
-  border: none;
   border-radius: var(--ck-radius-sm);
   cursor: pointer;
   transition:
@@ -784,14 +674,10 @@
 }
 
 .ck-swatch-btn:hover {
-  transform: translateY(-2px) scale(1.02);
+  border-color: var(--ck-primary);
   box-shadow:
     var(--ck-glass-shadow-lg),
     inset 0 0 0 1px var(--ck-glass-border);
-}
-
-.ck-swatch-btn:active {
-  transform: translateY(0) scale(0.98);
 }
 
 .ck-swatch-btn.ck-swatch-editing {
@@ -866,8 +752,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--ck-glass-border) !important;
-  border-style: solid !important;
+  border: 2px solid var(--ck-glass-border);
   opacity: 0.6;
 }
 
@@ -886,7 +771,9 @@
 }
 
 .ck-swatch-btn.selected {
-  box-shadow: 0 0 0 3px var(--ck-primary);
+  box-shadow:
+    0 0 0 2px var(--ck-bg),
+    0 0 0 3px var(--ck-primary);
 }
 
 .ck-swatch-btn:focus-visible {
@@ -897,13 +784,7 @@
 .ck-swatch-color {
   position: absolute;
   inset: 0;
-  border-radius: 2px;
-}
-
-/* Action buttons (eyedropper, copy) - glassmorphic */
-.ck-action-buttons {
-  display: flex;
-  gap: 4px;
+  border-radius: inherit;
 }
 
 .ck-eyedropper-btn,
@@ -935,15 +816,9 @@
   background: var(--ck-glass-bg-strong);
   border-color: var(--ck-primary);
   color: var(--ck-primary);
-  transform: translateY(-2px);
   box-shadow:
     var(--ck-glass-shadow-lg),
     0 0 0 2px var(--ck-primary-glow);
-}
-
-.ck-eyedropper-btn:active:not(:disabled),
-.ck-copy-btn:active {
-  transform: translateY(0) scale(0.95);
 }
 
 .ck-eyedropper-btn:focus-visible,
@@ -963,24 +838,14 @@
 .ck-copy-btn--copied {
   background: linear-gradient(135deg, var(--ck-primary), var(--ck-accent));
   border-color: var(--ck-primary);
-  color: white;
+  color: var(--ck-on-primary);
   box-shadow:
     var(--ck-glass-shadow-lg),
     0 0 20px var(--ck-primary-glow);
 }
 
-.ck-copy-btn--copied:hover {
-  background: linear-gradient(135deg, var(--ck-primary), var(--ck-accent));
-  transform: translateY(-2px);
-}
-
-/* ============================================================ */
-/* NEW UI COMPONENTS */
-/* ============================================================ */
-
-/* Recent Colors - glassmorphic */
 .ck-recent-colors {
-  display: none; /* Hidden by default for compact design */
+  display: flex;
   flex-direction: column;
   gap: 2px;
   border-top: 1px solid var(--ck-glass-border);
@@ -988,7 +853,7 @@
 }
 
 .ck-recent-colors-label {
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 600;
   color: var(--ck-text-muted);
   text-transform: uppercase;
@@ -1019,7 +884,6 @@
 }
 
 .ck-recent-color-swatch:hover {
-  transform: translateY(-2px) scale(1.05);
   border-color: var(--ck-primary);
   box-shadow:
     var(--ck-glass-shadow-lg),
@@ -1034,127 +898,13 @@
     0 0 0 4px var(--ck-primary-glow);
 }
 
-.ck-recent-color-swatch:active {
-  transform: translateY(0) scale(0.95);
-}
-
-/* ============================================================ */
-/* NARROW-PICKER LAYOUT — container queries on the picker's own  */
-/* width (NOT the viewport), so `width={320}` stacks on desktop. */
-/* ============================================================ */
-
-@container (max-width: 505px) {
-  /* Content-box measure: a default picker is 520px border-box = 506px
-     content, so this only fires for explicitly narrowed pickers. */
-  .ck-picker-main {
-    flex-direction: column;
-    min-width: 100%;
-  }
-
-  .ck-picker-controls {
-    min-width: 100%;
-  }
-
-  .ck-action-buttons {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  .ck-eyedropper-btn,
-  .ck-copy-btn {
-    min-width: 44px;
-    min-height: 44px;
-    width: 44px;
-    height: 44px;
-  }
-
-  .ck-recent-color-swatch {
-    min-height: 44px;
-  }
-
-  .ck-input-mode-btn {
-    padding: 10px;
-    font-size: 12px;
-    min-height: 44px;
-  }
-
-  .ck-swatch-btn {
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-/* Very narrow picker (content-box: ~400px border-box) */
 @container (max-width: 385px) {
   .ck-preset-colors {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* Phones: the picker is full-bleed regardless of its own width, and the
-   layout stacks with the viewport (as it always has). The @container rules
-   above additionally handle narrow pickers on wide viewports. */
-@media (max-width: 640px) {
-  .ck-color-picker {
-    flex-direction: column;
-    /* Full-bleed on phones, but an explicit `width` prop still wins if it
-       is narrower. (min(100%, 100%) = 100% when no width is set.) */
-    min-width: min(100%, var(--ck-width, 100%));
-  }
-
-  .ck-picker-main {
-    flex-direction: column;
-  }
-
-  .ck-picker-controls {
-    min-width: 100%;
-  }
-
-  .ck-action-buttons {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  .ck-eyedropper-btn,
-  .ck-copy-btn {
-    min-width: 44px;
-    min-height: 44px;
-    width: 44px;
-    height: 44px;
-  }
-
-  .ck-recent-color-swatch {
-    min-height: 44px;
-  }
-
-  .ck-input-mode-btn {
-    padding: 10px;
-    font-size: 12px;
-    min-height: 44px;
-  }
-
-  .ck-swatch-btn {
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 480px) {
-  .ck-color-picker {
-    padding: 12px;
-  }
-
-  .ck-preset-colors {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* ============================================================ */
-/* ACCESSIBILITY: MOTION + FORCED COLORS                         */
-/* ============================================================ */
-
-/* Respect users who opt out of animation; the transitions here are
-   decorative (color snap, hover glows), so near-zero duration is safe. */
+/* TRANSITIONS ARE DECORATIVE, SO NEAR-ZERO DURATION IS SAFE UNDER REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
   .ck-color-picker,
   .ck-color-picker *,
@@ -1166,8 +916,7 @@
   }
 }
 
-/* Under forced colors, color surfaces must keep rendering real color
-   (this is a color picker), while chrome/thumbnails get system hints. */
+/* FORCED COLORS: COLOR SURFACES KEEP REAL COLOR; CHROME GETS SYSTEM COLORS */
 @media (forced-colors: active) {
   .ck-color-area-layer,
   .ck-hue-slider-track,
@@ -1185,21 +934,256 @@
     outline: 2px solid CanvasText;
   }
 
-  .ck-input-mode-btn[aria-pressed='true'] {
-    forced-color-adjust: none;
-    background: Highlight;
-    color: HighlightText;
-  }
-
   .ck-color-picker :focus-visible {
     outline-color: Highlight;
   }
 }
 
-/* WCAG 2.2 SC 2.5.8: the delete control is visually 14px, but its hit
-   area is expanded to 24x24 via the ::before overlay. */
+/* EXPANDS THE 14PX DELETE CONTROL TO A 24X24 HIT AREA (WCAG 2.2 SC 2.5.8) */
 .ck-swatch-delete-btn::before {
   content: '';
   position: absolute;
   inset: -5px;
+}
+
+/* PICKER LAYOUT: COMPACT COLUMN BY DEFAULT, SIDE BY SIDE WITH --wide */
+.ck-color-picker .ck-color-area {
+  --ck-thumb-inset: 8px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+
+.ck-color-picker :is(.ck-color-area-thumb, .ck-slider-thumb) {
+  width: 16px;
+  height: 16px;
+}
+
+/* WHITE INNER RING KEEPS THE THUMB INSIDE THE TRACK */
+.ck-color-picker :is(.ck-color-area-thumb-inner, .ck-slider-thumb-inner) {
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+/* PREVIEW SPANS FROM THE TOP OF THE HUE BAR TO THE BOTTOM OF THE ALPHA BAR */
+.ck-picker-sliders {
+  --ck-span: 40px;
+  display: grid;
+  grid-template-columns: var(--ck-span) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.ck-picker-sliders--hue-only {
+  --ck-span: 16px;
+}
+
+.ck-picker-sliders--no-preview {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ck-color-picker .ck-picker-preview {
+  width: var(--ck-span);
+  height: var(--ck-span);
+  box-shadow: none;
+}
+
+.ck-picker-tracks {
+  display: grid;
+  min-width: 0;
+}
+
+.ck-color-picker :is(.ck-hue-slider, .ck-alpha-slider) {
+  --ck-thumb-inset: 8px;
+  height: 24px;
+}
+
+.ck-color-picker :is(.ck-hue-slider-track, .ck-alpha-slider-track) {
+  inset: 4px 0;
+}
+
+.ck-picker-value {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ck-picker-value .ck-inputs {
+  flex: 1;
+  min-width: 0;
+}
+
+.ck-picker-value--channels .ck-channel-grid {
+  flex-basis: 100%;
+  order: 1;
+  gap: 4px;
+}
+
+.ck-picker-value--channels .ck-select {
+  flex: 1;
+}
+
+.ck-color-picker :is(.ck-select, .ck-input, .ck-channel-input) {
+  height: 32px;
+  min-height: 32px;
+  padding: 0 6px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.ck-color-picker .ck-select {
+  min-width: 0;
+  max-width: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align-last: center;
+}
+
+.ck-color-picker :is(.ck-copy-btn, .ck-eyedropper-btn) {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  flex: none;
+}
+
+.ck-color-picker .ck-channel {
+  position: relative;
+}
+
+.ck-color-picker .ck-channel-label {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.ck-color-picker .ck-channel-input {
+  padding-left: 14px;
+}
+
+/* CHIPS WRAP IN THEIR OWN COLUMN; GROUP MENU AND + STAY TOP-RIGHT */
+.ck-picker-swatches {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ck-picker-chips {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 24px;
+}
+
+.ck-picker-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+}
+
+.ck-picker-chip {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border: 1px solid var(--ck-glass-border);
+  border-radius: var(--ck-radius-sm);
+  padding: 0;
+  cursor: pointer;
+}
+
+/* 24X24 HIT AREA AROUND EACH 20PX CHIP (WCAG 2.2 SC 2.5.8) */
+.ck-picker-chip::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+}
+
+.ck-picker-chip[aria-pressed='true'] {
+  box-shadow:
+    0 0 0 2px var(--ck-bg),
+    0 0 0 3px var(--ck-primary);
+}
+
+.ck-picker-chip:focus-visible,
+.ck-picker-add:focus-visible {
+  outline: 2px solid var(--ck-primary);
+  outline-offset: 2px;
+}
+
+.ck-picker-divider {
+  align-self: stretch;
+  width: 1px;
+  margin: 2px;
+  background: var(--ck-glass-border);
+}
+
+.ck-picker-add {
+  width: 20px;
+  height: 20px;
+  border: 1px dashed var(--ck-glass-border);
+  border-radius: var(--ck-radius-sm);
+  padding: 0;
+  background: none;
+  color: var(--ck-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.ck-picker-add:hover {
+  border-color: var(--ck-primary);
+  color: var(--ck-primary);
+}
+
+.ck-picker-groups {
+  height: 24px;
+  border: 1px solid var(--ck-glass-border);
+  border-radius: var(--ck-radius-sm);
+  padding: 0 4px;
+  background: var(--ck-glass-bg);
+  color: var(--ck-text);
+  font: inherit;
+  font-size: 11px;
+}
+
+/* WIDE: AREA ON THE LEFT, CONTROLS STACKED ON THE RIGHT */
+.ck-color-picker--wide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  align-content: start;
+  gap: 8px 12px;
+  width: var(--ck-width, 520px);
+}
+
+.ck-color-picker--wide > .ck-color-area {
+  grid-row: 1 / span 4;
+  align-self: stretch;
+  min-height: 176px;
+  aspect-ratio: auto;
+}
+
+.ck-color-picker--wide > :not(.ck-color-area) {
+  grid-column: 2;
+}
+
+@media (max-width: 560px) {
+  .ck-color-picker--wide {
+    display: flex;
+  }
+
+  .ck-color-picker--wide > .ck-color-area {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 3 / 2;
+  }
 }

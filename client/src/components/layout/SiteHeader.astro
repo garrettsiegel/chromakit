@@ -9,20 +9,20 @@ const isDocs = Astro.url.pathname.startsWith('/docs');
 <header class="site-header">
   <div class="container site-header__inner">
     <a href="/" class="brand-lockup" aria-label="ChromaKit home">
-      <BrandMark />
+      <BrandMark size={20} />
       <span>ChromaKit</span>
-      <span class="brand-lockup__version" aria-label={`Version ${version}`}>
-        v{version}
-      </span>
+      <span class="brand-lockup__version">v{version}</span>
     </a>
     <nav class="site-nav" aria-label="Primary navigation">
-      <a class="site-nav__link" href="/#workbench">Workbench</a>
       <a
-        class="site-nav__link site-nav__link--primary"
+        class="site-nav__link"
         href="/docs/getting-started"
         aria-current={isDocs ? 'page' : undefined}
       >
-        Read docs <span aria-hidden="true">→</span>
+        Docs
+      </a>
+      <a class="site-nav__link" href="https://github.com/garrettsiegel/chromakit">
+        GitHub <span aria-hidden="true">↗</span>
       </a>
       <ThemeToggle />
     </nav>

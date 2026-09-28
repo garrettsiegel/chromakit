@@ -1,39 +1,44 @@
 import type { ReactNode } from 'react';
-import type { Language } from 'prism-react-renderer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { CodeBlock } from '@/components/shared/CodeBlock';
+import * as Tabs from '@radix-ui/react-tabs';
 
 interface DemoCardProps {
-  code: string;
-  language?: Language;
+  label?: string;
+  code?: ReactNode;
   children: ReactNode;
 }
 
 export const DemoCard = ({
+  label = 'Default theme · chromakit.css',
   code,
-  language = 'tsx',
   children,
 }: DemoCardProps) => {
+  const caption = <span className="demo-card__label">{label}</span>;
+  const preview = <div className="demo-card__preview">{children}</div>;
+
+  if (!code) {
+    return (
+      <div className="demo-card">
+        <div className="demo-card__bar">{caption}</div>
+        {preview}
+      </div>
+    );
+  }
+
   return (
-    <Card>
-      <CardContent className="p-4 sm:p-6">
-        <Tabs defaultValue="preview" className="w-full">
-          <TabsList>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="code">Code</TabsTrigger>
-          </TabsList>
-          <TabsContent
-            value="preview"
-            className="mt-4 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-muted/30 p-6"
-          >
-            {children}
-          </TabsContent>
-          <TabsContent value="code" className="mt-4">
-            <CodeBlock code={code} language={language} />
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+    <Tabs.Root className="demo-card" defaultValue="preview">
+      <div className="demo-card__bar">
+        <Tabs.List className="tabs__list" aria-label="Demo view">
+          <Tabs.Trigger className="tabs__trigger" value="preview">
+            Preview
+          </Tabs.Trigger>
+          <Tabs.Trigger className="tabs__trigger" value="code">
+            Code
+          </Tabs.Trigger>
+        </Tabs.List>
+        {caption}
+      </div>
+      <Tabs.Content value="preview">{preview}</Tabs.Content>
+      <Tabs.Content value="code">{code}</Tabs.Content>
+    </Tabs.Root>
   );
 };

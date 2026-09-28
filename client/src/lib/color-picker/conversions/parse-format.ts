@@ -10,7 +10,7 @@ import { clamp } from './math';
 import { parseHex, rgbaToHex, rgbaToHex8 } from './hex';
 import { rgbToHsl } from './hsl';
 import { rgbToHsv } from './hsv';
-import { rgbToOklab, rgbToOklch, oklchaToRgba, oklabaToRgba } from './oklab';
+import { rgbToOklab, oklabToOklch, oklchaToRgba, oklabaToRgba } from './oklab';
 import { labToRgb, lchToRgb } from './lab';
 import { hwbToRgb } from './hwb';
 import { getNamedColor } from './named-colors';
@@ -30,7 +30,6 @@ export function parseColor(color: string): RGBA | null {
     return parseHex(trimmed);
   }
 
-  // CSS color keywords (`red`, `rebeccapurple`, `transparent`).
   if (/^[a-z]+$/.test(trimmed)) {
     const named = getNamedColor(trimmed);
     return named ? parseHex(named) : null;
@@ -58,7 +57,7 @@ export function parseColor(color: string): RGBA | null {
     return { ...rgb, a: alphaComponent(hwbMatch[4], hwbMatch[5]) };
   }
 
-  // ACCEPTS lab(L a b / A); 100% is 100 for L and 125 for the a/b axes.
+  // ACCEPTS lab(L a b / A); 100% IS 100 FOR L AND 125 FOR a/b
   const labMatch = trimmed.match(
     /^lab\s*\(\s*([\d.]+)(%?)\s+(-?[\d.]+)(%?)\s+(-?[\d.]+)(%?)(?:\s*\/\s*([\d.]+)(%?))?\s*\)$/
   );
@@ -71,7 +70,7 @@ export function parseColor(color: string): RGBA | null {
     return { ...rgb, a: alphaComponent(labMatch[7], labMatch[8]) };
   }
 
-  // ACCEPTS lch(L C H / A); 100% is 100 for L and 150 for chroma.
+  // ACCEPTS lch(L C H / A); 100% IS 100 FOR L AND 150 FOR C
   const lchMatch = trimmed.match(
     /^lch\s*\(\s*([\d.]+)(%?)\s+([\d.]+)(%?)\s+([\d.]+)(?:deg)?(?:\s*\/\s*([\d.]+)(%?))?\s*\)$/
   );
@@ -84,8 +83,7 @@ export function parseColor(color: string): RGBA | null {
     return { ...rgb, a: alphaComponent(lchMatch[6], lchMatch[7]) };
   }
 
-  // ACCEPTS oklch(L% C h / a) AND oklch(L C h / a); hue may be negative or
-  // carry a `deg` suffix, alpha may be a percentage.
+  // ACCEPTS oklch(L% C h / a) AND oklch(L C h / a); NEGATIVE/deg HUE, PERCENT ALPHA
   const oklchMatch = trimmed.match(
     /^oklch\s*\(\s*(-?[\d.]+)%?\s+([\d.]+)\s+(-?[\d.]+)(?:deg)?(?:\s*\/\s*(-?[\d.]+)(%?))?\s*\)$/
   );
@@ -100,14 +98,12 @@ export function parseColor(color: string): RGBA | null {
     return oklchaToRgba(oklcha);
   }
 
-  // ACCEPTS oklab(L% a b / A) AND oklab(L a b / A). The a/b axes may be numbers
-  // or percentages, where 100% is the 0.4 reference range from the CSS spec.
+  // ACCEPTS oklab(L% a b / A) AND oklab(L a b / A); 100% a/b IS 0.4, BARE L > 1 IS A PERCENTAGE
   const oklabMatch = trimmed.match(
     /^oklab\s*\(\s*([\d.]+)(%?)\s+(-?[\d.]+)(%?)\s+(-?[\d.]+)(%?)(?:\s*\/\s*([\d.]+)(%?))?\s*\)$/
   );
   if (oklabMatch) {
     const L = parseFloat(oklabMatch[1]);
-    // A bare L above 1 is read as a percentage, matching an explicit `%`.
     const lIsPercent = Boolean(oklabMatch[2]) || L > 1;
     const oklaba: OKLABA = {
       L: clamp(lIsPercent ? L / 100 : L, 0, 1),
@@ -126,7 +122,7 @@ export function rgbaToColorValue(rgba: RGBA): ColorValue {
   const hsl = rgbToHsl(rgb);
   const hsv = rgbToHsv(rgb);
   const oklab = rgbToOklab(rgb);
-  const oklch = rgbToOklch(rgb);
+  const oklch = oklabToOklch(oklab);
 
   return {
     hex: rgbaToHex(rgba),
@@ -144,11 +140,7 @@ export function rgbaToColorValue(rgba: RGBA): ColorValue {
   };
 }
 
-/**
- * Integer values stay integers; non-integers keep one decimal. Keeps the
- * picker's text fields round-trip-stable: a displayed 1-decimal value parses
- * back far closer to the original color than a rounded integer.
- */
+// ONE DECIMAL (NOT ROUNDED INTEGERS) KEEPS TEXT FIELDS ROUND-TRIP-STABLE
 function percentPart(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }

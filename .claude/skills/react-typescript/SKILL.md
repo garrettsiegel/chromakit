@@ -39,11 +39,11 @@ export const NewComponent = () => {
 ## React Rules
 
 - No React default or namespace imports (`import React` / `import * as React`) — use the automatic JSX runtime and named imports (`forwardRef`, `type HTMLAttributes`, …). ESLint-enforced.
-- **No static inline styles** — constant values belong in CSS classes (`chromakit.css` for the library, `index.css`/Tailwind for the demo). _Exception:_ runtime-computed values (live colors, thumb positions) may use `style` — this is a color picker; dynamic color must reach the DOM. This exception is why there is no ESLint rule for `style`; it is enforced by review, so keep every `style` prop dynamic-only.
+- **No static inline styles** — constant values belong in CSS classes (`chromakit.css` for the library, the plain CSS files for the demo). _Exception:_ runtime-computed values (live colors, thumb positions) may use `style` — this is a color picker; dynamic color must reach the DOM. This exception is why there is no ESLint rule for `style`; it is enforced by review, so keep every `style` prop dynamic-only.
 - No nested `function` declarations — use arrow consts or extract.
 - No deep relative imports (`../../…`) — use the `@/` alias. ESLint-enforced.
 
-## Size Limits (ESLint-enforced, tests exempt)
+## Size Limits (ESLint-enforced)
 
 - Files ≤ 300 lines, functions ≤ 200 lines (JSX-heavy layout components get headroom; logic functions should stay far below this). When a file approaches the limit, split it the way the codebase already does: extract data (`preset-data.ts`), subcomponents (`PickerLayout.tsx`), or modules (`conversions/`).
 

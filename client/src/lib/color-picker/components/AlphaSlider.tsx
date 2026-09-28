@@ -1,8 +1,9 @@
-import type { KeyboardEvent } from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import type { CSSProperties, KeyboardEvent } from 'react';
+import { useCallback, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
 import { hsvToRgb } from '../conversions';
+import { getSliderKeyValue } from './slider-keys';
 
 export interface AlphaSliderProps {
   hsva: HSVA;
@@ -44,48 +45,17 @@ export function AlphaSlider({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       const step = e.shiftKey ? 0.1 : 0.01;
-      let newA = hsva.a;
-
-      switch (e.key) {
-        case 'ArrowLeft':
-        case 'ArrowDown':
-          e.preventDefault();
-          newA = Math.max(0, hsva.a - step);
-          break;
-        case 'ArrowRight':
-        case 'ArrowUp':
-          e.preventDefault();
-          newA = Math.min(1, hsva.a + step);
-          break;
-        case 'Home':
-          e.preventDefault();
-          newA = 0;
-          break;
-        case 'End':
-          e.preventDefault();
-          newA = 1;
-          break;
-        default:
-          return;
-      }
-
+      const newA = getSliderKeyValue(e.key, hsva.a, step, 0, 1);
+      if (newA === null) return;
+      e.preventDefault();
       onChange({ ...hsva, a: Math.round(newA * 100) / 100 });
     },
     [hsva, onChange]
   );
 
-  const rgb = useMemo(() => hsvToRgb(hsva), [hsva]);
-
-  const gradientStyle = useMemo(() => {
-    const rgbString = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-    return {
-      background: vertical
-        ? `linear-gradient(to top, rgba(${rgbString}, 0), rgba(${rgbString}, 1))`
-        : `linear-gradient(to right, rgba(${rgbString}, 0), rgba(${rgbString}, 1))`,
-    };
-  }, [rgb, vertical]);
-
-  const thumbPosition = `${hsva.a * 100}%`;
+  const rgb = hsvToRgb(hsva);
+  const rgbString = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
+  const gradient = `linear-gradient(to ${vertical ? 'top' : 'right'}, rgba(${rgbString}, 0), rgba(${rgbString}, 1))`;
 
   const alphaPercentage = Math.round(hsva.a * 100);
 
@@ -100,17 +70,19 @@ export function AlphaSlider({
       aria-valuetext={`${alphaPercentage}%`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
-      className={`ck-alpha-slider${vertical ? ' ck-alpha-slider--vertical' : ''} ${className}`}
+      className={`ck-alpha-slider${vertical ? ' ck-alpha-slider--vertical' : ''} ${className}`.trim()}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="alpha-slider"
     >
       <div className="ck-alpha-slider-track ck-checkerboard" />
-      <div className="ck-alpha-slider-track" style={gradientStyle} />
+      <div className="ck-alpha-slider-track" style={{ background: gradient }} />
       <div
         className="ck-slider-thumb"
         style={
-          vertical ? { top: `${100 - hsva.a * 100}%` } : { left: thumbPosition }
+          vertical
+            ? ({ '--ck-y': 1 - hsva.a } as CSSProperties)
+            : ({ '--ck-x': hsva.a } as CSSProperties)
         }
         data-testid="alpha-slider-thumb"
       >

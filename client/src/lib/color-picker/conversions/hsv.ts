@@ -12,10 +12,6 @@ export function rgbToHsv(rgb: RGB): HSV {
   const d = max - min;
   const s = max === 0 ? 0 : d / max;
 
-  if (max === min) {
-    return { h: 0, s: round(s * 100), v: round(v * 100) };
-  }
-
   return {
     h: round(rgbToHue(r, g, b, max, d)),
     s: round(s * 100),

@@ -1,3 +1,44 @@
+# Migration guides
+
+- [Upgrading from chromakit-react 0.6](#upgrading-from-chromakit-react-06)
+- [Migrating from react-colorful](#migrating-from-react-colorful-to-chromakit)
+
+## Upgrading from chromakit-react 0.6
+
+Version 0.7.0 redesigns the picker. Most apps only need to check the layout and the look; apps that call `useColorState` with callbacks need a one-line change.
+
+### Closest to the 0.6 look
+
+```tsx
+<ColorPicker layout="wide" className="ck-theme-glass" />
+```
+
+`layout="wide"` keeps the 520px side-by-side footprint, and `ck-theme-glass` restores the frosted palette, radii, blur, and shadows. It is close, not identical: see the table below.
+
+### What changed
+
+| Area                   | 0.6                                                                                                                  | 0.7                                                                                | What to do                                                                         |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Default layout         | 520px side by side                                                                                                   | `compact`: a 280px column                                                          | Give it less room, or pass `layout="wide"`                                         |
+| `layout="wide"`        | —                                                                                                                    | 520px side by side in the new design                                               | Use it where you had space for the old picker                                      |
+| Format selection       | TEXT / RGB / HSL… tabs plus a HEX dropdown                                                                           | One dropdown; channel formats show a field per channel                             | Nothing, unless you targeted the tabs                                              |
+| Presets                | Swatch grid with edit mode and a group menu                                                                          | One row of 20px swatches, `+` to save; group menu in `wide` only                   | Build custom preset UIs with the exported `PresetColors`                           |
+| Recent colors          | Rendered but hidden by the stylesheet                                                                                | Visible in the swatch row                                                          | Pass `enableHistory={false}` to hide                                               |
+| Default theme          | Frosted glass, indigo accent, 12px radius                                                                            | Flat white/black, hairlines, square corners                                        | Add `className="ck-theme-glass"`, or override `--ck-*`                             |
+| Thumbs                 | Filled dots that could overhang the edges                                                                            | Rings that stay inside tracks                                                      | Nothing                                                                            |
+| Hover                  | Buttons and swatches lifted on hover                                                                                 | No lift                                                                            | Nothing                                                                            |
+| CSS class names        | `.ck-picker-main`, `.ck-picker-controls`, `.ck-input-modes`, `.ck-input-mode-btn`, `.ck-presets` (inside the picker) | `.ck-picker-sliders`, `.ck-picker-value`, `.ck-picker-swatches`, `.ck-picker-chip` | Update custom CSS that targets the old classes                                     |
+| Test IDs               | `input-mode-*`, `preset-colors`, `color-swatch` inside the picker                                                    | Not rendered by `ColorPicker`                                                      | Query `color-format-select` and the chips' `aria-label` (`Select #rrggbb`) instead |
+| `useColorState`        | `useColorState(initial, onChange, onChangeComplete, value)`                                                          | `useColorState(initial, { value, onChange, onChangeComplete })`                    | Move the arguments into an object; calls with only `initial` are unchanged         |
+| `useColorState` return | Included `isDragging`                                                                                                | Removed                                                                            | Track drags with `startDrag` / `endDrag`                                           |
+| `ChannelInputsProps`   | Exported                                                                                                             | Not exported                                                                       | Use `ChannelEditorProps` for the channel editors                                   |
+| `useDebounce`          | Supported                                                                                                            | Deprecated                                                                         | Debounce in your app, or use `onChangeComplete`                                    |
+| CSS size               | 3.5 kB gzipped                                                                                                       | About 3.8 kB                                                                       | Nothing                                                                            |
+
+### New CSS variables
+
+`--ck-frame` (outer border), `--ck-on-primary` (text on a `--ck-primary` fill), `--ck-track-radius` (slider tracks), and `--ck-thumb-inset` (how far thumbs stay from the edges).
+
 # Migrating from react-colorful to ChromaKit
 
 ChromaKit provides a modern alternative to react-colorful with additional features like OKLCH support, better composability, and built-in dark mode. This guide helps you migrate smoothly.

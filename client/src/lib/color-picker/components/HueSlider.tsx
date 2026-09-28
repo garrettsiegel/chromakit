@@ -1,4 +1,4 @@
-import type { KeyboardEvent } from 'react';
+import type { CSSProperties, KeyboardEvent } from 'react';
 import { useCallback, useRef } from 'react';
 import { usePointerDrag } from '../hooks';
 import type { HSVA } from '../types';
@@ -73,7 +73,7 @@ export function HueSlider({
     [hsva, onChange]
   );
 
-  const thumbPosition = `${(hsva.h / 360) * 100}%`;
+  const position = hsva.h / 360;
 
   return (
     <div
@@ -86,7 +86,7 @@ export function HueSlider({
       aria-valuetext={`${hsva.h}°`}
       aria-orientation={vertical ? 'vertical' : 'horizontal'}
       tabIndex={0}
-      className={`ck-hue-slider${vertical ? ' ck-hue-slider--vertical' : ''} ${className}`}
+      className={`ck-hue-slider${vertical ? ' ck-hue-slider--vertical' : ''} ${className}`.trim()}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
       data-testid="hue-slider"
@@ -94,7 +94,11 @@ export function HueSlider({
       <div className="ck-hue-slider-track" />
       <div
         className="ck-slider-thumb"
-        style={vertical ? { top: thumbPosition } : { left: thumbPosition }}
+        style={
+          vertical
+            ? ({ '--ck-y': position } as CSSProperties)
+            : ({ '--ck-x': position } as CSSProperties)
+        }
         data-testid="hue-slider-thumb"
       >
         <div className="ck-slider-thumb-inner" />

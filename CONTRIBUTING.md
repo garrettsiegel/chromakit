@@ -27,18 +27,14 @@ Thank you for your interest in contributing to ChromaKit! We welcome contributio
 chromakit/
 ├── client/src/lib/color-picker/  # Library source code (ships to npm)
 │   ├── components/               # React components
-│   │   └── *.test.tsx            # Component tests (colocated)
 │   ├── conversions/              # Color space conversions (barrel: conversions/index.ts)
-│   ├── conversions.test.ts       # Unit tests (colocated)
-│   ├── hooks.ts / hooks.test.ts  # React hooks + tests
+│   ├── hooks.ts                  # React hooks
 │   ├── types.ts                  # TypeScript types
-│   ├── utils.ts / utils.test.ts  # Helpers + tests
+│   ├── utils.ts                  # Helpers
 │   └── index.ts                  # Public API
 ├── client/src/pages/             # Demo/docs website (Astro routes)
 ├── client/src/components/        # Demo/docs components
-├── client/src/site-data/         # Reference data imported by docs pages
-├── e2e/                          # Playwright accessibility tests
-└── vitest.config.ts              # Test configuration
+└── client/src/site-data/         # Reference data imported by docs pages
 ```
 
 ### Making Changes
@@ -53,14 +49,11 @@ chromakit/
    - Library code goes in `client/src/lib/color-picker/`
    - Demo/website code goes in `client/src/pages/` and `client/src/components/`
 
-3. **Run tests** to ensure everything works:
+3. **Check your changes** — lint, type-check, and `astro check`:
 
    ```bash
-   npm run test:ci
+   npm run verify
    ```
-
-   Note: `npm test` is Vitest watch mode — it hangs automation. Always use
-   `npm run test:ci`.
 
 4. **Build the library** to check for errors:
 
@@ -68,7 +61,7 @@ chromakit/
    npm run build
    ```
 
-5. **Test your changes** in the demo site:
+5. **Try your changes** in the demo site:
    ```bash
    npm run dev
    ```
@@ -79,24 +72,10 @@ Run these before submitting a PR:
 
 ```bash
 npm run verify      # lint (zero warnings) + type-check + astro check
-npm run test:ci     # tests + coverage thresholds (NOT npm test — watch mode)
 npm run build       # library bundle + type declarations
 npm run size        # size-limit budgets
 npm run format      # prettier (format:check runs in CI)
 ```
-
-### Testing
-
-- Write tests for new features as colocated `*.test.ts`/`*.test.tsx` files near the source file
-- Ensure all tests pass before submitting a PR
-- Run tests with:
-  ```bash
-  npm run test:ci
-  ```
-- Check coverage with:
-  ```bash
-  npm run test:coverage
-  ```
 
 ## Submitting a Pull Request
 

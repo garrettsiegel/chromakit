@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { clamp } from '../conversions/math';
 
 export interface ChannelConfig<K extends string = string> {
   key: K;
@@ -18,9 +19,7 @@ export interface ChannelInputsProps<K extends string> {
   className?: string;
 }
 
-// SHARED NUMERIC CHANNEL GRID. THE FOCUSED FIELD SHOWS THE RAW TYPED TEXT
-// (DRAFT) SO ROUND-TRIPPED COLOR UPDATES NEVER SNAP THE VALUE MID-EDIT;
-// EVERY OTHER FIELD DERIVES STRAIGHT FROM PROPS.
+// FOCUSED FIELD SHOWS ITS RAW DRAFT SO ROUND-TRIPPED UPDATES NEVER SNAP IT MID-EDIT
 export function ChannelInputs<K extends string>({
   channels,
   values,
@@ -31,17 +30,15 @@ export function ChannelInputs<K extends string>({
 
   const handleChange = (channel: ChannelConfig<K>, raw: string) => {
     setDraft({ key: channel.key, text: raw });
-    // DON'T COMMIT WHILE THE FIELD IS EMPTY OR NON-NUMERIC — clearing a field
-    // to retype it must not repaint the picker with a 0.
+    // DON'T COMMIT EMPTY OR NON-NUMERIC TEXT, SO CLEARING A FIELD NEVER PAINTS A 0
     const parsed = parseFloat(raw);
     if (raw.trim() === '' || Number.isNaN(parsed)) return;
-    const clamped = Math.max(channel.min, Math.min(channel.max, parsed));
-    onChannelChange(channel.key, clamped);
+    onChannelChange(channel.key, clamp(parsed, channel.min, channel.max));
   };
 
   return (
     <div
-      className={`ck-channel-grid ck-channel-grid-${channels.length} ${className}`}
+      className={`ck-channel-grid ck-channel-grid-${channels.length} ${className}`.trim()}
     >
       {channels.map((channel) => (
         <div key={channel.key} className="ck-channel">

@@ -1,65 +1,93 @@
 export interface RGB {
-  r: number; // 0-255
-  g: number; // 0-255
-  b: number; // 0-255
+  /** 0-255 */
+  r: number;
+  /** 0-255 */
+  g: number;
+  /** 0-255 */
+  b: number;
 }
 
 export interface RGBA extends RGB {
-  a: number; // 0-1
+  /** 0-1 */
+  a: number;
 }
 
 export interface HSL {
-  h: number; // 0-360
-  s: number; // 0-100
-  l: number; // 0-100
+  /** 0-360 */
+  h: number;
+  /** 0-100 */
+  s: number;
+  /** 0-100 */
+  l: number;
 }
 
 export interface HSLA extends HSL {
-  a: number; // 0-1
+  /** 0-1 */
+  a: number;
 }
 
 export interface HSV {
-  h: number; // 0-360
-  s: number; // 0-100
-  v: number; // 0-100
+  /** 0-360 */
+  h: number;
+  /** 0-100 */
+  s: number;
+  /** 0-100 */
+  v: number;
 }
 
 export interface HSVA extends HSV {
-  a: number; // 0-1
+  /** 0-1 */
+  a: number;
 }
 
 export interface OKLAB {
-  L: number; // 0-1 (Lightness)
-  a: number; // roughly -0.4 to 0.4
-  b: number; // roughly -0.4 to 0.4
+  /** 0-1 (Lightness) */
+  L: number;
+  /** roughly -0.4 to 0.4 */
+  a: number;
+  /** roughly -0.4 to 0.4 */
+  b: number;
 }
 
 export interface HWB {
-  h: number; // 0-360 (Hue)
-  w: number; // 0-100 (Whiteness)
-  b: number; // 0-100 (Blackness)
+  /** 0-360 (Hue) */
+  h: number;
+  /** 0-100 (Whiteness) */
+  w: number;
+  /** 0-100 (Blackness) */
+  b: number;
 }
 
 export interface LAB {
-  L: number; // 0-100 (Lightness, CIE Lab / D50)
-  a: number; // roughly -125 to 125
-  b: number; // roughly -125 to 125
+  /** 0-100 (Lightness, CIE Lab / D50) */
+  L: number;
+  /** roughly -125 to 125 */
+  a: number;
+  /** roughly -125 to 125 */
+  b: number;
 }
 
 export interface LCH {
-  L: number; // 0-100 (Lightness, CIE LCH / D50)
-  C: number; // 0-150 (Chroma)
-  h: number; // 0-360 (Hue)
+  /** 0-100 (Lightness, CIE LCH / D50) */
+  L: number;
+  /** 0-150 (Chroma) */
+  C: number;
+  /** 0-360 (Hue) */
+  h: number;
 }
 
 export interface OKLCH {
-  L: number; // 0-1 (Lightness)
-  C: number; // 0-0.4 (Chroma)
-  h: number; // 0-360 (Hue)
+  /** 0-1 (Lightness) */
+  L: number;
+  /** 0-0.4 (Chroma) */
+  C: number;
+  /** 0-360 (Hue) */
+  h: number;
 }
 
 export interface OKLCHA extends OKLCH {
-  a: number; // 0-1 (Alpha)
+  /** 0-1 (Alpha) */
+  a: number;
 }
 
 export interface OKLABA extends OKLAB {
@@ -108,6 +136,11 @@ export type PresetGroupsInput = PresetGroup[] | Record<string, string[]>;
 
 export interface ColorPickerProps {
   value?: string;
+  /**
+   * `compact` (default): a 280px column.
+   * `wide`: a 520px side-by-side layout with a preset-group menu.
+   */
+  layout?: 'compact' | 'wide';
   defaultValue?: string;
   onChange?: (color: ColorValue) => void;
   onChangeComplete?: (color: ColorValue) => void;

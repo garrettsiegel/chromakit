@@ -1,37 +1,18 @@
-import { memo } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
-interface CopyIconButtonProps {
-  text: string;
-  className?: string;
-}
-
-const BASE_CLASSES = 'copy-icon-button';
-
-export const CopyIconButton = memo(function CopyIconButton({
-  text,
-  className = '',
-}: CopyIconButtonProps) {
+export const CopyIconButton = ({ text }: { text: string }) => {
   const { copied, copy } = useCopyToClipboard(text);
+  const Icon = copied ? Check : Copy;
 
   return (
     <button
       type="button"
+      className="copy-icon-button"
       onClick={copy}
-      className={`${BASE_CLASSES} ${className}`}
-      data-testid="button-copy"
-      aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
-      aria-live="polite"
+      aria-label={copied ? 'Copied' : 'Copy to clipboard'}
     >
-      {copied ? (
-        <Check className="h-4 w-4" aria-hidden="true" />
-      ) : (
-        <Copy className="h-4 w-4" aria-hidden="true" />
-      )}
-      <span className="sr-only">
-        {copied ? 'Copied!' : 'Copy to clipboard'}
-      </span>
+      <Icon size={16} aria-hidden="true" />
     </button>
   );
-});
+};

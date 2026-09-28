@@ -27,8 +27,7 @@ export function hueComponent(value: string): number {
   return ((parseFloat(value) % 360) + 360) % 360;
 }
 
-// CSS Color 4 lets rgb()/hsl()/hsv() be comma- OR space-separated (never mixed
-// in real CSS) with an optional alpha after `,` or `/`. Shared regex pieces:
+// CSS COLOR 4: COMMA- OR SPACE-SEPARATED ARGS WITH OPTIONAL ALPHA AFTER `,` OR `/`
 const NUM = String.raw`(-?[\d.]+)`;
 const PCT = String.raw`(%?)`;
 const SEP = String.raw`(?:\s*,\s*|\s+)`;

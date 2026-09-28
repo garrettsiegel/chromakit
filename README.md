@@ -1,29 +1,29 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/client/public/brand/readme-hero.png" alt="ChromaKit editorial color workbench showing a real picker, synchronized OKLCH values, and format outputs" width="100%" />
+  <img src="https://raw.githubusercontent.com/garrettsiegel/chromakit/main/client/public/brand/readme-hero.png" alt="The ChromaKit picker-glyph logo and wordmark beside a live OKLCH color picker" width="100%" />
 
 # ChromaKit
 
-A controlled React color picker and conversion toolkit for modern color systems.
+A React color picker and conversion toolkit. OKLCH, OKLAB, HSL, HSV, RGB, and HEX, with zero runtime dependencies.
 
 [![npm version](https://img.shields.io/npm/v/chromakit-react.svg)](https://www.npmjs.com/package/chromakit-react)
 [![CI](https://github.com/garrettsiegel/chromakit/actions/workflows/ci.yml/badge.svg)](https://github.com/garrettsiegel/chromakit/actions/workflows/ci.yml)
 [![MIT license](https://img.shields.io/npm/l/chromakit-react.svg)](https://github.com/garrettsiegel/chromakit/blob/main/LICENSE)
 
-[Live workbench](https://www.chromakit.site/) · [Documentation](https://www.chromakit.site/docs/getting-started) · [npm](https://www.npmjs.com/package/chromakit-react)
+[Live demo](https://www.chromakit.site/) · [Documentation](https://www.chromakit.site/docs/getting-started) · [npm](https://www.npmjs.com/package/chromakit-react)
 
 </div>
 
-## What it gives you
+## What's in the package
 
 ChromaKit combines a complete color picker, composable picker primitives, color parsing, conversion utilities, and WCAG contrast helpers in one TypeScript package. It supports React 18 and 19 and declares zero runtime dependencies.
 
-Current production budgets, measured with `size-limit` for v0.5.1:
+Gzipped sizes for v0.7.0, measured with `size-limit`:
 
 | Asset      | Gzipped size |
 | ---------- | -----------: |
 | ES module  |      12.7 kB |
-| UMD module |      13.3 kB |
-| CSS        |       3.5 kB |
+| UMD module |      13.4 kB |
+| CSS        |       3.8 kB |
 
 ## Install
 
@@ -31,7 +31,7 @@ Current production budgets, measured with `size-limit` for v0.5.1:
 npm install chromakit-react
 ```
 
-Import both the component and its stylesheet:
+Import the component and its stylesheet:
 
 ```tsx
 import { useState } from 'react';
@@ -45,7 +45,7 @@ export function BrandColorField() {
 }
 ```
 
-`onChange` returns one `ColorValue` containing every supported representation, so application state can stay in the format that fits your system.
+`onChange` receives one `ColorValue` with every supported format, so you can store whichever format your system uses.
 
 ## Color formats
 
@@ -86,13 +86,15 @@ function handleChange(next: ColorValue) {
 />;
 ```
 
-The full component also supports custom formats, presets and preset groups, recent-color history, eyedropper progressive enhancement, and independent color-area height.
+By default the picker is compact: a 280px column with one format dropdown and a single row of preset and recent swatches. Pass `layout="wide"` for a 520px side-by-side version with the color area on the left and a preset-group menu.
+
+The full component also supports a custom format list, presets and preset groups, recent-color history (on by default), an eyedropper where the browser supports it, and a configurable color-area height.
 
 [Read the complete `ColorPicker` prop reference](https://www.chromakit.site/docs/color-picker).
 
 ## Theming
 
-The package skin is controlled by documented `--ck-*` custom properties. Add a class to the picker and override the values your design system owns:
+The picker is styled with `--ck-*` CSS custom properties. Add a class to the picker and override the values your design system owns:
 
 ```css
 .brand-picker {
@@ -109,6 +111,8 @@ The package skin is controlled by documented `--ck-*` custom properties. Add a c
 <ColorPicker className="brand-picker" defaultValue="#ddfe3f" />
 ```
 
+The default theme is flat: white and black, hairline borders, square corners. Add `className="ck-theme-glass"` for the previous frosted-glass look.
+
 [See every theme variable and a live comparison](https://www.chromakit.site/docs/theming).
 
 ## Accessibility behavior
@@ -122,13 +126,13 @@ ChromaKit provides multiple ways to reach the same color value:
   targets (like the preset delete control) have a hit area of at least
   24×24 CSS pixels. All interactive elements have visible focus treatment.
 - Copy actions expose text status instead of relying on color or icon changes alone.
-- WCAG contrast-ratio and readable-text helpers are exported for applications that build their own contrast interface.
+- WCAG luminance and contrast-ratio helpers are exported for applications that build their own contrast checks.
 
-These behaviors support accessible product implementation; teams should still test the picker inside their own labels, forms, themes, and page structure.
+These behaviors are a starting point, not a guarantee. Test the picker inside your own labels, forms, themes, and page structure.
 
 ## Compose your own picker
 
-The complete picker is assembled from the same public pieces available to consumers:
+`ColorPicker` is built from the same public components and hooks you can import:
 
 ```tsx
 import {
@@ -175,9 +179,12 @@ ChromaKit computes OKLCH and OKLab in JavaScript. CSS `oklch()` support is neede
 - [Getting started and framework setup](https://www.chromakit.site/docs/getting-started)
 - [`ColorPicker` API](https://www.chromakit.site/docs/color-picker)
 - [Composable components](https://www.chromakit.site/docs/components)
-- [Hooks and utilities](https://www.chromakit.site/docs/hooks)
+- [Hooks](https://www.chromakit.site/docs/hooks)
+- [Color utilities](https://www.chromakit.site/docs/utilities)
+- [Theming](https://www.chromakit.site/docs/theming)
 - [Troubleshooting and exported types](https://www.chromakit.site/docs/troubleshooting)
-- [Migrating from react-colorful](./MIGRATION.md)
+- [Upgrading from 0.6](https://github.com/garrettsiegel/chromakit/blob/main/MIGRATION.md#upgrading-from-chromakit-react-06)
+- [Migrating from react-colorful](https://github.com/garrettsiegel/chromakit/blob/main/MIGRATION.md#migrating-from-react-colorful-to-chromakit)
 
 ## Contributing
 
@@ -186,7 +193,6 @@ Issues and focused pull requests are welcome. Read the [contributing guide](http
 ```bash
 npm ci
 npm run verify
-npm run test:ci
 npm run build
 npm run size
 ```

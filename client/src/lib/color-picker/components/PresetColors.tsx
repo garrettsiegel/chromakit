@@ -110,7 +110,7 @@ export function PresetColors({
         </div>
       )}
       <div
-        className={`ck-preset-colors ${className}`}
+        className={`ck-preset-colors ${className}`.trim()}
         data-testid="preset-colors"
       >
         {swatchEntries.map(({ color, occurrence }, index) => (

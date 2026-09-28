@@ -2,25 +2,69 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SiteHeader from '@/components/layout/SiteHeader.astro';
 import SiteFooter from '@/components/layout/SiteFooter.astro';
-import HeroSection from '@/components/home/HeroSection.astro';
-import FeaturesSection from '@/components/home/FeaturesSection.astro';
-import { DemoPlayground } from '@/components/home/DemoPlayground';
-import UsageSection from '@/components/home/UsageSection.astro';
-import FinalCTA from '@/components/home/FinalCTA.astro';
+import StaticCode from '@/components/docs/StaticCode.astro';
+import { HeroPicker } from '@/components/home/HeroPicker';
+import '@/components/home/home.css';
 
 const title = 'ChromaKit — React color picker and conversion toolkit';
 const description =
-  'A zero-runtime-dependency React color picker and conversion toolkit with OKLCH, OKLAB, HSL, HSV, RGB, HEX, TypeScript, theming, and WCAG contrast helpers.';
+  'React color picker and conversion toolkit: OKLCH, OKLAB, HSL, HSV, RGB, and HEX. TypeScript types, WCAG contrast helpers, zero runtime dependencies.';
+
+const example = `import { useState } from 'react';
+import { ColorPicker } from 'chromakit-react';
+import 'chromakit-react/chromakit.css';
+
+export function ColorField() {
+  const [color, setColor] = useState('#ff6b6b');
+
+  return (
+    <ColorPicker
+      value={color}
+      onChange={(next) => setColor(next.hex8)}
+    />
+  );
+}`;
+const facts = [
+  ['01', 'Zero runtime dependencies.', 'React and React DOM 18 or 19 are the only peer dependencies. Nothing else is installed.'],
+  ['02', 'Six color formats.', 'OKLCH, OKLAB, HSL, HSV, RGB, and HEX. Every change returns all six, so you store the one you need.'],
+  ['03', 'Whole picker, or its parts.', 'Use ColorPicker as is, or compose the area, sliders, and inputs yourself. Style both with --ck-* variables.'],
+];
 ---
 
 <BaseLayout title={title} description={description} jsonLd>
   <SiteHeader />
   <main id="main-content" class="site-main">
-    <HeroSection />
-    <DemoPlayground client:visible />
-    <FeaturesSection />
-    <UsageSection />
-    <FinalCTA />
+    <HeroPicker client:load />
+    <div class="container home-details">
+      <section class="home-usage" aria-labelledby="home-usage-title">
+        <div class="home-section-copy">
+          <p class="home-eyebrow">01 / IMPLEMENT</p>
+          <h2 id="home-usage-title">Your color.<br />Your application.</h2>
+          <p>Pass a value in. Get every format back. Keep state in React; ChromaKit handles the controls and the conversions.</p>
+          <a href="/docs/getting-started">Installation &amp; setup <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="home-example">
+          <div class="home-example-label"><span>ColorField.tsx</span><span>React / TypeScript</span></div>
+          <StaticCode code={example} />
+          <p>This renders the default ColorPicker. The picker at the top of the page is a custom layout built from the same components.</p>
+        </div>
+      </section>
+      <section class="home-facts" aria-labelledby="home-facts-title">
+        <div class="home-section-heading"><p class="home-eyebrow">02 / THE ESSENTIALS</p><h2 id="home-facts-title">Small kit.<br />Room to build.</h2></div>
+        <div class="home-fact-grid">
+          {facts.map(([number, heading, detail]) => <article><span class="home-fact-number">{number}</span><h3>{heading}</h3><p>{detail}</p></article>)}
+        </div>
+      </section>
+      <section class="home-docs" aria-labelledby="home-docs-title">
+        <div><p class="home-eyebrow">03 / KEEP GOING</p><h2 id="home-docs-title">Make it yours.</h2></div>
+        <div class="home-doc-links">
+          <a href="/docs/getting-started"><span>Get started</span><span aria-hidden="true">→</span></a>
+          <a href="/docs/components"><span>Explore the components</span><span aria-hidden="true">→</span></a>
+          <a href="/docs/theming"><span>Style your picker</span><span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    </div>
   </main>
   <SiteFooter />
+  <noscript><p class="container">This interactive preview needs JavaScript. <a href="/docs/getting-started">Read the installation guide.</a></p></noscript>
 </BaseLayout>

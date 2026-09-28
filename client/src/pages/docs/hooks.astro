@@ -4,14 +4,10 @@ import DocSection from '@/components/docs/DocSection.astro';
 import StaticCode from '@/components/docs/StaticCode.astro';
 import PropsTable from '@/components/docs/PropsTable.astro';
 import { HookDemoCard } from '@/components/demos/HookDemoCard';
-import { DOCS_NAV } from './_nav';
 import type { PropRow } from '@/components/docs/props-table-types';
 
-const meta = DOCS_NAV.find((d) => d.slug === 'hooks');
-const description = meta?.description ?? '';
-
 const useColorStateReturn: PropRow[] = [
-  { name: 'hsva', type: 'HSVA', description: 'Internal HSVA representation.' },
+  { name: 'hsva', type: 'HSVA', description: 'The color as HSVA. Pass it to ColorArea and the sliders.' },
   {
     name: 'colorValue',
     type: 'ColorValue',
@@ -37,10 +33,23 @@ const useColorStateReturn: PropRow[] = [
     type: '() => void',
     description: 'End a drag; fires onChangeComplete with the final color.',
   },
+];
+
+const useColorStateOptions: PropRow[] = [
   {
-    name: 'isDragging',
-    type: 'RefObject<boolean>',
-    description: 'Whether a drag is currently in progress.',
+    name: 'value',
+    type: 'string',
+    description: 'Controlled color. When set, the hook follows it.',
+  },
+  {
+    name: 'onChange',
+    type: '(color: ColorValue) => void',
+    description: 'Fires on every change (drag, typing).',
+  },
+  {
+    name: 'onChangeComplete',
+    type: '(color: ColorValue) => void',
+    description: 'Fires once a drag ends, with the final color.',
   },
 ];
 
@@ -51,7 +60,9 @@ const useColorStateCode = `const {
   setFromString,
   startDrag,
   endDrag,
-} = useColorState('#6366F1');
+} = useColorState('#6366F1', {
+  onChange: (color) => console.log(color.hex),
+});
 
 // colorValue.hex, colorValue.oklch, … are all live`;
 
@@ -72,48 +83,52 @@ useEffect(() => {
 }, [debounced]);`;
 ---
 
-<DocsLayout
-  slug="hooks"
-  title="Hooks · ChromaKit Docs"
-  description={description}
->
-  <div class="space-y-3">
-    <h1 class="text-4xl font-bold tracking-tight">Hooks</h1>
-    <p class="text-lg text-muted-foreground">
-      Two hooks power the components; a third, <code>useDebounce</code>, is a
-      convenience export. <code>useColorState</code> is the one you reach for
-      most — it holds the color and hands you every setter the primitives
-      need.
-    </p>
-  </div>
+<DocsLayout slug="hooks">
+  <Fragment slot="lead">
+    <code>useColorState</code> holds the color and returns every setter the
+    primitives need. <code>usePointerDrag</code> handles dragging on the color
+    area and sliders. <code>useDebounce</code> is deprecated.
+  </Fragment>
 
   <DocSection
     id="use-color-state"
     title="useColorState"
-    description="The core state hook. Give it an initial color; it returns the current color in every format plus the setters that ColorArea, the sliders, and the inputs expect."
+    description="The core state hook. Pass an initial color and an optional options object. It returns the current color in every format, plus the setters that ColorArea, the sliders, and the inputs expect."
   >
     <StaticCode code={useColorStateCode} lang="typescript" />
     <HookDemoCard client:visible />
-    <h3 class="text-base font-semibold">Returns</h3>
-    <PropsTable
-      rows={useColorStateReturn}
-      labels={{ name: 'Key', type: 'Type' }}
-      showDefault={false}
-    />
+    <div class="docs-block">
+      <h3>Returns</h3>
+      <PropsTable
+        rows={useColorStateReturn}
+        labels={{ name: 'Key', type: 'Type' }}
+        showDefault={false}
+        caption="useColorState return value"
+      />
+    </div>
+    <div class="docs-block">
+      <h3>Options</h3>
+      <PropsTable
+        rows={useColorStateOptions}
+        labels={{ name: 'Option', type: 'Type' }}
+        showDefault={false}
+        caption="useColorState options"
+      />
+    </div>
   </DocSection>
 
   <DocSection
     id="use-pointer-drag"
     title="usePointerDrag"
-    description="The drag primitive behind the color area and sliders. Reports normalized 0–1 coordinates and manages the document-level pointer listeners for you."
+    description="The drag primitive behind the color area and sliders. It reports coordinates from 0 to 1 and manages the document-level pointer listeners."
   >
     <StaticCode code={usePointerDragCode} lang="typescript" />
   </DocSection>
 
   <DocSection
     id="use-debounce"
-    title="useDebounce"
-    description="A tiny generic debounce — handy for throttling expensive work (persisting, network calls) as the color changes."
+    title="useDebounce (deprecated)"
+    description="Deprecated. It will be removed in a future minor release. Debounce in your app instead; the pattern below works with any debounce helper."
   >
     <StaticCode code={useDebounceCode} lang="typescript" />
   </DocSection>

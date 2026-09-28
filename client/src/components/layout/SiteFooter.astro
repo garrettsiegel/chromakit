@@ -1,23 +1,26 @@
+---
+import BrandMark from '@/components/BrandMark.astro';
+---
+
 <footer class="site-footer">
-  <div class="container">
-    <p class="site-footer__statement">
-      Pick color.<br />Keep the system.
-    </p>
-    <div class="site-footer__meta">
-      <p>
-        <strong>chromakit-react</strong><br />A zero-runtime-dependency React
-        color toolkit.
-      </p>
-      <nav class="site-footer__links" aria-label="Project links">
-        <a href="/docs/getting-started">Docs</a>
-        <a href="https://www.npmjs.com/package/chromakit-react">npm</a>
-        <a href="https://github.com/garrettsiegel/chromakit">GitHub</a>
-        <a href="https://github.com/garrettsiegel/chromakit/blob/main/LICENSE">MIT</a>
-      </nav>
-      <p>
-        Built by <a href="https://github.com/garrettsiegel">Garrett Siegel</a>.<br />
-        React 18 and 19.
+  <div class="container site-footer__inner">
+    <div class="site-footer__id">
+      <a href="/" class="site-footer__brand text-link">
+        <BrandMark size={16} />
+        ChromaKit
+      </a>
+      <p class="site-footer__tagline">
+        React color tools. Built by <a
+          class="text-link"
+          href="https://github.com/garrettsiegel">Garrett Siegel</a
+        >.
       </p>
     </div>
+    <nav class="site-footer__links" aria-label="Project links">
+      <a class="text-link" href="/docs/getting-started">Docs</a>
+      <a class="text-link" href="https://www.npmjs.com/package/chromakit-react">npm ↗</a>
+      <a class="text-link" href="https://github.com/garrettsiegel/chromakit">GitHub ↗</a>
+      <a class="text-link" href="https://github.com/garrettsiegel/chromakit/blob/main/LICENSE">MIT ↗</a>
+    </nav>
   </div>
 </footer>

@@ -41,8 +41,7 @@ export function ColorSwatch({
 
   const handleClick = () => {
     clearTimer();
-    // A long press already did its action; the trailing click must not also
-    // select the swatch.
+    // A LONG PRESS ALREADY ACTED; THE TRAILING CLICK MUST NOT ALSO SELECT
     if (longPressFired.current) {
       longPressFired.current = false;
       return;
@@ -59,7 +58,7 @@ export function ColorSwatch({
         onPointerUp={clearTimer}
         onPointerLeave={clearTimer}
         onPointerCancel={clearTimer}
-        className={`ck-swatch-btn ${selected ? 'selected' : ''} ${editing ? 'ck-swatch-editing' : ''} ${className}`}
+        className={`ck-swatch-btn${selected ? ' selected' : ''}${editing ? ' ck-swatch-editing' : ''} ${className}`.trim()}
         data-testid="color-swatch"
         title={
           editing

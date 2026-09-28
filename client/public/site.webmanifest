@@ -2,8 +2,8 @@
   "name": "ChromaKit",
   "short_name": "ChromaKit",
   "description": "React color picker and conversion toolkit for modern color spaces",
-  "theme_color": "#202516",
-  "background_color": "#f6f3e9",
+  "theme_color": "#111111",
+  "background_color": "#ffffff",
   "display": "standalone",
   "icons": [
     {

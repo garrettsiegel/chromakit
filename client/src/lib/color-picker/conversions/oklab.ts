@@ -24,8 +24,7 @@ function oklabToLinearSrgb(oklab: OKLAB): [number, number, number] {
   ];
 }
 
-// A channel this far outside 0-255 still rounds into range, so treating it as
-// in-gamut avoids pointless chroma reduction from floating-point noise.
+// A CHANNEL THIS FAR OUTSIDE 0-255 STILL ROUNDS INTO RANGE, SO FLOAT NOISE DOESN'T REDUCE CHROMA
 const GAMUT_TOLERANCE = 0.5;
 
 function isInGamut(linear: [number, number, number]): boolean {
@@ -84,7 +83,7 @@ export function oklabToRgb(oklab: OKLAB): RGB {
   let low = 0;
   let high = C;
 
-  // 24 halvings resolve chroma far below one 8-bit step.
+  // 24 HALVINGS RESOLVE CHROMA FAR BELOW ONE 8-BIT STEP
   for (let i = 0; i < 24; i++) {
     const mid = (low + high) / 2;
     if (isInGamut(oklabToLinearSrgb(oklchToOklab({ L, C: mid, h })))) {

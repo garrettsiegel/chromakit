@@ -1,7 +1,9 @@
 import { useState, useCallback, useMemo } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import type { ColorValue, ColorFormat } from '../types';
 import { parseColor, formatColor } from '../conversions';
 import { CopyButton } from './CopyButton';
+import { COLOR_FORMATS, hasAlpha } from './formats';
 
 export interface ColorInputsProps {
   colorValue: ColorValue;
@@ -15,23 +17,10 @@ export interface ColorInputsProps {
   onCopy?: (success: boolean) => void;
 }
 
-const ALL_FORMATS: {
-  value: ColorFormat;
-  label: string;
-  needsAlpha?: boolean;
-}[] = [
-  { value: 'hex', label: 'HEX' },
-  { value: 'hex8', label: 'HEX8', needsAlpha: true },
-  { value: 'rgb', label: 'RGB' },
-  { value: 'rgba', label: 'RGBA', needsAlpha: true },
-  { value: 'hsl', label: 'HSL' },
-  { value: 'hsla', label: 'HSLA', needsAlpha: true },
-  { value: 'hsv', label: 'HSV' },
-  { value: 'hsva', label: 'HSVA', needsAlpha: true },
-  { value: 'oklch', label: 'OKLCH' },
-  { value: 'oklcha', label: 'OKLCHA', needsAlpha: true },
-  { value: 'oklab', label: 'OKLAB' },
-  { value: 'oklaba', label: 'OKLABA', needsAlpha: true },
+// THIS SELECT HAS ALWAYS LISTED OKLCH BEFORE OKLAB
+const SELECT_FORMATS: ColorFormat[] = [
+  ...COLOR_FORMATS.filter((f) => !f.startsWith('oklab')),
+  ...COLOR_FORMATS.filter((f) => f.startsWith('oklab')),
 ];
 
 export function ColorInputs({
@@ -56,7 +45,7 @@ export function ColorInputs({
   const inputValue = isEditing ? draftValue : derivedValue;
 
   const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setDraftValue(value);
       setIsEditing(true);
@@ -78,7 +67,7 @@ export function ColorInputs({
   }, [draftValue, derivedValue]);
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         const parsed = parseColor(inputValue);
         if (!parsed) {
@@ -91,7 +80,7 @@ export function ColorInputs({
   );
 
   return (
-    <div className={`ck-inputs ${className}`}>
+    <div className={`ck-inputs ${className}`.trim()}>
       <div className="ck-input-row">
         <input
           type="text"
@@ -111,17 +100,13 @@ export function ColorInputs({
             className="ck-select"
             data-testid="color-format-select"
           >
-            {ALL_FORMATS.filter((f) => {
-              if (availableFormats && !availableFormats.includes(f.value)) {
-                return false;
-              }
-              if (f.needsAlpha && !showAlpha) {
-                return false;
-              }
-              return true;
-            }).map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
+            {SELECT_FORMATS.filter(
+              (f) =>
+                (!availableFormats || availableFormats.includes(f)) &&
+                (showAlpha || !hasAlpha(f))
+            ).map((f) => (
+              <option key={f} value={f}>
+                {f.toUpperCase()}
               </option>
             ))}
           </select>

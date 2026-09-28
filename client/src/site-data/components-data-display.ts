@@ -3,7 +3,7 @@ import type { ComponentGroup } from './components-data';
 export const displayGroup: ComponentGroup = {
   id: 'display',
   title: 'Display',
-  description: 'Read-only and action pieces.',
+  description: 'Previews, swatches, and single-purpose buttons.',
   components: [
     {
       name: 'ColorPreview',

@@ -1,9 +1,7 @@
 import type { RGB, LAB, LCH } from '../types';
 import { linearToSrgb } from './math';
 
-// CSS Color 4 defines lab()/lch() against the D50 white point, so the pipeline
-// is Lab -> XYZ(D50) -> linear sRGB -> sRGB. Constants and the transform matrix
-// are taken from the specification's sample code.
+// CSS COLOR 4 lab()/lch() USE D50: Lab -> XYZ(D50) -> LINEAR sRGB -> sRGB (SPEC SAMPLE CODE CONSTANTS)
 const KAPPA = 24389 / 27;
 const EPSILON = 216 / 24389;
 const D50_WHITE: readonly [number, number, number] = [

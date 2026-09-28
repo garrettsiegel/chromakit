@@ -13,72 +13,52 @@ Living handbook for AI agents working in this package. `CLAUDE.md` is a short po
 ## Stack
 
 - React 18 or 19 (peer dependency; the library declares **no** runtime `dependencies`).
-- TypeScript (strict), Vite 7 (library build only — see below), Vitest 4 + Testing Library + jsdom (tests).
-- ESLint 9 flat config (`eslint.config.js`), hardened per the "prompt once, lint forever" workflow: hard errors for `any`, non-null assertions, React default/namespace imports, enums, deep relative imports, `eslint-disable` comments (`eslint-comments/no-use`), and size limits (files ≤300, functions ≤200; tests exempt). `--max-warnings 0`.
+- TypeScript (strict), Vite 8 (library build only — see below).
+- ESLint 9 flat config (`eslint.config.js`), hardened per the "prompt once, lint forever" workflow: hard errors for `any`, non-null assertions, React default/namespace imports, enums, deep relative imports, `eslint-disable` comments (`eslint-comments/no-use`), and size limits (files ≤300, functions ≤200). `--max-warnings 0`.
 - **Claude Code hooks** (`.claude/settings.json`): PostToolUse auto-runs `eslint --fix` on every edited ts/tsx/astro file; Stop runs `npm run verify`. The `react-typescript` skill (`.claude/skills/react-typescript/SKILL.md`) documents the standards.
 - **Library styles:** hand-written plain CSS in `client/src/lib/color-picker/chromakit.css` (NOT Tailwind). Static styles live in CSS classes; `style` props are reserved for runtime-computed values (live colors, thumb positions) only.
-- **Demo/docs site: Astro 7** (static output, `@astrojs/react` islands) + Tailwind **v4** (`@tailwindcss/vite`), loading the legacy `tailwind.config.ts` via `@config` in `client/src/index.css`. Migrated 2026-07 from a Vite+React SPA (wouter) — see Notable Decisions & Lessons for why and the gotchas.
+- **Demo/docs site: Astro 7** (static output, `@astrojs/react` islands) styled with **plain CSS + tokens** (no Tailwind since 2026-09-27): `tokens.css` → `client/src/index.css` (reset, base, chrome, shared) + page-scoped files (`layouts/docs.css`, `components/home/home.css`, `components/home/HeroPicker.css`). Migrated 2026-07 from a Vite+React SPA (wouter) — see Notable Decisions & Lessons.
 
 ## Layout
 
 ```
 astro.config.mjs                 # site build: srcDir client/src, outDir dist/public, react()+sitemap()
 vercel.json                      # Vercel deploy config; /docs -> /docs/getting-started redirect
-vite.config.ts                   # LIBRARY BUILD ONLY (no site branching); injects nothing — __PKG_VERSION__
-                                  # is defined in astro.config.mjs's vite.define for the site
-tailwind.config.ts               # loaded by the site via @config; library does not use Tailwind
+vite.config.ts                   # LIBRARY BUILD ONLY; __PKG_VERSION__ is defined in astro.config.mjs
 tsconfig.build.json              # declaration-only type build, scoped to the library
-playwright.config.ts             # a11y e2e config (e2e/a11y.playwright.ts, axe-core)
-lighthouserc.{mobile,desktop,404}.cjs  # Lighthouse CI profiles (minScore: 1)
+tokens.css                       # site design tokens (imported by client/src/index.css)
+scripts/                         # brand:assets — generate-brand-assets.mjs, brand-card.html
 client/
-  public/                        # static assets: favicon.png, og-image.png, site.webmanifest, robots.txt,
-                                 #   brand/ (color-study avif/webp/jpg, readme-hero.png, workbench-screenshot.png)
+  public/                        # favicon.svg + raster icons, og-image.png, site.webmanifest, robots.txt,
+                                 #   fonts/geist-latin.woff2, brand/readme-hero.png (README image)
   src/
     lib/color-picker/            # ← THE PUBLISHED LIBRARY (the only code that ships to NPM)
       index.ts                   # public entry / export surface
-      types.ts  hooks.ts  utils.ts
-      picker-state.ts            # (components/) useColorState + usePresets reducers
-      conversions/index.ts       # barrel over conversions/ (hex, hsl, hsv, hwb, lab, oklab,
-                                 #   named-colors, parse-format, math)
+      types.ts  hooks.ts  utils.ts  constants.ts
+      conversions/               # hex, hsl, hsv, hwb, lab, oklab, named-colors, parse-format, math (+ index.ts barrel)
       chromakit.css              # library styles (imported by index.ts, shipped as a side effect)
-      components/                # one component per file:
-                                 #   ColorPicker (state) + PickerLayout (markup) + preset-data + picker-state
-                                 #   ColorArea, HueSlider, AlphaSlider
-                                 #   ColorInputs (text) + ChannelInputs (shared grid) + create-channel-editor
-                                 #   RGB/HSL/HSV/OKLCH/OKLABInputs + InputValuePanel
-                                 #   ColorPreview, ColorSwatch, PresetColors, CopyButton, RecentColors,
-                                 #   EyeDropperButton
-      *.test.ts(x)               # colocated tests
-    layouts/                     # BaseLayout.astro (head/SEO/GA/theme-script), DocsLayout.astro (sidebar)
-    pages/                       # Astro file-based routes — never shipped
-      index.astro                # home page
-      404.astro
-      docs/*.astro               # one file per docs page (getting-started, color-picker, components,
-                                 #   hooks, utilities, theming, troubleshooting)
-      docs/_nav.ts               # underscore-prefixed = excluded from routing; sidebar order + per-page SEO meta
-    site-data/                   # reference-data files (props tables, code snippets) imported by docs pages —
-                                 #   MUST live outside pages/ or Astro treats .ts files there as API endpoints
+      components/                # one component per file (ColorPicker + PickerLayout, ColorArea, sliders,
+                                 #   inputs via create-channel-editor, preview/swatch/presets/copy/history/
+                                 #   eyedropper) + internal helpers (formats.ts, slider-keys.ts)
+    layouts/                     # BaseLayout.astro (head/SEO/GA/theme script), DocsLayout.astro (+ docs.css)
+    pages/                       # Astro routes — never shipped
+      index.astro  404.astro
+      docs/*.astro               # one file per docs page; title/description/h1 come from docs/_nav.ts
+      docs/_nav.ts               # underscore = excluded from routing; sidebar order + per-page meta
+    site-data/                   # code snippets + props-table data imported by pages
+                                 #   (MUST live outside pages/ or Astro treats .ts files as endpoints)
     components/
-      demos/                     # React island wrappers, one per live demo (e.g. ConverterDemoCard.tsx) —
-                                 #   mounted with client:visible/client:load from .astro pages
-      docs/                      # DocSection.astro, PropsTable.astro (+ props-table-types.ts for the shared
-                                 #   PropRow type), StaticCode.astro (build-time shiki, zero JS), DemoCard.tsx
-                                 #   (the Preview/Code tab wrapper used inside demo islands)
-      home/                      # HeroSection/FeaturesSection/FinalCTA/UsageSection.astro (static) +
-                                 #   DemoPlayground.tsx (the one fully-interactive home island) +
-                                 #   InstallCommandBox.tsx
+      demos/                     # React island wrappers, one per live demo, mounted with client:visible
+      docs/                      # DocSection, PropsTable, StaticCode (build-time Shiki + copy button),
+                                 #   DocsNavList, DemoCard.tsx (Preview/Code tabs; code arrives as a slot)
+      home/                      # HeroPicker.tsx + HeroPicker.css (scroll-assembling hero island),
+                                 #   home.css (home sections)
       layout/                    # SiteHeader.astro, SiteFooter.astro
-      shared/                    # site-only primitives reused across demos/docs (CodeBlock,
-                                 #   CopyIconButton, ColorFormatsDisplay)
-      ThemeToggle.astro          # dark-mode toggle (static astro islands)
-      BrandMark.astro            # logo lockup
-      ui/                        # shadcn-style primitives kept by the site (card, tabs)
+      shared/                    # CopyIconButton, ColorFormatsDisplay
+      ThemeToggle.astro  BrandMark.astro
+    hooks/                       # use-copy-to-clipboard.ts
     types/globals.d.ts           # ambient declarations for the site build
-    hooks/, index.css            # demo-site-only helpers and global styles
-tokens.css                       # site design tokens (imported by client/src/index.css)
-e2e/a11y.playwright.ts           # axe-core accessibility suite over built site pages
-scripts/generate-brand-assets.mjs # regenerates og-image.png + readme-hero.png (needs sharp)
-.github/ACCESSIBILITY_RELEASE_CHECKLIST.md  # manual a11y checks before release
+    index.css                    # reset + base + site chrome + shared components
 ```
 
 The published surface is **only** `client/src/lib/color-picker/`. Everything else under `client/src/` is demo/docs site — never shipped. `client/index.html` no longer exists; Astro generates HTML per-route from `.astro` files.
@@ -92,20 +72,14 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 - `npm run build` — library bundle (`build:lib`, plain `vite build` now) + type declarations (`build:types`).
 - `npm run build:site` — `astro build` → static site to `dist/public` (what Vercel deploys).
 - `npm run preview` — `astro preview`, serves the built `dist/public` (closest thing to prod locally).
-- `npm run test` — Vitest **watch mode** (interactive). For a one-shot run use `npm run test:ci`.
-- `npm run test:ci` — one-shot run with coverage (enforces thresholds).
-- `npm run test:a11y` — rebuilds the site then runs the Playwright/axe suite (`e2e/`). Playwright needs `npx playwright install --with-deps chromium` once.
-- `npm run test:lighthouse` — rebuilds the site then runs the three Lighthouse profiles (minScore: 1).
-- `npm run quality:site` — build + Playwright + all Lighthouse profiles in one go.
 - `npm run format` / `format:check` — Prettier (`format:check` runs in CI, not in `verify`).
-- `npm run size` — size-limit budgets (ES 13.5 KB / UMD 14 KB / CSS 3.75 KB, gzipped). `size:why` opens the bundle analysis.
-- `npm run brand:assets` — regenerates `client/public/og-image.png` and `client/public/brand/readme-hero.png` via `scripts/generate-brand-assets.mjs` (sharp).
+- `npm run size` — size-limit budgets (ES 13.5 KB / UMD 14 KB / CSS 4 KB, gzipped). `rollup-plugin-visualizer` writes `.stats/bundle.html` on every library build.
+- `npm run brand:assets` — builds the library, then regenerates the raster favicons/app icons from `favicon.svg` (sharp) and the social cards (`og-image.png`, `brand/readme-hero.png`) by rendering `scripts/brand-card.html` in headless Chromium (Playwright; needs `npx playwright install chromium`). The card server-renders the real `ColorPicker` from `dist/chromakit.es.js` and zooms it to fit, so it always shows the current picker.
 - `npm run ci` — the full gate GitHub Actions runs.
 
 ## Conventions
 
 - **Zero runtime deps in the library.** Never add anything to `dependencies` in `package.json`. UI libs (`@radix-ui/*`, `lucide-react`, etc.) are demo-only and belong in `devDependencies`.
-- Tests are colocated (`Foo.test.tsx` next to `Foo.tsx`), Testing Library + Vitest, jsdom environment.
 - Public exports go through `client/src/lib/color-picker/index.ts`. Keep the export surface honest — don't export props/types that don't do anything.
 - The library CSS uses `ck-`-prefixed class names and `--ck-` CSS custom properties; theming is done by overriding those variables, not via JS props.
 - Never publish to NPM as part of a task — version bumps and `npm publish` are the owner's call.
@@ -114,15 +88,12 @@ Run from this directory with **npm** (not pnpm). If `node_modules/` is missing, 
 ## Gotchas
 
 - **Container-query stacking (A4).** The picker stacks based on its OWN width via `@container` queries in `chromakit.css` — not the viewport. An explicit `width` prop lowers the 520 px content floor (PickerLayout writes both `width` and the `--ck-width` var); without it, the picker keeps the 520 px floor, so shrink-wrap parents (flex items, `w-fit`) still render a 520 px picker. Container queries measure the CONTENT box (520 border ≈ 506 content), hence the 505 px query threshold.
-- **`extract-zip` advisory is dev-only.** `npm audit --audit-level=moderate` reports 6 findings, all in the `@lhci/cli` → lighthouse → puppeteer-core → extract-zip chain. `extract-zip` has no fixed version (`npm audit fix --force` would downgrade `@lhci/cli` to 0.1.0 — don't). `tmp`/`uuid` are pinned via `overrides` in `package.json`. The published package has zero runtime dependencies (`npm audit --omit=dev` is clean); CI fails only on production advisories.
 - **`node_modules/` may be absent.** This repo isn't part of the pnpm workspace, so a monorepo-wide install won't populate it. Run `npm ci` in this dir.
-- **`npm run test` is watch mode** and will hang an automated run. Use `npm run test:ci`.
 - **`eslint-disable` comments are errors** (and CI greps for them). Fix the code or ask a human to extend the config's `allow` list.
 - **`react-hooks` lint forbids writing refs during render.** Sync a "latest value" ref inside a `useEffect`, not with a bare `ref.current = x` at render time.
 - **Channel inputs use a focused-field draft** (`ChannelInputs.tsx`): the focused input shows raw typed text; everything else derives from props. No sync-in-effect — don't reintroduce one.
-- **Tailwind v4 does not auto-load `tailwind.config.ts`.** The demo relies on `@config "../../tailwind.config.ts";` at the top of `client/src/index.css`. Without it, custom color utilities (`bg-primary`, `text-foreground`, …) silently don't generate.
 - **`build:types` needs a CSS module ambient declaration** because `index.ts` imports `./chromakit.css`. Keep `css.d.ts` (`declare module '*.css';`) in the library's type-build include set.
-- **OKLCH hue can drift a few degrees** on OKLCH→RGB→OKLCH round trips at high chroma (sRGB gamut clamping). It's color science, not a bug — tests that assert hue stability must use low-chroma colors.
+- **OKLCH hue can drift a few degrees** on OKLCH→RGB→OKLCH round trips at high chroma (sRGB gamut clamping). It's color science, not a bug — anything that asserts hue stability must use low-chroma colors.
 - **`.ts`/`.tsx` files under `client/src/pages/` become Astro routes/endpoints.** Reference data and helper modules that docs pages import must live in `client/src/site-data/` (or another non-`pages/` location), never in `pages/`. `client/src/pages/docs/_nav.ts` is the one exception — the leading underscore tells Astro to exclude it from routing.
 - **`build:lib` still wipes `dist/` (`emptyOutDir: true`).** This is intentional — it's what keeps `dist/public` (the site build) out of the npm tarball, since `package.json`'s `files` only lists `dist`. Practical effect: running `npm run build` (or `npm run ci`) after `npm run build:site` deletes the site output; if you need both, build the site _last_, or just re-run `npm run build:site` after.
 - **`eslint-plugin-astro` is pinned to `^1.7.0`**, not latest (2.x) — 2.x requires ESLint ≥10 and this repo is on ESLint 9. Don't bump it without also bumping ESLint.
@@ -170,3 +141,13 @@ _Newest at the bottom._
 - **2026-08-29**: **v0.5.1 — editorial workbench redesign + a11y test gates.** Home page redesigned (workbench layout, self-hosted variable fonts in `client/public/fonts/` via `@font-face` — no fontsource packages). Added real accessibility CI: Playwright + axe (`e2e/a11y.playwright.ts`, `npm run test:a11y`) and Lighthouse CI with `minScore: 1` across mobile/desktop/404 profiles (`npm run test:lighthouse`). `.github/ACCESSIBILITY_RELEASE_CHECKLIST.md` tracks pre-release manual checks; two items remain deferred (native VoiceOver pass, macOS Increased Contrast pass).
 - **2026-09-02**: **SCAN.md remediation — all 8 batches implemented** (branches `scan/hygiene` → `scan/api`, stacked PRs #8–#15; SCAN.md deleted per its own completion rule). P0 parse fixes landed: CSS Color 4 space-separated `rgb()`/`hsl()`, percentage alpha, deg/negative hues, `oklch()` alpha clamping, and `hsv()`/`hsva()` round-tripping (parsers extracted to `conversions/parse-css-functions.ts`). Interaction: `pointercancel` ends drags, ColorSwatch long-press no longer double-fires, CopyButton timer cleanup, mode-button `onKeyDown` removed. CSS: the `width` prop now works below 520px via container queries — **the picker's stacking is keyed to its own width, and `PickerLayout` writes both `width` and the `--ck-width` var so an explicit width lowers the 520px content floor; container queries measure the content box (505px query ≈ 520px border)**. Reduced-motion/forced-colors rules ship in the library CSS; preset delete hit area ≥ 24×24. Tooling: prettier enforced in CI, honest CI security gate (prod must be clean, dev-only advisory), coverage thresholds raised to 92/92/88/92, sharp+`brand:assets`, vite@8/Rolldown (ES 12.54 kB gzip), lucide@1, jsdom@30, jest-dom@7. Prop types exported. **Deferred:** T8 Stage B (eslint@10) reverted per the plan's stop rule — eslint-plugin-react/jsx-a11y have no ESLint-10-compatible releases; the @eslint-community/eslint-comments fork swap stands. B3 (formatColor precision) needs the owner's call.
 - **2026-09-02 (release)**: **v0.6.0 published** from the merged SCAN remediation (all 8 batches, PRs #8–#15 squash-merged via merge commits into `main`, tag `v0.6.0`). CI fixes landed during release: Lighthouse gates now run **median-of-3** (`numberOfRuns: 3` in all `lighthouserc.*.cjs`) because a single devtools-throttled run flaked at 0.99 vs `minScore: 1`; Node 20.x was dropped from the CI matrix because **astro 7.2.9 hard-requires Node ≥ 22.12** (the `security` job stays on 20.x). Verified as a consumer post-publish: CSS Color 4 parsing, oklch alpha clamp, hsv round-trip, B3 formatColor precision (`oklch(94.2% 0.204 119.3)`), exported prop types in `dist/index.d.ts`, CSS in tarball, 0 install vulnerabilities. Still blocked upstream: eslint@10 (plugin-react/jsx-a11y) and typescript@7 (astro language-server).
+- **2026-09-27**: **Site restyled from the editorial workbench to a minimal hairline style** (owner disliked the paper/olive look). Source: the former `/concept` draft, now the home page. White/black (inverted `.dark`), Geist only (Anybody removed), 1px hairlines, `--radius: 0`, no brand colour blocks — colour on the page comes only from the picker. Tokens in `tokens.css` (`--color-bg/fg/muted-fg/subtle-fg/hairline/surface/accent` + Tailwind channel vars); home hero is `components/home/HeroPicker.tsx` + `home.css` (scroll-driven FLIP assembly; the stage sticks under the sticky site header, so progress is offset by the stage's computed `top`). New mark: solid square with one picked point. Poster art, hero plot, workbench `DemoPlayground` and `InstallCommandBox` deleted. Short viewports (`max-height: 499px`, i.e. landscape phones) get the static assembled hero, same as reduced motion — the media query lives in both `HeroPicker.tsx` and `home.css`. **Library fix (unreleased):** `.ck-input-modes` used `repeat(auto-fit, minmax(min-content, 1fr))`, which is invalid CSS (auto-repeat needs a fixed minimum), so the six format tabs collapsed into one column in every narrow picker; now `minmax(3.75rem, 1fr)`. **Theme gotcha:** the library CSS follows `prefers-color-scheme: dark` unless `<html>` has `.light`; the site now sets `.light` or `.dark` (never neither), otherwise light-site + dark-OS renders dark pickers.
+- **2026-09-27 (tests removed)**: **Owner removed all tests** — Vitest unit/component tests, the Playwright + axe a11y suite (`e2e/`), Lighthouse CI profiles, coverage thresholds, the `site-quality` workflow and `.github/ACCESSIBILITY_RELEASE_CHECKLIST.md`, plus their devDependencies. Don't re-add test tooling unless asked. `@playwright/test` stays only because `scripts/generate-brand-assets.mjs` renders the social cards with its Chromium. Quality gate is now `npm run verify` + `npm run build` (+ `knip`, format check, size-limit in CI).
+
+- **2026-09-27 (cleanup)**: **Lean pass per the `react-typescript` skill.** Site dropped Tailwind (config, `@tailwindcss/*`, `tailwindcss-animate`, typography) for plain CSS + tokens with a small `@layer reset` that mirrors the old preflight — keep the reset in its layer so the unlayered library CSS still wins. Dropped `prism-react-renderer`, `CodeBlock`, and the shadcn `ui/card`/`ui/tabs` wrappers: demo Code tabs now receive a build-time Shiki `<StaticCode slot="code">` from the page (Astro passes named slots to React islands as props), so there is one highlighter. StaticCode's copy handler is delegated at the document level because slot HTML only mounts when the Code tab opens. `DocsLayout` derives title/description/h1 from `_nav.ts`; pages pass the lead paragraph via `slot="lead"`. Theming demo now renders a real `.brand-picker` (docs.css) matching the snippet; `.ck-demo-theme` is gone. Library (API unchanged, 19.8M-case equivalence-checked): internal `constants.ts`, `components/formats.ts`, `components/slider-keys.ts`; hue/alpha CSS merged (side effect: `<AlphaSlider vertical>` now sizes like vertical hue — it was accidentally 100%×44px); `--ck-checker` var fixes the OS-dark checkerboard. Tooling: removed `overrides`, broken `size:why`, dead vite `@` alias, duplicate `favicon.png`/`chromakit-mark.svg`; `hero-screenshot.png` moved to `scripts/`; CI triggers `main` only.
+- **2026-09-28**: **Light mode is the default** (the pre-paint script ignores `prefers-color-scheme`; dark only when the visitor chooses it, stored in `localStorage.theme`). **New logo: the picker glyph** — a mini color area + hue strip + ring thumb (`BrandMark.astro`, `client/public/favicon.svg`; gradient ids are suffixed per size so header and footer marks don't collide). Social card + README hero regenerated with it; the README image is served from `raw.githubusercontent.com/.../main/`, so it only updates on GitHub/npm after a push. **Breaking (unreleased) API**: `useColorState(initial, { value, onChange, onChangeComplete })` with exported `UseColorStateOptions`; `isDragging` no longer returned; `ChannelInputsProps` no longer exported; `useDebounce` deprecated. Recent colors are now visible (the library CSS used to `display: none` them). Removed the `gh pr merge` auto-allow from `.claude/settings.json`. Copy pass: US spelling, no hype, concrete facts.
+- **2026-09-28 (library skin)**: **Default ColorPicker skin now matches the site hero** — flat white/black, `#d4d4d4` hairlines, `--ck-frame` outer border, square corners, ring-style thumbs (white ring + dark hairline, transparent center), no blur/glow/shadows/hover lifts; dark mode inverts. The old frosted look is opt-in via `.ck-theme-glass` (palette, radii incl. pill tracks, blur, shadows — thumbs stay rings). New vars: `--ck-frame`, `--ck-on-primary` (copied-state text), `--ck-track-radius`. The color area no longer clips (`overflow` removed; layers inherit the radius) so edge thumbs aren't cut off. Unreleased; owner picks the version.
+- **2026-09-28 (compact layout)**: **`layout="compact"` is the new ColorPicker default** (`components/CompactLayout.tsx`, `.ck-color-picker--compact` styles at the end of `chromakit.css`); the old markup is `layout="wide"` (`PickerLayout.tsx`). Compact = area on top (3:2), 40px preview + 24px-hit/16px-bar hue & alpha, one format `<select>` over `InputValuePanel` (channel grids wrap to their own row), copy + eyedropper, one swatch row (presets | up to 4 recents not already presets | `+` adds a preset). No preset groups or preset editing in compact — use wide. Owner chose one small size for mouse and touch (24px hit targets, WCAG 2.2 AA) and rejected a larger touch variant as too airy. Thumbs are positioned by CSS vars (`--ck-x/--ck-y`) inside `--ck-thumb-inset`, and `usePointerDrag` reads that var so 0..1 spans the inset range. CSS budget raised 3.75 → 4.25 KB for the new layout.
+- **2026-09-28 (docs + hero polish)**: `DocSection split` puts text left / demo right (`.docs-section--split`, 24rem demo column; stacks below a 44rem `.docs-content` container width). Used for single-picker demos only (not the wide-layout, hooks, or theming comparison sections). Hero scroll: frame outline appears only at progress ≥ 0.94, readings fade out before editors fade in (never overlap). Owner wants no touching letters: wordmark, header/footer brand, and "Ready to use." use -0.035em (wordmark fit ratio 4.95em).
+- **2026-09-28 (one picker design)**: The old side-by-side markup and its CSS are gone. `components/PickerLayout.tsx` renders the new design for both `layout="compact"` (default, 280px column) and `layout="wide"` (`.ck-color-picker--wide`: CSS grid, area left spanning the rows, controls right, 520px; falls back to the column under a 560px viewport). Wide adds a preset-group `<select>`; neither layout has preset edit mode (the exported `PresetColors` still does). Former `.ck-compact-*` classes are now `.ck-picker-*`, and the new-design rules are the `.ck-color-picker` base. CSS budget back down to 4 KB (3.78 KB actual). Upgrade notes live in MIGRATION.md ("Upgrading from chromakit-react 0.6"). Dev-server gotcha: after dependency changes a long-running `astro dev` serves 504 Outdated Optimize Dep and no island hydrates — restart with `npx astro dev --force`; `optimizeDeps.include` in astro.config.mjs pre-bundles the island deps to make this rarer.
+- **2026-09-28 (release)**: **v0.7.0** — owner-requested release of the redesign (compact/wide layouts, flat theme + `ck-theme-glass`, `useColorState` options object, removed `isDragging`/`ChannelInputsProps`, deprecated `useDebounce`). Upgrade guide: MIGRATION.md → "Upgrading from chromakit-react 0.6". README links to MIGRATION.md are absolute GitHub URLs so they work on npmjs.com.

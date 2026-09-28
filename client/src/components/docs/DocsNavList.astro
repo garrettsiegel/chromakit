@@ -1,0 +1,21 @@
+---
+import { DOCS_NAV } from '@/pages/docs/_nav';
+
+const { slug } = Astro.props as { slug: string };
+---
+
+<ul class="docs-nav-list">
+  {
+    DOCS_NAV.map((doc) => (
+      <li>
+        <a
+          href={`/docs/${doc.slug}`}
+          class="docs-nav-link"
+          aria-current={doc.slug === slug ? 'page' : undefined}
+        >
+          {doc.title}
+        </a>
+      </li>
+    ))
+  }
+</ul>

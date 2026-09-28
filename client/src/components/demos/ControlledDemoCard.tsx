@@ -1,19 +1,11 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ColorPicker } from '@/lib/color-picker';
 import { DemoCard } from '@/components/docs/DemoCard';
 
-const controlledCode = `const [color, setColor] = useState('#6366F1');
-
-<ColorPicker
-  value={color}
-  onChange={(c) => setColor(c.hex8)}
-  onChangeComplete={(c) => console.log('final', c.oklch)}
-/>`;
-
-export const ControlledDemoCard = () => {
+export const ControlledDemoCard = ({ code }: { code?: ReactNode }) => {
   const [color, setColor] = useState('#6366F1');
   return (
-    <DemoCard code={controlledCode}>
+    <DemoCard code={code}>
       <ColorPicker value={color} onChange={(c) => setColor(c.hex8)} />
     </DemoCard>
   );

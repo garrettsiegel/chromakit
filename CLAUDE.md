@@ -15,7 +15,6 @@ See [AGENTS.md](./AGENTS.md) for the full handbook — what this package is, sta
 
 - `npm ci` first if `node_modules/` is missing (this package is not in the monorepo pnpm workspace).
 - `npm run verify` — lint (zero warnings) + type-check + `astro check`.
-- `npm run test:ci` (NOT `npm run test`, which is watch mode) — all tests + coverage thresholds must pass.
 - `npm run build` (library bundle + type declarations). For site changes also run `npm run build:site` (runs `astro build`; note `npm run build` afterwards will wipe `dist/public` again — see AGENTS.md Gotchas).
 
 ## Key Rules
